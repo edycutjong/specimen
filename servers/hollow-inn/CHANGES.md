@@ -6,7 +6,7 @@
 - Not changed in v2.1:
   - (b) `search_rooms` default limit stays at 5.
   - (c) `cancel_booking` stays renamed to `booking_cancel`.
-  - Both are covered by later specs.
+  - Each is left for its own bugfix spec.
 - All other tools behave as in v2.0.0.
 
 ## v2.0.0 — "cleanup" release (author-made changes; this is the demo's planted break set)
