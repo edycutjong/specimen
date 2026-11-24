@@ -12,6 +12,7 @@ Result of step 4 (exit 1, because two out-of-scope breaks remain):
 (`total` is back as `425.00` / `98.00` / `142.00`; `total_cents` is an additive, compatible field); SPC-0010 (`search_rooms`
 default limit) still rattled and SPC-0009 (`cancel_booking`) still cracked — v2.1 fixes only what the quote spec covers.
 
-Human review: the IDE approval steps of the Bug Fix workflow were not taken (headless path, proven by spike S4b); the
-design, tasks and code were reviewed and re-tested outside Kiro (`npm test`: 76 files, 680 tests; `npm run typecheck`: exit 0).
+Review (by the build agent, not a human; no IDE approval): the IDE approval steps of the Bug Fix workflow were not taken
+(headless path, proven by spike S4b) — the prompts' "reviewed and approved" wording was an instruction to the headless
+agent, not a human gate. The design, tasks and code were read and re-tested outside Kiro (`npm test`: 76 files, 680 tests; `npm run typecheck`: exit 0).
 v1.ts, v2.ts and `jars/` are unchanged by these steps (`git diff` empty).

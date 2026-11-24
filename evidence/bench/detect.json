@@ -12,7 +12,7 @@
     "schema_removed": [],
     "schema_added": [],
     "schema_input_changed": [],
-    "ms": 2082
+    "ms": 1990
   },
   {
     "version": "v2",
@@ -37,7 +37,7 @@
       "booking_cancel"
     ],
     "schema_input_changed": [],
-    "ms": 2060
+    "ms": 2001
   },
   {
     "version": "v2.1",
@@ -59,6 +59,6 @@
       "booking_cancel"
     ],
     "schema_input_changed": [],
-    "ms": 2227
+    "ms": 2232
   }
 ]

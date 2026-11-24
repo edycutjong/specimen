@@ -1,0 +1,9 @@
+# check-spec failures of curator attempt 1, as the CLI quoted them in the retry prompt
+# source: the user prompt of Kiro session sess_cf4ce9a8-85cd-4779-98cd-c7b7ee4b1592 (attempt 2)
+
+FAIL SPC-0002 shall_continue: Unchanged Behavior (Regression Prevention) has no SHALL CONTINUE TO
+FAIL SPC-0002 unchanged_jar: Unchanged Behavior (Regression Prevention) must say "no preserved jar" because no preserved jar of quote exists
+FAIL SPC-0006 shall_continue: Unchanged Behavior (Regression Prevention) has no SHALL CONTINUE TO
+FAIL SPC-0006 unchanged_jar: Unchanged Behavior (Regression Prevention) must say "no preserved jar" because no preserved jar of quote exists
+FAIL SPC-0007 shall_continue: Unchanged Behavior (Regression Prevention) has no SHALL CONTINUE TO
+FAIL SPC-0007 unchanged_jar: Unchanged Behavior (Regression Prevention) must say "no preserved jar" because no preserved jar of quote exists

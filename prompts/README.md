@@ -1,9 +1,12 @@
 # Kiro prompts
 
-Every prompt sent to Kiro while building this repository, verbatim and numbered in the order they ran. Line 1 of each file
+Every prompt sent to Kiro while building this repository, verbatim and numbered in the order they ran — except one
+`/usage` balance probe on day 1 (0.18 credits) and the curator prompts that `specimen file` builds at run time (row "(CLI)"). Line 1 of each file
 (an HTML comment) records the date, the exact `kiro-cli` command, the engine and the working directory; the prompt is the
 rest of the file. Commits that contain Kiro's output start with `kiro:`; glue, tests and harnesses written without Kiro
-start with `claude-direct:`.
+start with `claude-direct:`; commits with any other prefix (`docs:`, `evidence:`, `field:`, `jars:`, `chore:`) contain no
+Kiro-written code. Prompts that say a spec "has been reviewed and approved" are instructions to the headless agent so it
+does not stop to ask — no human approval step was taken (the IDE approvals are a human step we did not run).
 
 | Turn | What Kiro did | Credits |
 |---|---|---|

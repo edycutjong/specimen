@@ -7,7 +7,7 @@ What happened, in order:
 1. The CLI grouped every jar with the same tool and changed-path set (`quote`, `/total` + `/total_cents`): SPC-0002 (RACK A), SPC-0006 and SPC-0007 (RACK B).
 2. The CLI wrote the skeleton with the repro block (verbatim input, recorded `response_text`, replayed body, changed paths) and the diff table — by code, not by a model.
 3. Kiro's `specimen-curator` agent (`kiro-cli chat --no-interactive --agent-engine v3 --trust-workspace --agent specimen-curator`, no `--trust-tools`) wrote the Introduction and the three EARS sections.
-4. `check-spec` failed the first attempt on all three jars — `shall_continue` (no "SHALL CONTINUE TO" line) and `unchanged_jar` (the section did not say "no preserved jar"); Kiro session `sess_601d64af…`.
+4. `check-spec` failed the first attempt on all three jars — `shall_continue` (no "SHALL CONTINUE TO" line) and `unchanged_jar` (the section did not say "no preserved jar"); Kiro session `sess_601d64af…`. The six FAIL lines, as the CLI quoted them to the curator: `01-attempt1-checkspec.txt`.
 5. The CLI re-ran the curator once with those failures quoted; the second attempt passed for all three jars (session `sess_cf4ce9a8…`).
 
 Re-check: `npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-0002` (and SPC-0006, SPC-0007) → `PASS` each.

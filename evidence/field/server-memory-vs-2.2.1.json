@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "server": "sh--Users-edycu-Hackathon-devpost-devpost-kiroween-specimen-build-field-server-memory-run.sh-2.2.1",
+  "server": "sh-field-server-memory-run.sh-2.2.1",
   "started_at": "2026-11-24T20:48:28.506Z",
   "strict": false,
   "jars": [
