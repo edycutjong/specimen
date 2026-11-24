@@ -20,5 +20,16 @@ start with `claude-direct:`.
 | 11 | spike S4b: Bug Fix workflow writes design.md + tasks.md headless in spec mode | 3.48 |
 | 12 | credit-metering probe (`--output-format stream-json`) | 0.07 |
 | 13 | decision D-425: the hook receives a server's `425.00` literal unchanged | 0.21 |
+| 14–15 | `jar-capture` feature spec: requirements.md, Requirements-First, headless spec mode (one session) | 9.29 |
+| 16 | `jar-capture` Analyze Requirements pass (a first attempt sent `/spec analyze_requirements` as plain text: 0.24) | 9.63 |
+| 17 | `jar-capture` design.md + tasks.md | 9.89 |
+| 18, 19, 23 | executed the `jar-capture` tasks (one session, 606 tool calls, model claude-haiku-5.5) | 27.45 |
+| 20 | `replay-engine` feature spec: requirements.md | 4.69 |
+| 21 | `replay-engine` Analyze Requirements pass | 11.65 |
+| 22 | `replay-engine` design.md + tasks.md | 14.91 |
+| rack-a, rack-a-followup, rack-b | recorded RACK A and RACK B through specimen's capture hooks (attempt 1 discarded: 1.31; committed attempt 2: 1.31) | 2.62 |
+| 24 | live firewall probe: Kiro's write to a jar intercepted | 0.66 |
+| field-memory | field shelf: one capture session against `@modelcontextprotocol/server-memory@1.0.0` | 0.56 |
+| 25 | executed the `replay-engine` tasks (461 tool calls, model claude-haiku-5.5) | 53.23 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–12) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
