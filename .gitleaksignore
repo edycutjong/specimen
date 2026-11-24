@@ -1,0 +1,2 @@
+# test fixture: a deliberately fake API-key shape used to prove replay redacts STDERR (packages/cli/test/replay.test.ts)
+470788649b9f69d33f5cc2adfc99db8592c7d3fa:packages/cli/test/replay.test.ts:generic-api-key:412
