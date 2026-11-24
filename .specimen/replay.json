@@ -9,6 +9,5 @@
   ],
   "watch": [
     "servers/**"
-  ],
-  "note": "safe: in-memory bookings, local process"
+  ]
 }
