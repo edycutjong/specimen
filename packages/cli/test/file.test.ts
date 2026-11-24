@@ -366,6 +366,7 @@ describe("runFile", () => {
     expect(code).toBe(FILE_EXIT.timeout);
     expect(calls[0]?.timeoutMs).toBe(7_000);
     expect(err()).toContain("curator timed out after 7 s — no spec written");
+    expect(existsSync(join(ws.root, ".kiro/specs/quote-total-total-cents"))).toBe(false);
   });
 
   it("exits 22 and prints the code and stderr when kiro-cli fails", async () => {
@@ -378,6 +379,7 @@ describe("runFile", () => {
     expect(code).toBe(FILE_EXIT.kiroFailed);
     expect(err()).toContain("kiro-cli failed with exit code 4");
     expect(err()).toContain("boom: no session");
+    expect(existsSync(join(ws.root, ".kiro/specs/quote-total-total-cents/bugfix.md"))).toBe(false);
   });
 
   it("writes nothing and runs nothing with --dry-run", async () => {

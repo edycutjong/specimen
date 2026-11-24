@@ -14,6 +14,8 @@ import {
   readFileSync,
   readdirSync,
   renameSync,
+  rmSync,
+  rmdirSync,
   writeFileSync,
   type Dirent,
 } from "node:fs";
@@ -334,6 +336,19 @@ function timeoutSeconds(value: string | undefined): number | undefined {
 }
 
 /**
+ * Removes the skeleton when the curator never ran to completion, so "no spec written" stays true:
+ * the file goes, and its folder too when nothing else is in it.
+ */
+function discardSkeleton(specPath: string): void {
+  rmSync(specPath, { force: true });
+  try {
+    rmdirSync(dirname(specPath));
+  } catch {
+    // The folder still holds other files, or is already gone: leave it.
+  }
+}
+
+/**
  * Runs `specimen file <jar-id>`. The Replay_Result is `options.replay`, or the newest file in
  * `replays/`. Paths are relative to the working directory, and the spec is written under the
  * workspace root.
@@ -421,6 +436,7 @@ export async function runFile(
       cwd: root,
       timeoutMs: seconds * 1000,
     });
+    if (run.timedOut || run.exitCode !== 0) discardSkeleton(specPath);
     if (run.timedOut) {
       io.stderr(`specimen file: curator timed out after ${seconds} s — no spec written\n`);
       return FILE_EXIT.timeout;
