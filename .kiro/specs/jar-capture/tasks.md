@@ -175,18 +175,18 @@ Rules for every task:
     - Parallel real child processes yield distinct `id` values and distinct `seq` values.
     - _Requirements: 2.3, 2.6, 3.5, 3.11, 4.4, 4.7, 4.9, 4.21, 4.22, 6.1, 6.2, 6.3, 6.10, 7.3, 7.4, 10.9, 12.4, 12.6, 11.3, 11.4, 11.10, 11.14, 11.16, 11.17, 11.18, 11.19, 11.20, 11.21, 11.22_
 
-- [ ] 8. Kiro wiring and end-to-end tests
-  - [-] 8.1 Add the remaining Kiro configuration files
+- [x] 8. Kiro wiring and end-to-end tests
+  - [x] 8.1 Add the remaining Kiro configuration files
     - `.kiro/settings/mcp.json` registering `hollowinn` with command `npx` and args `tsx servers/hollow-inn/src/main.ts v1`.
     - `.kiro/hooks/specimen-jar-pre.json` (PreToolUse, matcher `@hollowinn`, `npx --no-install specimen hook pre --server hollowinn`), `.kiro/hooks/specimen-jar-post.json` (PostToolUse, matcher `@hollowinn`, `npx --no-install specimen hook post --server hollowinn`), and `.kiro/hooks/post-task-tests.json` (PostTaskExec, command `npm test`).
     - _Requirements: 9.1, 9.2, 9.3, 9.6, 9.9_
-  - [ ]* 8.2 Write the Hook_File tests in `packages/cli/test/wiring.test.ts`
+  - [x]* 8.2 Write the Hook_File tests in `packages/cli/test/wiring.test.ts`
     - Parse every file in `.kiro/hooks/` with a zod `hookFileSchema` (`matcher` optional for `PreTaskExec` and `PostTaskExec`), assert the command strings of the pre, post, firewall and manifest-check files equal the exact strings of Requirement 9, assert none of the pre, post or firewall commands contains `&&`, `||`, `|`, `;`, `>` or `<`, and assert `.kiro/settings/mcp.json` registers `hollowinn` as specified.
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 11.25_
-  - [ ]* 8.3 Write the hollow-inn end-to-end test in `packages/cli/test/e2e-quote.test.ts`
+  - [x]* 8.3 Write the hollow-inn end-to-end test in `packages/cli/test/e2e-quote.test.ts`
     - Start hollow-inn v1 through the real MCP SDK `Client` over stdio (no protocol mock), call `quote`, feed the returned text through `specimen hook pre` then `specimen hook post` as real child processes in a temporary workspace, and assert the Jar_Line keeps `425.00` and `212.50` byte-identical in `response_text`.
     - _Requirements: 4.18, 7.13, 7.14, 10.8, 11.27_
-  - [ ]* 8.4 Write the measured-payload end-to-end test in `packages/cli/test/e2e-s3.test.ts`
+  - [x]* 8.4 Write the measured-payload end-to-end test in `packages/cli/test/e2e-s3.test.ts`
     - Feed the exact Pre_Payload and Post_Payload shapes recorded in `evidence/spikes/S3.md` through the pre and post hooks in a temporary workspace and assert one valid Jar_Line results. Run `npm test` at the repo root and make sure it passes.
     - _Requirements: 4.1, 4.5, 4.8, 11.15, 11.28_
 

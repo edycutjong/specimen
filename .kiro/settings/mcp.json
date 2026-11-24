@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "hollowinn": { "command": "npx", "args": ["tsx", "servers/hollow-inn/src/main.ts", "v1"] }
+  }
+}
