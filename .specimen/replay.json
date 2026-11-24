@@ -1,0 +1,14 @@
+{
+  "allow": [
+    "search_rooms",
+    "get_room",
+    "quote",
+    "book",
+    "list_bookings",
+    "cancel_booking"
+  ],
+  "watch": [
+    "servers/**"
+  ],
+  "note": "safe: in-memory bookings, local process"
+}
