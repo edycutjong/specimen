@@ -1,0 +1,475 @@
+{
+  "v": 1,
+  "server": "npx-tsx-servers-hollow-inn-src-main.ts-v2.1",
+  "started_at": "2026-11-24T21:11:11.360Z",
+  "strict": false,
+  "jars": [
+    {
+      "id": "SPC-0001",
+      "session_id": "sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8",
+      "seq": 1,
+      "tool": "search_rooms",
+      "state": "preserved",
+      "input": {
+        "check_in": "2026-12-04",
+        "nights": 2,
+        "guests": 3,
+        "limit": 50
+      },
+      "response_text": "{\"check_in\":\"2026-12-04\",\"nights\":2,\"guests\":3,\"rooms\":[{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75},{\"id\":\"r-04\",\"name\":\"Hearth Room\",\"beds\":2,\"max_guests\":4,\"fireplace\":true,\"nightly\":212.50},{\"id\":\"r-06\",\"name\":\"Cellar Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":131.25},{\"id\":\"r-07\",\"name\":\"Ember Suite\",\"beds\":3,\"max_guests\":4,\"fireplace\":true,\"nightly\":236.00},{\"id\":\"r-08\",\"name\":\"Gallery Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":168.40},{\"id\":\"r-09\",\"name\":\"Raven Loft\",\"beds\":3,\"max_guests\":5,\"fireplace\":true,\"nightly\":289.00}]}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\"check_in\":\"2026-12-04\",\"nights\":2,\"guests\":3,\"rooms\":[{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75},{\"id\":\"r-04\",\"name\":\"Hearth Room\",\"beds\":2,\"max_guests\":4,\"fireplace\":true,\"nightly\":212.50},{\"id\":\"r-06\",\"name\":\"Cellar Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":131.25},{\"id\":\"r-07\",\"name\":\"Ember Suite\",\"beds\":3,\"max_guests\":4,\"fireplace\":true,\"nightly\":236.00},{\"id\":\"r-08\",\"name\":\"Gallery Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":168.40},{\"id\":\"r-09\",\"name\":\"Raven Loft\",\"beds\":3,\"max_guests\":5,\"fireplace\":true,\"nightly\":289.00}]}",
+      "replayed": {
+        "check_in": "2026-12-04",
+        "nights": 2,
+        "guests": 3,
+        "rooms": [
+          {
+            "id": "r-02",
+            "name": "Moth Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 142
+          },
+          {
+            "id": "r-03",
+            "name": "Candle Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 156.75
+          },
+          {
+            "id": "r-04",
+            "name": "Hearth Room",
+            "beds": 2,
+            "max_guests": 4,
+            "fireplace": true,
+            "nightly": 212.5
+          },
+          {
+            "id": "r-06",
+            "name": "Cellar Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 131.25
+          },
+          {
+            "id": "r-07",
+            "name": "Ember Suite",
+            "beds": 3,
+            "max_guests": 4,
+            "fireplace": true,
+            "nightly": 236
+          },
+          {
+            "id": "r-08",
+            "name": "Gallery Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 168.4
+          },
+          {
+            "id": "r-09",
+            "name": "Raven Loft",
+            "beds": 3,
+            "max_guests": 5,
+            "fireplace": true,
+            "nightly": 289
+          }
+        ]
+      },
+      "ms": 3
+    },
+    {
+      "id": "SPC-0002",
+      "session_id": "sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8",
+      "seq": 2,
+      "tool": "quote",
+      "state": "preserved",
+      "input": {
+        "room_id": "r-04",
+        "nights": 2
+      },
+      "response_text": "{\"room_id\":\"r-04\",\"nights\":2,\"nightly\":212.50,\"total\":425.00,\"currency\":\"USD\"}",
+      "changes": [],
+      "compatible": [
+        {
+          "path": "/total_cents",
+          "kind": "added",
+          "now": 42500
+        }
+      ],
+      "ignored": [],
+      "replayed_text": "{\"room_id\":\"r-04\",\"nights\":2,\"nightly\":212.50,\"total\":425.00,\"total_cents\":42500,\"currency\":\"USD\"}",
+      "replayed": {
+        "room_id": "r-04",
+        "nights": 2,
+        "nightly": 212.5,
+        "total": 425,
+        "total_cents": 42500,
+        "currency": "USD"
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0003",
+      "session_id": "sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8",
+      "seq": 3,
+      "tool": "book",
+      "state": "preserved",
+      "input": {
+        "room_id": "r-04",
+        "check_in": "2026-12-04",
+        "nights": 2,
+        "guest": "M. Shelley"
+      },
+      "response_text": "{\"booking_id\":\"BK-0001\",\"room_id\":\"r-04\",\"check_in\":\"2026-12-04\",\"nights\":2,\"guest\":\"M. Shelley\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T19:07:55.510Z\"}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [
+        "/created_at"
+      ],
+      "replayed_text": "{\"booking_id\":\"BK-0001\",\"room_id\":\"r-04\",\"check_in\":\"2026-12-04\",\"nights\":2,\"guest\":\"M. Shelley\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T21:11:11.867Z\"}",
+      "replayed": {
+        "booking_id": "BK-0001",
+        "room_id": "r-04",
+        "check_in": "2026-12-04",
+        "nights": 2,
+        "guest": "M. Shelley",
+        "status": "confirmed",
+        "created_at": "2026-11-24T21:11:11.867Z"
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0004",
+      "session_id": "sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8",
+      "seq": 4,
+      "tool": "list_bookings",
+      "state": "preserved",
+      "input": {},
+      "response_text": "{\"bookings\":[{\"booking_id\":\"BK-0001\",\"room_id\":\"r-04\",\"check_in\":\"2026-12-04\",\"nights\":2,\"guest\":\"M. Shelley\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T19:07:55.510Z\"}]}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [
+        "/bookings/0/created_at"
+      ],
+      "replayed_text": "{\"bookings\":[{\"booking_id\":\"BK-0001\",\"room_id\":\"r-04\",\"check_in\":\"2026-12-04\",\"nights\":2,\"guest\":\"M. Shelley\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T21:11:11.867Z\"}]}",
+      "replayed": {
+        "bookings": [
+          {
+            "booking_id": "BK-0001",
+            "room_id": "r-04",
+            "check_in": "2026-12-04",
+            "nights": 2,
+            "guest": "M. Shelley",
+            "status": "confirmed",
+            "created_at": "2026-11-24T21:11:11.867Z"
+          }
+        ]
+      },
+      "ms": 0
+    },
+    {
+      "id": "SPC-0010",
+      "session_id": "sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8",
+      "seq": 5,
+      "tool": "search_rooms",
+      "state": "rattled",
+      "input": {
+        "check_in": "2026-12-04",
+        "guests": 3,
+        "nights": 2
+      },
+      "response_text": "{\"check_in\":\"2026-12-04\",\"nights\":2,\"guests\":3,\"rooms\":[{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75},{\"id\":\"r-04\",\"name\":\"Hearth Room\",\"beds\":2,\"max_guests\":4,\"fireplace\":true,\"nightly\":212.50},{\"id\":\"r-06\",\"name\":\"Cellar Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":131.25},{\"id\":\"r-07\",\"name\":\"Ember Suite\",\"beds\":3,\"max_guests\":4,\"fireplace\":true,\"nightly\":236.00},{\"id\":\"r-08\",\"name\":\"Gallery Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":168.40},{\"id\":\"r-09\",\"name\":\"Raven Loft\",\"beds\":3,\"max_guests\":5,\"fireplace\":true,\"nightly\":289.00}]}",
+      "changes": [
+        {
+          "path": "/rooms",
+          "kind": "length",
+          "was": 7,
+          "now": 5
+        },
+        {
+          "path": "/rooms/r-08",
+          "kind": "removed",
+          "was": {
+            "id": "r-08",
+            "name": "Gallery Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 168.4
+          }
+        },
+        {
+          "path": "/rooms/r-09",
+          "kind": "removed",
+          "was": {
+            "id": "r-09",
+            "name": "Raven Loft",
+            "beds": 3,
+            "max_guests": 5,
+            "fireplace": true,
+            "nightly": 289
+          }
+        }
+      ],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\"check_in\":\"2026-12-04\",\"nights\":2,\"guests\":3,\"rooms\":[{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75},{\"id\":\"r-04\",\"name\":\"Hearth Room\",\"beds\":2,\"max_guests\":4,\"fireplace\":true,\"nightly\":212.50},{\"id\":\"r-06\",\"name\":\"Cellar Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":131.25},{\"id\":\"r-07\",\"name\":\"Ember Suite\",\"beds\":3,\"max_guests\":4,\"fireplace\":true,\"nightly\":236.00}]}",
+      "replayed": {
+        "check_in": "2026-12-04",
+        "nights": 2,
+        "guests": 3,
+        "rooms": [
+          {
+            "id": "r-02",
+            "name": "Moth Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 142
+          },
+          {
+            "id": "r-03",
+            "name": "Candle Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 156.75
+          },
+          {
+            "id": "r-04",
+            "name": "Hearth Room",
+            "beds": 2,
+            "max_guests": 4,
+            "fireplace": true,
+            "nightly": 212.5
+          },
+          {
+            "id": "r-06",
+            "name": "Cellar Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 131.25
+          },
+          {
+            "id": "r-07",
+            "name": "Ember Suite",
+            "beds": 3,
+            "max_guests": 4,
+            "fireplace": true,
+            "nightly": 236
+          }
+        ]
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0005",
+      "session_id": "sess_854a0f71-fdbf-4cea-82fb-ab61a8255115",
+      "seq": 1,
+      "tool": "search_rooms",
+      "state": "preserved",
+      "input": {
+        "check_in": "2026-12-11",
+        "nights": 1,
+        "guests": 2,
+        "limit": 3
+      },
+      "response_text": "{\"check_in\":\"2026-12-11\",\"nights\":1,\"guests\":2,\"rooms\":[{\"id\":\"r-01\",\"name\":\"Lantern Room\",\"beds\":1,\"max_guests\":2,\"fireplace\":false,\"nightly\":98.00},{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75}]}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\"check_in\":\"2026-12-11\",\"nights\":1,\"guests\":2,\"rooms\":[{\"id\":\"r-01\",\"name\":\"Lantern Room\",\"beds\":1,\"max_guests\":2,\"fireplace\":false,\"nightly\":98.00},{\"id\":\"r-02\",\"name\":\"Moth Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":142.00},{\"id\":\"r-03\",\"name\":\"Candle Room\",\"beds\":2,\"max_guests\":3,\"fireplace\":false,\"nightly\":156.75}]}",
+      "replayed": {
+        "check_in": "2026-12-11",
+        "nights": 1,
+        "guests": 2,
+        "rooms": [
+          {
+            "id": "r-01",
+            "name": "Lantern Room",
+            "beds": 1,
+            "max_guests": 2,
+            "fireplace": false,
+            "nightly": 98
+          },
+          {
+            "id": "r-02",
+            "name": "Moth Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 142
+          },
+          {
+            "id": "r-03",
+            "name": "Candle Room",
+            "beds": 2,
+            "max_guests": 3,
+            "fireplace": false,
+            "nightly": 156.75
+          }
+        ]
+      },
+      "ms": 3
+    },
+    {
+      "id": "SPC-0006",
+      "session_id": "sess_854a0f71-fdbf-4cea-82fb-ab61a8255115",
+      "seq": 2,
+      "tool": "quote",
+      "state": "preserved",
+      "input": {
+        "room_id": "r-01",
+        "nights": 1
+      },
+      "response_text": "{\"room_id\":\"r-01\",\"nights\":1,\"nightly\":98.00,\"total\":98.00,\"currency\":\"USD\"}",
+      "changes": [],
+      "compatible": [
+        {
+          "path": "/total_cents",
+          "kind": "added",
+          "now": 9800
+        }
+      ],
+      "ignored": [],
+      "replayed_text": "{\"room_id\":\"r-01\",\"nights\":1,\"nightly\":98.00,\"total\":98.00,\"total_cents\":9800,\"currency\":\"USD\"}",
+      "replayed": {
+        "room_id": "r-01",
+        "nights": 1,
+        "nightly": 98,
+        "total": 98,
+        "total_cents": 9800,
+        "currency": "USD"
+      },
+      "ms": 0
+    },
+    {
+      "id": "SPC-0007",
+      "session_id": "sess_854a0f71-fdbf-4cea-82fb-ab61a8255115",
+      "seq": 3,
+      "tool": "quote",
+      "state": "preserved",
+      "input": {
+        "room_id": "r-02",
+        "nights": 1
+      },
+      "response_text": "{\"room_id\":\"r-02\",\"nights\":1,\"nightly\":142.00,\"total\":142.00,\"currency\":\"USD\"}",
+      "changes": [],
+      "compatible": [
+        {
+          "path": "/total_cents",
+          "kind": "added",
+          "now": 14200
+        }
+      ],
+      "ignored": [],
+      "replayed_text": "{\"room_id\":\"r-02\",\"nights\":1,\"nightly\":142.00,\"total\":142.00,\"total_cents\":14200,\"currency\":\"USD\"}",
+      "replayed": {
+        "room_id": "r-02",
+        "nights": 1,
+        "nightly": 142,
+        "total": 142,
+        "total_cents": 14200,
+        "currency": "USD"
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0008",
+      "session_id": "sess_854a0f71-fdbf-4cea-82fb-ab61a8255115",
+      "seq": 4,
+      "tool": "book",
+      "state": "preserved",
+      "input": {
+        "check_in": "2026-12-11",
+        "guest": "Guest",
+        "nights": 1,
+        "room_id": "r-01"
+      },
+      "response_text": "{\"booking_id\":\"BK-0001\",\"room_id\":\"r-01\",\"check_in\":\"2026-12-11\",\"nights\":1,\"guest\":\"Guest\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T19:08:19.780Z\"}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [
+        "/created_at"
+      ],
+      "replayed_text": "{\"booking_id\":\"BK-0001\",\"room_id\":\"r-01\",\"check_in\":\"2026-12-11\",\"nights\":1,\"guest\":\"Guest\",\"status\":\"confirmed\",\"created_at\":\"2026-11-24T21:11:12.434Z\"}",
+      "replayed": {
+        "booking_id": "BK-0001",
+        "room_id": "r-01",
+        "check_in": "2026-12-11",
+        "nights": 1,
+        "guest": "Guest",
+        "status": "confirmed",
+        "created_at": "2026-11-24T21:11:12.434Z"
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0009",
+      "session_id": "sess_854a0f71-fdbf-4cea-82fb-ab61a8255115",
+      "seq": 5,
+      "tool": "cancel_booking",
+      "state": "cracked",
+      "input": {
+        "booking_id": "BK-0001"
+      },
+      "response_text": "{\"booking_id\":\"BK-0001\",\"status\":\"cancelled\"}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": null,
+      "replayed": null,
+      "reason": "tool not in tools/list",
+      "ms": 0
+    }
+  ],
+  "spoiled": [],
+  "counts": {
+    "preserved": 8,
+    "rattled": 1,
+    "cracked": 1,
+    "unsealed": 0,
+    "skipped": 0
+  },
+  "schema_diff": {
+    "tools_removed": [],
+    "tools_added": [],
+    "input_schema_changed": []
+  },
+  "verdict": "HOLD",
+  "red": 2,
+  "filed": 0,
+  "covered": false,
+  "reason": "1 rattled, 1 cracked",
+  "coverage": {
+    "compared": 10,
+    "tools_compared": [
+      "book",
+      "list_bookings",
+      "quote",
+      "search_rooms"
+    ],
+    "tools_listed": [
+      "book",
+      "booking_cancel",
+      "get_room",
+      "list_bookings",
+      "quote",
+      "search_rooms"
+    ],
+    "tools_unrecorded": [
+      "booking_cancel",
+      "get_room"
+    ]
+  }
+}
