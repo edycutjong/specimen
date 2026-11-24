@@ -1,0 +1,5 @@
+[
+  { "id": "R-101", "name": "Crypt Suite", "nightly": 212.5, "sleeps": 2 },
+  { "id": "R-102", "name": "Bell Tower", "nightly": 140, "sleeps": 1 },
+  { "id": "R-201", "name": "Lantern Loft", "nightly": 95, "sleeps": 2 }
+]

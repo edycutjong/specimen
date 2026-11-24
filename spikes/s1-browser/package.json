@@ -1,0 +1,19 @@
+{
+  "name": "@specimen/spike-s1-browser",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Day-1 spike S1: MCP McpServer + Client over InMemoryTransport inside a production Vite bundle",
+  "scripts": {
+    "build": "vite build",
+    "check": "vite build && node scripts/check.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1",
+    "vite": "^7.3.8"
+  }
+}
