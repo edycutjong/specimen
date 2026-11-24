@@ -1,0 +1,5 @@
+{"version":"v1","hooks":[
+ {"name":"specimen-jar-pre","trigger":"PreToolUse","matcher":"@memory","action":{"type":"command","command":"npx --no-install specimen hook pre --server memory"}},
+ {"name":"specimen-jar-post","trigger":"PostToolUse","matcher":"@memory","action":{"type":"command","command":"npx --no-install specimen hook post --server memory"}},
+ {"name":"specimen-jar-firewall","trigger":"PreToolUse","matcher":"write","action":{"type":"command","command":"npx --no-install specimen hook firewall"}}
+]}
