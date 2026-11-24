@@ -20,7 +20,8 @@ function isJsonValue(v: unknown): v is Json {
   return false;
 }
 
-const jsonValue = z.custom<Json>((v) => isJsonValue(v), { message: "not a JSON value" });
+/** zod schema for one JSON value, shared with replay-result.ts. */
+export const jsonValue = z.custom<Json>((v) => isJsonValue(v), { message: "not a JSON value" });
 
 const FIELD_TOKENS = new Set(["input", "response"]);
 

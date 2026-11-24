@@ -2,6 +2,8 @@ import { Command, CommanderError } from "commander";
 import { createFirewallCommand } from "./hooks/firewall.js";
 import { captureCommand, isCaptureName, runCapture } from "./hooks/run.js";
 import { createManifestGroup } from "./manifest.js";
+import { createReplayCommand } from "./replay.js";
+import { createCheckSpecCommand } from "./check-spec.js";
 import { logDiag } from "./io/log.js";
 import { nodeIO } from "./io/port.js";
 import { findWorkspaceRoot } from "./io/root.js";
@@ -30,7 +32,9 @@ export function createProgram(): Command {
     .name("specimen")
     .description("Record MCP tool calls as jars and replay them against a changed server.")
     .addCommand(createHookGroup())
-    .addCommand(createManifestGroup());
+    .addCommand(createManifestGroup())
+    .addCommand(createReplayCommand())
+    .addCommand(createCheckSpecCommand());
 }
 
 /**
@@ -46,6 +50,11 @@ export async function run(argv: readonly string[]): Promise<void> {
   try {
     await createProgram().parseAsync([...argv]);
   } catch (err) {
+    if (err instanceof CommanderError && (argv[2] === "replay" || argv[2] === "check-spec")) {
+      // A usage error of `replay` or `check-spec` (unknown option, missing argument) is exit 2. Help is exit 0.
+      process.exitCode = err.exitCode === 0 ? 0 : 2;
+      return;
+    }
     if (!(err instanceof CommanderError) || argv[2] !== "hook") throw err;
     if (err.exitCode !== 0) {
       const hook = argv[3] === "firewall" ? "firewall" : "hook";

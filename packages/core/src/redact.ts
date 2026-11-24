@@ -229,7 +229,12 @@ function locate(value: ScanNode, ptr: string, c: Compiled, spans: Span[]): void 
   }
 }
 
-function redactText(text: string, c: Compiled): ResponseResult {
+/**
+ * Redacts a response that is not a JSON_Response. In mode `hash` the result is the `sha256:`
+ * text of the replaced text, exactly as jar-capture stores a Hashed_Jar (Requirement 7 criterion
+ * 20). The replay engine calls this directly so that a replayed text is hashed by the same code.
+ */
+export function redactText(text: string, c: Compiled): ResponseResult {
   const replaced = replaceAll(text, c.res);
   if (c.text === "hash") {
     return {
