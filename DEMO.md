@@ -56,9 +56,9 @@ npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"
 ```
 
-The spec was filed by Kiro's `specimen-curator` agent, Kiro's Bug Fix workflow wrote its design and tasks, and Kiro
+The CLI wrote the spec's repro block and diff table, Kiro's `specimen-curator` agent wrote its prose, Kiro's Bug Fix workflow wrote its design and tasks, and Kiro
 executed them into `servers/hollow-inn/src/v2_1.ts` — `evidence/slice/`. On v2.1 the three quote jars replay preserved;
-the overall verdict stays HOLD (SPC-0010 `search_rooms` rattled, SPC-0009 `cancel_booking` cracked — v2.1 fixes only
+committed output `evidence/replay/racks-vs-v2.1.txt`; the overall verdict stays HOLD (SPC-0010 `search_rooms` rattled, SPC-0009 `cancel_booking` cracked — v2.1 fixes only
 quote). `specimen replay` also writes a new file under `replays/` each run.
 
 ## Notes — field shelf (hour 1)

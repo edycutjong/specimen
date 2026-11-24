@@ -19,7 +19,8 @@ the nine memory tools — the three `delete_*` tools are excluded; the repo's ow
 | 1.0.0 (self-replay) | SHIP | 5 | 5 | 0 | 0 | nothing | 0 |
 | 2.2.1 | SHIP | 5 | 5 | 0 | 0 | inputSchema changed on 9 of 9 tools | 0 |
 
-Outputs: `replay-1.0.0.txt`, `replay-2.2.1.txt` (CLI output + exit code, produced by `replay.sh`); `server-memory-1.0.0-self.json`,
+Outputs: `replay-1.0.0.txt`, `replay-2.2.1.txt` (CLI output + exit code, produced by `field/server-memory/replay.sh`; the temp path on the last line was replaced by
+`(scratch dir)`); `server-memory-1.0.0-self.json`,
 `server-memory-vs-2.2.1.json` (Replay_Results from the first, equivalent hand-run of the same `specimen replay` command
 before `replay.sh` packaged it; their `server` label was shortened to remove a local absolute path).
 
@@ -28,7 +29,8 @@ What the input-schema diff is reacting to (`server-memory-tools-1.0.0.json` vs `
 URI (draft-07 → 2020-12); three also gained OPTIONAL top-level inputs — `search_nodes` (`limit`, `observationLimit`),
 `read_graph` (`entityTypes`, `observationLimit`), `open_nodes` (`observationLimit`); four gained a description on their
 top-level property (`create_entities`, `create_relations`, `add_observations`, `delete_observations`); `delete_entities`
-and `delete_relations` changed nothing but the dialect URI. No input was removed and every `required` list is unchanged.
+and `delete_relations` changed nothing in their `inputSchema` but the dialect URI (their tool descriptions did change;
+descriptions and `outputSchema` are not part of the input-schema diff). No input was removed and every `required` list is unchanged.
 
 What this shows, and only this: across 1.0.0 → 2.2.1 the five recorded calls (create_entities, create_relations,
 search_nodes, open_nodes, read_graph) return the same responses, while an input-schema diff flags every tool. It is NOT a

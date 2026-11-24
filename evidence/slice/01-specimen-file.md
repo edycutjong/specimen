@@ -1,7 +1,7 @@
 # Vertical slice, step 1 — `specimen file SPC-0002` (P1b, 2026-11-25 03:52 WIB)
 
 **Command:** `npx specimen file SPC-0002` (latest Replay_Result: `replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-24T20-41-40.470Z.json`, racks vs hollow-inn v2).
-**Exit code:** 0. **Output:** `filed .kiro/specs/quote-total-total-cents/bugfix.md · PASS SPC-0002, SPC-0006, SPC-0007`
+**Exit code:** 0 (stdout + exit in `01-specimen-file.txt`). **Output:** `filed .kiro/specs/quote-total-total-cents/bugfix.md · PASS SPC-0002, SPC-0006, SPC-0007`
 
 What happened, in order:
 1. The CLI grouped every jar with the same tool and changed-path set (`quote`, `/total` + `/total_cents`): SPC-0002 (RACK A), SPC-0006 and SPC-0007 (RACK B).

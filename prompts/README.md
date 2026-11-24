@@ -2,7 +2,8 @@
 
 Every prompt sent to Kiro while building this repository, verbatim and numbered in the order they ran — except one
 `/usage` balance probe on day 1 (0.18 credits) and the curator prompts that `specimen file` builds at run time (row "(CLI)"). One local absolute path in `turn-19.md` is replaced by `<repo-root>`; nothing else is edited. Line 1 of each file
-(an HTML comment) records the exact `kiro-cli` command, the engine and the working directory, and for the `turn-NN` files the date; the prompt is the
+(an HTML comment) records the `kiro-cli` command (turns 03 and 09 name the earlier turn whose command they repeat), the engine and the
+working directory where the header states them, and for the `turn-NN` files the date; the prompt is the
 rest of the file. Commits that contain Kiro's output start with `kiro:`; glue, tests and harnesses written without Kiro
 start with `claude-direct:`; commits with any other prefix (`docs:`, `evidence:`, `field:`, `jars:`, `chore:`) contain no
 Kiro-written code. Prompts that say a spec or its requirements are "approved" are instructions to the headless agent so it
