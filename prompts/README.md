@@ -31,5 +31,9 @@ start with `claude-direct:`.
 | 24 | live firewall probe: Kiro's write to a jar intercepted | 0.66 |
 | field-memory | field shelf: one capture session against `@modelcontextprotocol/server-memory@1.0.0` | 0.56 |
 | 25 | executed the `replay-engine` tasks (461 tool calls, model claude-haiku-5.5) | 53.23 |
+| 26 | added the `specimen file` command + 21 tests (model claude-haiku-5.5) | 0.51 |
+| (CLI) | `specimen file SPC-0002`: the `specimen-curator` agent wrote the quote bugfix spec; one retry after check-spec | 0.66 |
+| 27 | Bug Fix workflow: design.md + tasks.md for the quote spec | 6.32 |
+| 28 | executed the quote bugfix tasks → hollow-inn v2.1 (model claude-haiku-5.5) | 1.29 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–12) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.

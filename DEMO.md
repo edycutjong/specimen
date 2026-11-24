@@ -32,7 +32,7 @@ Committed outputs: `evidence/replay/racks-vs-v1.txt`, `evidence/replay/racks-vs-
 ## 3. Replay vs a schema diff, same change
 
 ```sh
-npx tsx scripts/bench.ts detect
+npm run bench -- detect
 ```
 
 Writes `evidence/bench/detect.md`: per hollow-inn version, the jar states next to what a tools/list schema diff reports.
@@ -45,6 +45,17 @@ npm run -w spikes/s1-browser check
 
 Builds a production Vite bundle that runs the committed jars through `@specimen/core` against hollow-inn over an in-memory
 MCP transport, and reads the result with headless Chromium (`evidence/spikes/S1.md`).
+
+## 5. The loop closes once: jar → bugfix spec → Kiro fix → jar calm
+
+```sh
+npx specimen file SPC-0002 --dry-run --replay replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-24T20-41-40.470Z.json    # the repro block the CLI writes for the three quote jars (no Kiro call)
+npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-0002 --replay replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-24T20-41-40.470Z.json
+npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"
+```
+
+The spec was filed by Kiro's `specimen-curator` agent, Kiro's Bug Fix workflow wrote its design and tasks, and Kiro
+executed them into `servers/hollow-inn/src/v2_1.ts` — `evidence/slice/`. On v2.1 the three quote jars replay preserved.
 
 ## Notes — field shelf (hour 1)
 

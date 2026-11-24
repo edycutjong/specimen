@@ -17,7 +17,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "spike:s1": "npm run -w spikes/s1-browser check",
-    "seed:check": "tsx scripts/seed-check.ts"
+    "seed:check": "tsx scripts/seed-check.ts",
+    "bench": "tsx scripts/bench.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
