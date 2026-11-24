@@ -1,5 +1,14 @@
 # hollow-inn — changes
 
+## v2.1.0 — `quote` returns `total` again
+
+- `quote` returns `total` (dollars, `425.00`) again, alongside `total_cents` (integer, `42500`). This reverses change (a) from v2.0.0.
+- Not changed in v2.1:
+  - (b) `search_rooms` default limit stays at 5.
+  - (c) `cancel_booking` stays renamed to `booking_cancel`.
+  - Both are covered by later specs.
+- All other tools behave as in v2.0.0.
+
 ## v2.0.0 — "cleanup" release (author-made changes; this is the demo's planted break set)
 Each version ships its own test suite and every suite passes. The v2 suite was updated with the refactor, so it
 asserts the new behaviour — while calls that agents recorded against v1 now get different answers.

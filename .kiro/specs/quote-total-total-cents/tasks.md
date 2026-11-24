@@ -6,7 +6,7 @@ Add hollow-inn v2.1, whose `quote` returns both `total` and `total_cents`, so SP
 
 ## Tasks
 
-- [ ] 1. Write bug condition exploration test
+- [x] 1. Write bug condition exploration test
   - **Property 1: Bug Condition** - quote returns `/total` and `/total_cents`
   - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
   - **DO NOT attempt to fix the test or the code when it fails**
@@ -23,7 +23,7 @@ Add hollow-inn v2.1, whose `quote` returns both `total` and `total_cents`, so SP
   - Mark task complete when the test is written, run, and the failure is documented
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
   - **Property 2: Preservation** - everything except the `quote` shape is unchanged
   - **IMPORTANT**: Follow observation-first methodology
   - Observe on UNFIXED code (v2) with `connect("v2")`: tool list (`book`, `booking_cancel`, `get_room`, `list_bookings`, `quote`, `search_rooms`) and every `inputSchema`; `search_rooms` without `limit` returns 5 rooms; `get_room`, `book` (first booking is `BK-0001`), `list_bookings` and `booking_cancel` text; `quote` for unknown room `r-99` returns `isError: true` with `unknown room r-99`; `quote` `nightly` is a two-decimal literal and `currency` is `"USD"`
@@ -34,9 +34,9 @@ Add hollow-inn v2.1, whose `quote` returns both `total` and `total_cents`, so SP
   - Mark task complete when the tests are written, run against v2, and passing
   - _Requirements: 3.1_
 
-- [ ] 3. Fix for `quote` omitting `total` on the server (add hollow-inn v2.1)
+- [x] 3. Fix for `quote` omitting `total` on the server (add hollow-inn v2.1)
 
-  - [ ] 3.1 Add `servers/hollow-inn/src/v2_1.ts`
+  - [x] 3.1 Add `servers/hollow-inn/src/v2_1.ts`
     - Export `createV2_1(opts: InnOptions = {}): McpServer`, a complete module copied from `v2.ts` with server version `"2.1.0"`
     - Import `date` and `nights` from `./v1.js` and helpers from `./inn.js`, as v2 does. No `node:` imports
     - In the `quote` handler compute `const total = nightly(room).times(nights)` and return, in this order, `room_id`, `nights`, `nightly: nightly(room)`, `total`, `total_cents: total.cents`, `currency: "USD"`
@@ -48,33 +48,33 @@ Add hollow-inn v2.1, whose `quote` returns both `total` and `total_cents`, so SP
     - _Preservation: every tool except the `quote` response shape behaves as in v2; v1.ts and v2.ts stay byte-for-byte unchanged_
     - _Requirements: 2.1, 2.2, 2.3, 3.1_
 
-  - [ ] 3.2 Register v2.1 in `servers/hollow-inn/src/index.ts`
+  - [x] 3.2 Register v2.1 in `servers/hollow-inn/src/index.ts`
     - Import `createV2_1` from `./v2_1.js`
     - Change `VERSIONS` to `["v1", "v2", "v2.1"]`
     - Add `case "v2.1": return createV2_1(opts);` to the exhaustive `switch`
     - `main.ts` needs no change: confirm `npx tsx servers/hollow-inn/src/main.ts v2.1` starts
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 3.3 Complete `servers/hollow-inn/test/v2_1.test.ts`
+  - [x] 3.3 Complete `servers/hollow-inn/test/v2_1.test.ts`
     - Unit tests: SPC-0002 exact text (r-04 × 2); r-01 × 1 gives `total` `98.00` and `total_cents` 9800; r-02 × 1 gives `total` `142.00` and `total_cents` 14200; unknown room `r-99` gives `isError: true` with `unknown room r-99`; tool list is `book`, `booking_cancel`, `get_room`, `list_bookings`, `quote`, `search_rooms`; `search_rooms` without `limit` returns 5 rooms
     - Property tests: for any room and `nights` in 1..30, `total_cents === nightly.cents × nights`, the text contains `"total":<Money literal>`, and `total_cents === Math.round(total * 100)`
     - Serialiser check: `toJsonText({ total: new Money(42500) })` is `{"total":425.00}`
     - _Requirements: 2.1, 2.2, 2.3, 3.1_
 
-  - [ ] 3.4 Add the v2.1 entry to `servers/hollow-inn/CHANGES.md`
+  - [x] 3.4 Add the v2.1 entry to `servers/hollow-inn/CHANGES.md`
     - Add a `## v2.1.0` section above v2.0.0: `quote` returns `total` again, alongside `total_cents`
     - State that the `search_rooms` default limit (b) and the `cancel_booking` rename (c) are not changed in v2.1 and are covered by later specs
     - Do not edit the existing v2.0.0 and v1.0.0 text
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 3.5 Verify bug condition exploration test now passes
+  - [x] 3.5 Verify bug condition exploration test now passes
     - **Property 1: Expected Behavior** - quote returns `/total` and `/total_cents`
     - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
     - Run `npx vitest run servers/hollow-inn/test/v2_1.test.ts`
     - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 3.6 Verify preservation tests still pass
+  - [x] 3.6 Verify preservation tests still pass
     - **Property 2: Preservation** - everything except the `quote` shape is unchanged
     - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
     - Run the preservation tests, now comparing v2.1 with v2
@@ -82,7 +82,7 @@ Add hollow-inn v2.1, whose `quote` returns both `total` and `total_cents`, so SP
     - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
     - _Requirements: 3.1_
 
-- [ ] 4. Checkpoint - Acceptance replay and full test run
+- [x] 4. Checkpoint - Acceptance replay and full test run
   - Run `npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"` on the committed jars
   - Confirm SPC-0002, SPC-0006 and SPC-0007 are PRESERVED
   - Report only what the replay shows. Jars for `search_rooms` and `cancel_booking` can still be RATTLED or CRACKED on v2.1, so the overall verdict can still be HOLD. That is expected and outside this spec

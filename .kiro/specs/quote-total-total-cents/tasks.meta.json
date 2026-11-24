@@ -1,0 +1,165 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785468
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553791096
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553854362
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785471
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553880656
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554003685
+      }
+    ],
+    "3.1 Add `servers/hollow-inn/src/v2_1.ts`": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785473
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554031300
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554069043
+      }
+    ],
+    "3.2 Register v2.1 in `servers/hollow-inn/src/index.ts`": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785476
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554099709
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554149624
+      }
+    ],
+    "3.3 Complete `servers/hollow-inn/test/v2_1.test.ts`": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785477
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554186337
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554231673
+      }
+    ],
+    "3.4 Add the v2.1 entry to `servers/hollow-inn/CHANGES.md`": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785478
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554099705
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554149844
+      }
+    ],
+    "3.5 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785478
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554232429
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554291003
+      }
+    ],
+    "3.6 Verify preservation tests still pass": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785479
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554292789
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554342457
+      }
+    ],
+    "4. Checkpoint - Acceptance replay and full test run": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795553785480
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554344201
+      },
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554548492
+      }
+    ],
+    "3. Fix for `quote` omitting `total` on the server (add hollow-inn v2.1)": [
+      {
+        "executionId": "4f3ffef3-299b-420f-9988-416ea8f59be0",
+        "chatSessionId": "sess_41c0f1fc-680c-47a2-8432-f27ee3a74b1e",
+        "timestamp": 1795554342458
+      }
+    ]
+  }
+}

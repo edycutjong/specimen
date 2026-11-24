@@ -3,8 +3,9 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { InnOptions } from "./inn.js";
 import { createV1 } from "./v1.js";
 import { createV2 } from "./v2.js";
+import { createV2_1 } from "./v2_1.js";
 
-export const VERSIONS = ["v1", "v2"] as const;
+export const VERSIONS = ["v1", "v2", "v2.1"] as const;
 export type Version = (typeof VERSIONS)[number];
 export const isVersion = (v: string): v is Version => (VERSIONS as readonly string[]).includes(v);
 
@@ -14,6 +15,8 @@ export function createServer(version: Version, opts: InnOptions = {}): McpServer
       return createV1(opts);
     case "v2":
       return createV2(opts);
+    case "v2.1":
+      return createV2_1(opts);
   }
 }
 
