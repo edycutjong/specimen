@@ -1,7 +1,7 @@
 // `npx tsx scripts/bench.ts detect` — the detection table (specs: complexity §3, Must).
 // Replays the committed jars (jars/) against every hollow-inn version that exists, each time with
-// v1 as the tools/list baseline, and writes the counts per version next to what a pure schema diff
-// (tools removed / added / input schema changed) would have reported for the same change.
+// v1 as the tools/list baseline, and writes the counts per version next to what an input-schema diff of tools/list
+// (tools removed / added / inputSchema changed; descriptions are not compared) reports for the same change.
 // Output: evidence/bench/detect.md (the table) + evidence/bench/detect.json (the raw counts).
 // Every figure in the table comes from a real `specimen replay --json` run; nothing is typed in.
 import { execFileSync } from "node:child_process";
@@ -82,7 +82,7 @@ const lines = [
   "",
   `Generated ${new Date().toISOString()} by \`npx tsx scripts/bench.ts detect\` from the committed jars (\`jars/\`), baseline v1 for tools/list.`,
   "",
-  "| server | verdict | jars compared | preserved | rattled | cracked | unsealed | skipped | red jars | schema-diff changes | what the schema diff saw | wall ms |",
+  "| server | verdict | jars compared | preserved | rattled | cracked | unsealed | skipped | red jars | input-schema diff changes | what the input-schema diff saw | wall ms |",
   "|---|---|---|---|---|---|---|---|---|---|---|---|",
   ...rows.map((r) => {
     const saw = [
@@ -93,7 +93,7 @@ const lines = [
     return `| hollow-inn ${r.version} | ${r.verdict} | ${r.compared} | ${r.preserved} | ${r.rattled} | ${r.cracked} | ${r.unsealed} | ${r.skipped} | ${r.red_ids.join(", ") || "-"} | ${schemaCount(r)} | ${saw} | ${r.ms} |`;
   }),
   "",
-  "Wall ms = one cold `specimen replay` process including `npx tsx` start-up of the server per session; it is not a latency benchmark.",
+  "Input-schema diff = tools removed, tools added, `inputSchema` changed in `tools/list` (descriptions are not compared). Wall ms = one cold `specimen replay` process including `npx tsx` start-up of the server per session; it is not a latency benchmark.",
   "",
 ];
 mkdirSync(join(root, "evidence/bench"), { recursive: true });

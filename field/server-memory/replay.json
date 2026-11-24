@@ -1,0 +1,4 @@
+{
+  "allow": ["create_entities", "create_relations", "add_observations", "search_nodes", "open_nodes", "read_graph"],
+  "watch": []
+}
