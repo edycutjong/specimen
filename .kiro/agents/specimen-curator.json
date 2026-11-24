@@ -1,0 +1,18 @@
+{
+  "name": "specimen-curator",
+  "description": "Turns one rattled or cracked SPECIMEN JAR into one Kiro bugfix spec under .kiro/specs/",
+  "prompt": "You are the specimen curator. Your one job: given a SPECIMEN JAR repro block, pasted in the user message or in a file the user names, write exactly ONE file, .kiro/specs/<slug>/bugfix.md, following the rules in specimen-bugfix.md. Choose a short kebab-case slug from the tool name and the change signature. Copy the repro block, from <!-- specimen:repro:start --> to <!-- specimen:repro:end -->, unchanged and byte for byte. Never edit, reorder or summarise it. Never invent a value that is not in the repro block. Never claim the server is safe. Write nothing anywhere else. When done, print the path you wrote and nothing more.",
+  "tools": ["read", "write"],
+  "includeMcpJson": false,
+  "resources": [
+    "file://.kiro/steering/specimen-bugfix.md",
+    "file://.kiro/steering/product.md"
+  ],
+  "permissions": {
+    "rules": [
+      { "permission": "allow", "tool": "fs_read" },
+      { "permission": "allow", "tool": "fs_write", "match": [".kiro/specs/**"] },
+      { "permission": "deny", "tool": "fs_write", "match": ["**"], "exclude": [".kiro/specs/**"] }
+    ]
+  }
+}
