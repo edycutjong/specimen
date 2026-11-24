@@ -39,5 +39,9 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | (CLI) | `specimen file SPC-0002`: the `specimen-curator` agent wrote the quote bugfix spec; one retry after check-spec | 0.66 |
 | 27 | Bug Fix workflow: design.md + tasks.md for the quote spec | 6.32 |
 | 28 | executed the quote bugfix tasks → hollow-inn v2.1 (model claude-haiku-5.5) | 1.29 |
+| rack-a, rack-b (consequence) | consequence run: the same two prompts re-run against hollow-inn v2 and v1 with no hooks ([`evidence/consequence-v2/`](../evidence/consequence-v2/README.md)) | 2.29 |
+| 29 | `cabinet-ui` feature spec: requirements.md | 4.10 |
+| 30 | `cabinet-ui` Analyze Requirements pass | 9.27 |
+| 31 | `cabinet-ui` design.md + tasks.md | 11.27 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
