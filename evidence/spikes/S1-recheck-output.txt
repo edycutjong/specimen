@@ -1,11 +1,86 @@
-node:internal/modules/run_main:123
-    triggerUncaughtException(
-    ^
+vite v7.3.8 building client environment for production...
+transforming...
 
-page.$eval: Failed to find element matching selector "#result"
-    at /Users/edycu/Hackathon/devpost/devpost-kiroween/specimen/build/spikes/s1-browser/scripts/check.mjs:13:27 {
-  name: 'Error'
+
+
+
+✓ 356 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                  0.37 kB │ gzip:   0.29 kB
+dist/assets/index-CoAiBrms.js  435.47 kB │ gzip: 121.53 kB
+✓ built in 842ms
+url http://localhost:4318/
+status PASS
+{
+  "toy": {
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "stateful: book then list_bookings returns the booking",
+        "pass": true,
+        "detail": "book → BK-0001; list_bookings → [\"BK-0001\"]"
+      },
+      {
+        "name": "second fresh session: first book is BK-0001 again",
+        "pass": true,
+        "detail": "fresh session book → BK-0001"
+      },
+      {
+        "name": "field diff v1 → v2 on quote",
+        "pass": true,
+        "detail": "removed [\"/total\"] · added [\"/total_cents\"] · v1 /total=425 · v2 /total_cents=42500"
+      },
+      {
+        "name": "other three calls identical v1 vs v2",
+        "pass": true,
+        "detail": "identical=true"
+      }
+    ],
+    "quoteDiff": {
+      "removed": [
+        "/total"
+      ],
+      "added": [
+        "/total_cents"
+      ],
+      "changed": []
+    }
+  },
+  "real": {
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "real jars vs real hollow-inn v1 in the browser: SHIP, every jar preserved",
+        "pass": true,
+        "detail": "SHIP · {\"preserved\":10,\"rattled\":0,\"cracked\":0,\"unsealed\":0,\"skipped\":0} · SPC-0001:preserved SPC-0002:preserved SPC-0003:preserved SPC-0004:preserved SPC-0010:preserved SPC-0005:preserved SPC-0006:preserved SPC-0007:preserved SPC-0008:preserved SPC-0009:preserved"
+      },
+      {
+        "name": "RACK B fresh server per session: every recorded book replays BK-0001",
+        "pass": true,
+        "detail": "SPC-0003 → BK-0001, SPC-0008 → BK-0001"
+      },
+      {
+        "name": "D-425 (d): the money literal survives the browser Client result text byte for byte",
+        "pass": true,
+        "detail": "SPC-0002 replayed_text \"total\":425.00 · jarred text has the same literal: true"
+      },
+      {
+        "name": "real jars vs real hollow-inn v2 in the browser: the CLI's measured HOLD (5 preserved · 4 rattled · 1 cracked)",
+        "pass": true,
+        "detail": "HOLD · {\"preserved\":5,\"rattled\":4,\"cracked\":1,\"unsealed\":0,\"skipped\":0} · SPC-0001:preserved SPC-0002:rattled SPC-0003:preserved SPC-0004:preserved SPC-0010:rattled SPC-0005:preserved SPC-0006:rattled SPC-0007:rattled SPC-0008:preserved SPC-0009:cracked"
+      },
+      {
+        "name": "quote jars rattle at /total → /total_cents with the ×100 rename note",
+        "pass": true,
+        "detail": "SPC-0002: /total removed; /total_cents added (suspected rename from /total ×100) | SPC-0006: /total removed; /total_cents added (suspected rename from /total ×100) | SPC-0007: /total removed; /total_cents added (suspected rename from /total ×100)"
+      },
+      {
+        "name": "schema diff in the browser sees only the cancel tool rename",
+        "pass": true,
+        "detail": "{\"tools_removed\":[\"cancel_booking\"],\"tools_added\":[\"booking_cancel\"],\"input_schema_changed\":[]}"
+      }
+    ]
+  }
 }
-
-Node.js v22.22.0
-exit=1
+exit=0
