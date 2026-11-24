@@ -1,0 +1,243 @@
+{
+  "v": 1,
+  "server": "sh--Users-edycu-Hackathon-devpost-devpost-kiroween-specimen-build-field-server-memory-run.sh-1.0.0",
+  "started_at": "2026-11-24T20:48:25.238Z",
+  "strict": false,
+  "jars": [
+    {
+      "id": "SPC-0001",
+      "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
+      "seq": 1,
+      "tool": "create_entities",
+      "state": "preserved",
+      "input": {
+        "entities": [
+          {
+            "name": "Hollow Inn",
+            "entityType": "inn",
+            "observations": [
+              "Has 9 rooms"
+            ]
+          },
+          {
+            "name": "Hearth Room",
+            "entityType": "room",
+            "observations": [
+              "Has a fireplace",
+              "Costs 212.50 a night"
+            ]
+          }
+        ]
+      },
+      "response_text": "[\n  {\n    \"name\": \"Hollow Inn\",\n    \"entityType\": \"inn\",\n    \"observations\": [\n      \"Has 9 rooms\"\n    ]\n  },\n  {\n    \"name\": \"Hearth Room\",\n    \"entityType\": \"room\",\n    \"observations\": [\n      \"Has a fireplace\",\n      \"Costs 212.50 a night\"\n    ]\n  }\n]",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "[\n  {\n    \"name\": \"Hollow Inn\",\n    \"entityType\": \"inn\",\n    \"observations\": [\n      \"Has 9 rooms\"\n    ]\n  },\n  {\n    \"name\": \"Hearth Room\",\n    \"entityType\": \"room\",\n    \"observations\": [\n      \"Has a fireplace\",\n      \"Costs 212.50 a night\"\n    ]\n  }\n]",
+      "replayed": [
+        {
+          "name": "Hollow Inn",
+          "entityType": "inn",
+          "observations": [
+            "Has 9 rooms"
+          ]
+        },
+        {
+          "name": "Hearth Room",
+          "entityType": "room",
+          "observations": [
+            "Has a fireplace",
+            "Costs 212.50 a night"
+          ]
+        }
+      ],
+      "ms": 5
+    },
+    {
+      "id": "SPC-0002",
+      "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
+      "seq": 2,
+      "tool": "create_relations",
+      "state": "preserved",
+      "input": {
+        "relations": [
+          {
+            "from": "Hearth Room",
+            "to": "Hollow Inn",
+            "relationType": "is part of"
+          }
+        ]
+      },
+      "response_text": "[\n  {\n    \"from\": \"Hearth Room\",\n    \"to\": \"Hollow Inn\",\n    \"relationType\": \"is part of\"\n  }\n]",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "[\n  {\n    \"from\": \"Hearth Room\",\n    \"to\": \"Hollow Inn\",\n    \"relationType\": \"is part of\"\n  }\n]",
+      "replayed": [
+        {
+          "from": "Hearth Room",
+          "to": "Hollow Inn",
+          "relationType": "is part of"
+        }
+      ],
+      "ms": 2
+    },
+    {
+      "id": "SPC-0003",
+      "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
+      "seq": 3,
+      "tool": "search_nodes",
+      "state": "preserved",
+      "input": {
+        "query": "fireplace"
+      },
+      "response_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "replayed": {
+        "entities": [
+          {
+            "name": "Hearth Room",
+            "entityType": "room",
+            "observations": [
+              "Has a fireplace",
+              "Costs 212.50 a night"
+            ]
+          }
+        ],
+        "relations": [
+          {
+            "from": "Hearth Room",
+            "to": "Hollow Inn",
+            "relationType": "is part of"
+          }
+        ]
+      },
+      "ms": 1
+    },
+    {
+      "id": "SPC-0004",
+      "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
+      "seq": 4,
+      "tool": "open_nodes",
+      "state": "preserved",
+      "input": {
+        "names": [
+          "Hearth Room"
+        ]
+      },
+      "response_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "replayed": {
+        "entities": [
+          {
+            "name": "Hearth Room",
+            "entityType": "room",
+            "observations": [
+              "Has a fireplace",
+              "Costs 212.50 a night"
+            ]
+          }
+        ],
+        "relations": [
+          {
+            "from": "Hearth Room",
+            "to": "Hollow Inn",
+            "relationType": "is part of"
+          }
+        ]
+      },
+      "ms": 2
+    },
+    {
+      "id": "SPC-0005",
+      "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
+      "seq": 5,
+      "tool": "read_graph",
+      "state": "preserved",
+      "input": {},
+      "response_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hollow Inn\",\n      \"entityType\": \"inn\",\n      \"observations\": [\n        \"Has 9 rooms\"\n      ]\n    },\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "changes": [],
+      "compatible": [],
+      "ignored": [],
+      "replayed_text": "{\n  \"entities\": [\n    {\n      \"name\": \"Hollow Inn\",\n      \"entityType\": \"inn\",\n      \"observations\": [\n        \"Has 9 rooms\"\n      ]\n    },\n    {\n      \"name\": \"Hearth Room\",\n      \"entityType\": \"room\",\n      \"observations\": [\n        \"Has a fireplace\",\n        \"Costs 212.50 a night\"\n      ]\n    }\n  ],\n  \"relations\": [\n    {\n      \"from\": \"Hearth Room\",\n      \"to\": \"Hollow Inn\",\n      \"relationType\": \"is part of\"\n    }\n  ]\n}",
+      "replayed": {
+        "entities": [
+          {
+            "name": "Hollow Inn",
+            "entityType": "inn",
+            "observations": [
+              "Has 9 rooms"
+            ]
+          },
+          {
+            "name": "Hearth Room",
+            "entityType": "room",
+            "observations": [
+              "Has a fireplace",
+              "Costs 212.50 a night"
+            ]
+          }
+        ],
+        "relations": [
+          {
+            "from": "Hearth Room",
+            "to": "Hollow Inn",
+            "relationType": "is part of"
+          }
+        ]
+      },
+      "ms": 1
+    }
+  ],
+  "spoiled": [],
+  "counts": {
+    "preserved": 5,
+    "rattled": 0,
+    "cracked": 0,
+    "unsealed": 0,
+    "skipped": 0
+  },
+  "schema_diff": {
+    "tools_removed": [],
+    "tools_added": [],
+    "input_schema_changed": []
+  },
+  "verdict": "SHIP",
+  "red": 0,
+  "filed": 0,
+  "covered": false,
+  "reason": "",
+  "coverage": {
+    "compared": 5,
+    "tools_compared": [
+      "create_entities",
+      "create_relations",
+      "open_nodes",
+      "read_graph",
+      "search_nodes"
+    ],
+    "tools_listed": [
+      "add_observations",
+      "create_entities",
+      "create_relations",
+      "delete_entities",
+      "delete_observations",
+      "delete_relations",
+      "open_nodes",
+      "read_graph",
+      "search_nodes"
+    ],
+    "tools_unrecorded": [
+      "add_observations",
+      "delete_entities",
+      "delete_observations",
+      "delete_relations"
+    ]
+  }
+}
