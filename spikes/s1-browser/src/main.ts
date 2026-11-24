@@ -1,10 +1,11 @@
 import { runS1 } from "./s1";
+import { runS1Real } from "./s1-real";
 
 const el = document.getElementById("result")!;
-runS1()
-  .then((report) => {
-    el.textContent = JSON.stringify(report, null, 2);
-    el.dataset.status = report.status;
+Promise.all([runS1(), runS1Real()])
+  .then(([toy, real]) => {
+    el.textContent = JSON.stringify({ toy, real }, null, 2);
+    el.dataset.status = toy.status === "PASS" && real.status === "PASS" ? "PASS" : "FAIL";
   })
   .catch((err: unknown) => {
     el.textContent = String(err instanceof Error ? err.stack : err);

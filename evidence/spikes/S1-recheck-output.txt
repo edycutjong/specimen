@@ -1,0 +1,11 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.$eval: Failed to find element matching selector "#result"
+    at /Users/edycu/Hackathon/devpost/devpost-kiroween/specimen/build/spikes/s1-browser/scripts/check.mjs:13:27 {
+  name: 'Error'
+}
+
+Node.js v22.22.0
+exit=1

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
+    "@specimen/core": "*",
     "zod": "^4.6.7"
   },
   "devDependencies": {

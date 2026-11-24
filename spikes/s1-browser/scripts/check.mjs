@@ -2,7 +2,7 @@
 import { preview } from "vite";
 import { chromium } from "playwright";
 
-const server = await preview({ preview: { port: 4317, strictPort: true }, logLevel: "silent" });
+const server = await preview({ preview: { port: 4317, strictPort: false }, logLevel: "silent" });
 const url = server.resolvedUrls.local[0];
 const browser = await chromium.launch();
 const page = await browser.newPage();
