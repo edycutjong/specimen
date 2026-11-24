@@ -1,0 +1,11 @@
+[
+  { "id": "r-01", "name": "Lantern Room", "beds": 1, "max_guests": 2, "fireplace": false, "nightly": 98.00 },
+  { "id": "r-02", "name": "Moth Room", "beds": 2, "max_guests": 3, "fireplace": false, "nightly": 142.00 },
+  { "id": "r-03", "name": "Candle Room", "beds": 2, "max_guests": 3, "fireplace": false, "nightly": 156.75 },
+  { "id": "r-04", "name": "Hearth Room", "beds": 2, "max_guests": 4, "fireplace": true, "nightly": 212.50 },
+  { "id": "r-05", "name": "Belfry Nook", "beds": 1, "max_guests": 2, "fireplace": true, "nightly": 189.00 },
+  { "id": "r-06", "name": "Cellar Room", "beds": 2, "max_guests": 3, "fireplace": false, "nightly": 131.25 },
+  { "id": "r-07", "name": "Ember Suite", "beds": 3, "max_guests": 4, "fireplace": true, "nightly": 236.00 },
+  { "id": "r-08", "name": "Gallery Room", "beds": 2, "max_guests": 3, "fireplace": false, "nightly": 168.40 },
+  { "id": "r-09", "name": "Raven Loft", "beds": 3, "max_guests": 5, "fireplace": true, "nightly": 289.00 }
+]

@@ -1,0 +1,15 @@
+{
+  "name": "@specimen/hollow-inn",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The Hollow Inn: the demo MCP server specimen records and replays (v1, v2 with three author-made breaks, v2.1 fixed by Kiro)",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  }
+}
