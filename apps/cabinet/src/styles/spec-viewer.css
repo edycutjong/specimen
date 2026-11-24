@@ -1,0 +1,116 @@
+/*
+ * SpecViewer styles (Requirement 12). Colours come from the Token_File only. Text stays at 15 px
+ * or larger, and long paths and code wrap inside the drawer instead of forcing a horizontal scroll.
+ */
+
+.spec-viewer {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+}
+
+.spec-viewer__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.spec-viewer__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  font-family: var(--font-data);
+  font-size: 15px;
+}
+
+.spec-viewer__badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--before);
+  color: var(--label-ink);
+  font-family: var(--font-data);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.spec-viewer__provenance {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.spec-viewer__provenance code {
+  font-family: var(--font-data);
+  font-size: 15px;
+}
+
+.spec-viewer__link {
+  margin: 0;
+  font-family: var(--font-data);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.spec-viewer__link a {
+  color: var(--tag);
+}
+
+.spec-viewer__body {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--glass);
+  overflow-wrap: anywhere;
+}
+
+.spec-viewer__body h1,
+.spec-viewer__body h2,
+.spec-viewer__body h3,
+.spec-viewer__body h4,
+.spec-viewer__body h5,
+.spec-viewer__body h6 {
+  margin: 14px 0 6px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.spec-viewer__body p,
+.spec-viewer__body li {
+  margin: 6px 0;
+}
+
+.spec-viewer__body ul,
+.spec-viewer__body ol {
+  margin: 6px 0;
+  padding-left: 22px;
+}
+
+.spec-viewer__body code {
+  font-family: var(--font-data);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.spec-viewer__body pre {
+  max-width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--bg);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.spec-viewer__body pre code {
+  overflow-wrap: normal;
+}

@@ -1,0 +1,155 @@
+/*
+ * Base layout and type for the Cabinet. Colours and faces come from tokens.css only.
+ * Mobile first: the base rules apply below 600 px, and each breakpoint adds min-width rules.
+ * Breakpoints: 600 px, 1024 px, 1280 px (Requirement 10.2 to 10.5, 9.6, 4.1).
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * Overflow (Requirement 7.10). Content must fit the viewport, so the rules below
+ * constrain widths and wrap long text. They do not use overflow-x: hidden, which
+ * would clip content instead of fitting it.
+ */
+html,
+body {
+  max-width: 100%;
+  min-width: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+/* Focus ring for every control (Requirement 8.12 sets 3 px in --ink for jars). */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Type roles (Requirement 9.3 to 9.6). Every size is 14 px or larger (Requirement 9.7). */
+
+.verdict-word {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1;
+  overflow-wrap: normal;
+}
+
+.shelf-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.tool-name {
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.data {
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* Layout. The jar grid keeps at least two 140 px cells at 320 px. */
+
+.page {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* The header element in App.tsx. Below 600 px the wordmark, controls and plate stack in a column. */
+.cabinet-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  min-width: 0;
+}
+
+.shelf-grid > * {
+  min-width: 0;
+}
+
+/* Below 1024 px the drawer takes the full width. Right-panel widths follow below. */
+.jar-drawer {
+  width: 100%;
+  min-width: 0;
+}
+
+/* 600 px and up: verdict at full size, header on one row. */
+@media (min-width: 600px) {
+  .verdict-word {
+    font-size: 56px;
+  }
+
+  .cabinet-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page {
+    padding: 24px;
+  }
+}
+
+/* 1024 px and up: the drawer is a right panel 420 px wide. */
+@media (min-width: 1024px) {
+  .jar-drawer {
+    width: 420px;
+  }
+}
+
+/* 1280 px and up: the drawer is a right panel 480 px wide. */
+@media (min-width: 1280px) {
+  .jar-drawer {
+    width: 480px;
+  }
+}

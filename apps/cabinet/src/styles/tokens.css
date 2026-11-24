@@ -1,0 +1,22 @@
+/*
+ * Token_File (Requirement 9.1). The only file that defines colours and font faces.
+ * Exactly these 14 custom properties. Components read them with var(--name).
+ * --storm is for the window and lightning only (Requirement 9.2).
+ */
+:root {
+  --bg: #10150F;
+  --glass: #192219;
+  --ink: #ECE6D3;
+  --tag: #D9C49A;
+  --label-ink: #1E1912;
+  --muted: #8E978A;
+  --before: #A8E35F;
+  --after: #FF4A2E;
+  --cracked: #7A3B31;
+  --rule: #333D31;
+  --storm: #C9D6F2;
+
+  --font-display: "Grenze Gotisch", serif;
+  --font-body: "Atkinson Hyperlegible Next", sans-serif;
+  --font-data: "Azeret Mono", monospace;
+}

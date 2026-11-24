@@ -1,0 +1,118 @@
+/*
+ * LabReportTable styles (Requirement 11). Colours come from tokens.css only. Font sizes stay at
+ * 15 px or more (Requirement 16.9). The paper scrolls inside itself, so the page never scrolls
+ * sideways (Requirement 10.5).
+ */
+
+.lab-report {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Ruled paper: a rule every 28 px and a red margin line on the left. */
+.lab-report__paper {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px 8px 8px 14px;
+  border-left: 2px solid var(--after);
+  background-color: var(--glass);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    var(--rule) 27px,
+    var(--rule) 28px
+  );
+  background-attachment: local;
+}
+
+.lab-report__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.lab-report__table th,
+.lab-report__table td {
+  padding: 0 6px;
+  line-height: 28px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.lab-report__table thead th {
+  font-weight: 700;
+  color: var(--tag);
+}
+
+.lab-report__table tbody th {
+  font-weight: 700;
+  font-style: italic;
+  color: var(--tag);
+}
+
+/* Flag words are in the display face (Requirement 11.11). */
+.lab-report__flag {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+/* Paths, values and literals are in the data face (Requirement 11.11). */
+.lab-report__data {
+  font-family: var(--font-data);
+  font-size: 15px;
+}
+
+/* A changed row is red ink with struck path and replayed value, and its flag word is printed. */
+.lab-report__row--changed {
+  color: var(--after);
+}
+
+.lab-report__row--changed s {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--after);
+}
+
+/* A compatible addition is neutral ink with no strike-through (Requirement 11.8). */
+.lab-report__row--compatible {
+  color: var(--ink);
+}
+
+/* The rename annotation row (Requirement 11.5). */
+.lab-report__note td {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--tag);
+}
+
+.lab-report__statement {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.lab-report__ignored {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.lab-report__label {
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+
+.lab-report__list {
+  margin: 0;
+  padding-left: 20px;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,135 @@
+/*
+ * Jar.tsx styles (Requirements 8.4, 8.8, 8.12). Colours and faces come from the Token_File only.
+ * Text sizes are fixed px values, so no viewport width shrinks them (Requirement 8.4).
+ */
+.jar {
+  position: relative;
+  display: block;
+}
+
+.jar__button {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+/* Focus ring in --ink, 3 px wide, for every Jar_State (Requirement 8.12). */
+.jar__button:focus-visible,
+.jar__button:focus {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.jar__art {
+  position: relative;
+  display: block;
+}
+
+.jar__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Covers the whole jar. Its children are placed in percentages of the jar's viewBox. */
+.jar__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The toe-tag box. Its rotation is set inline, and its children use percentages of this box. */
+.jar__tag {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 3% 4%;
+  box-sizing: border-box;
+  color: var(--label-ink);
+  overflow: visible;
+}
+
+.jar__accession {
+  font-family: var(--font-data);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.jar__tool {
+  font-family: var(--font-data);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.jar__barcode {
+  position: absolute;
+  top: 10%;
+  right: 6%;
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  height: 36%;
+}
+
+.jar__barcode > span {
+  display: block;
+  height: 100%;
+  background: var(--label-ink);
+}
+
+.jar__flag {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1;
+  color: var(--label-ink);
+  background: var(--after);
+  white-space: nowrap;
+}
+
+.jar__tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  z-index: 5;
+  max-width: 260px;
+  padding: 6px 8px;
+  border: 1px solid var(--rule);
+  background: var(--glass);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.3;
+  white-space: normal;
+  pointer-events: auto;
+}
+
+/* A transparent bridge, so the pointer can move from the jar to the tooltip without leaving the hover. */
+.jar__tip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 8px;
+}

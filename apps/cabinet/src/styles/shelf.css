@@ -1,0 +1,174 @@
+/*
+ * Shelf, Legend and SpoiledTray styles (Requirements 7, 14.4 to 14.7, 15.4). Colours come from
+ * tokens.css only. Mobile first: the base rules apply below 600 px.
+ */
+
+/* One rack: plate, task and meta above the shelf. */
+.shelf {
+  margin: 0 0 32px;
+  min-width: 0;
+}
+
+.shelf-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  min-width: 0;
+}
+
+.shelf-task {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 18px;
+  overflow-wrap: break-word;
+}
+
+.shelf-meta {
+  margin: 4px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+/* The jar grid. Two 140 px cells plus an 8 px gap fit in 288 px, the width at 320 px. */
+ol.shelf-grid {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+
+@media (min-width: 600px) {
+  ol.shelf-grid {
+    gap: 16px;
+  }
+}
+
+/* One Jar_Cell: the jar above its share of the iron shelf lip. */
+.shelf-cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* The iron shelf lip under each jar, with the stencilled position code. */
+.shelf-lip {
+  margin-top: 4px;
+  border-top: 6px solid var(--rule);
+  padding-top: 2px;
+  text-align: center;
+}
+
+.shelf-code {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* Legend (Requirement 14.4). Each mark is a CSS shape, so no glyph comes from a system font. */
+.legend {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  min-width: 0;
+}
+
+.legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.legend__mark {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  box-sizing: border-box;
+}
+
+.legend__mark--preserved {
+  border-radius: 50%;
+  background: var(--before);
+}
+
+.legend__mark--rattled {
+  background: var(--after);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.legend__mark--cracked {
+  background: var(--cracked);
+  clip-path: polygon(0 0, 30% 0, 50% 40%, 70% 0, 100% 0, 60% 50%, 100% 100%, 70% 100%, 50% 60%, 30% 100%, 0 100%, 40% 50%);
+}
+
+.legend__mark--unsealed {
+  border: 1px solid var(--muted);
+  background: repeating-linear-gradient(45deg, var(--muted) 0 2px, transparent 2px 5px);
+}
+
+.legend__mark--skipped {
+  border: 2px dashed var(--ink);
+}
+
+.legend__mark--not-replayed {
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+}
+
+/* Spoiled tray (Requirements 14.6, 15.4). Only rendered when a line is listed. */
+.spoiled-tray {
+  margin: 32px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--rule);
+  background: var(--glass);
+  min-width: 0;
+}
+
+.spoiled-tray__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.spoiled-tray__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.spoiled-tray__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.spoiled-tray__where {
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: 15px;
+}

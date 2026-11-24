@@ -1,0 +1,225 @@
+/*
+ * JarDrawer styles (Requirements 10.2 to 10.5). The form comes from the data-form attribute that
+ * the component sets from the viewport width, so the CSS and the modal or non-modal behaviour can
+ * never disagree. Colours come from the Token_File only. Text stays at 15 px or larger.
+ */
+
+.jar-drawer {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--glass);
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+/* Right panels: 480 px at 1280 px and wider, 420 px from 1024 px to 1279 px. */
+.jar-drawer[data-form="panel-wide"],
+.jar-drawer[data-form="panel-narrow"] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-left: 2px solid var(--tag);
+}
+
+/*
+ * Panel widths. JarDrawer sets data-form="panel-narrow" only from 1024 px and "panel-wide" only from 1280 px, so these
+ * media queries match the form the component chooses (Requirement 10.5, no fixed width above 320 px outside 600 px).
+ */
+@media (min-width: 1024px) {
+  .jar-drawer[data-form="panel-narrow"] {
+    width: 420px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .jar-drawer[data-form="panel-wide"] {
+    width: 480px;
+  }
+}
+
+/* Bottom sheet: 70 % of the viewport height, from 600 px to 1023 px. */
+.jar-drawer[data-form="sheet"] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70vh;
+  border-top: 2px solid var(--tag);
+}
+
+/* Full-screen sheet below 600 px. */
+.jar-drawer[data-form="fullscreen"] {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.jar-drawer__header {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.jar-drawer__mini {
+  flex: 0 0 auto;
+  width: 56px;
+}
+
+.jar-drawer__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.jar-drawer__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.jar-drawer__heading {
+  margin: 0;
+  font-family: var(--font-data);
+  font-size: 20px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* The heading takes focus on open, so its focus ring is always visible. */
+.jar-drawer__heading:focus {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.jar-drawer__tool,
+.jar-drawer__place {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.jar-drawer__place {
+  font-family: var(--font-data);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.jar-drawer__flag {
+  margin: 8px 0 0;
+  font-family: var(--font-data);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.jar-drawer__flag[data-flag="abnormal"],
+.jar-drawer__flag[data-flag="cracked"] {
+  color: var(--after);
+}
+
+.jar-drawer__close {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--tag);
+  background: none;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.jar-drawer__body {
+  display: grid;
+  gap: 16px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 16px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.jar-drawer__tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.jar-drawer__tab {
+  min-height: 44px;
+  margin-bottom: -1px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.jar-drawer__tab[aria-selected="true"] {
+  border-bottom-color: var(--tag);
+}
+
+.jar-drawer__tab:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.jar-drawer__tab:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.jar-drawer__panel {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.jar-drawer__panel:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.jar-drawer__subheading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.jar-drawer__data {
+  margin: 0;
+  padding: 10px;
+  min-width: 0;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-size: 15px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.jar-drawer__statement {
+  margin: 0;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.jar-drawer__section {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}

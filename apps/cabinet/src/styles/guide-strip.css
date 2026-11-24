@@ -1,0 +1,106 @@
+/*
+ * GuideStrip styles (Requirement 13). Colours come from tokens.css only.
+ * The numerals are SVG strokes, so no font face is needed for them.
+ */
+
+.guide-strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 600px) {
+  .guide-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+.guide-strip__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--glass);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.guide-strip__numeral {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: var(--tag);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.guide-strip__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.guide-strip__tick {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-data);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.guide-strip__mark {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--before);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.guide-strip__step--done .guide-strip__state {
+  color: var(--before);
+}
+
+/* The Cold_Open pulse, played once (the component does not restart it). */
+.guide-strip__step--pulse {
+  animation: guide-strip-pulse 1.2s ease-out 1;
+}
+
+/* Reduced_Motion: a static highlight in place of the pulse. */
+.guide-strip__step--highlight {
+  border-color: var(--tag);
+  box-shadow: inset 0 0 0 1px var(--tag);
+}
+
+@keyframes guide-strip-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--tag);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Belt and braces: the App also passes the flag, but the CSS must not animate under the preference. */
+@media (prefers-reduced-motion: reduce) {
+  .guide-strip__step--pulse {
+    animation: none;
+  }
+}

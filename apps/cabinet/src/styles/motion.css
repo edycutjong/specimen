@@ -1,0 +1,186 @@
+/*
+ * Cold-open motion (Requirements 2.6 to 2.13, 13.5, 13.6).
+ *
+ * Base rules describe each element's final state, so that removing an animation under
+ * Reduced_Motion leaves the jar in its replayed look. Each keyframe runs from the state before
+ * the Reveal. The class names are the ones `jar-art.tsx` and `reveal.ts` emit.
+ */
+
+:root {
+  --rattle-ms: 540ms;
+  --flood-ms: 700ms;
+  --ink-ms: 320ms;
+  --bubble-ms: 6s;
+  --flash-ms: 900ms;
+  --stamp-ms: 180ms;
+}
+
+/* Rattle: three rattles of translateX ±3 px and rotate ±2.5 deg (Requirement 2.7). */
+.jar-art__shake {
+  animation: jar-rattle var(--rattle-ms) ease-out both;
+}
+
+@keyframes jar-rattle {
+  0% { transform: translateX(0) rotate(0deg); }
+  16.66% { transform: translateX(3px) rotate(2.5deg); }
+  33.33% { transform: translateX(-3px) rotate(-2.5deg); }
+  50% { transform: translateX(3px) rotate(2.5deg); }
+  66.66% { transform: translateX(-3px) rotate(-2.5deg); }
+  83.33% { transform: translateX(3px) rotate(2.5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+/* The specimen twitches with the rattle (Requirement 2.8). */
+.jar-art__shake .jar-art__specimen {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: jar-twitch var(--rattle-ms) ease-out both;
+}
+
+@keyframes jar-twitch {
+  0% { transform: rotate(0deg); }
+  30% { transform: rotate(6deg); }
+  60% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/*
+ * Flood: the red fluid rises from the bottom of the jar over 700 ms, through a mask (Requirement
+ * 2.8). The base mask is full height, so the fluid shows in its final colour once the animation
+ * is gone.
+ */
+.jar-art__flood {
+  -webkit-mask: linear-gradient(#000 0 0) bottom / 100% 100% no-repeat;
+  mask: linear-gradient(#000 0 0) bottom / 100% 100% no-repeat;
+  -webkit-mask-origin: fill-box;
+  mask-origin: fill-box;
+  animation: jar-flood var(--flood-ms) ease-out both;
+}
+
+@keyframes jar-flood {
+  from {
+    -webkit-mask-size: 100% 0%;
+    mask-size: 100% 0%;
+  }
+  to {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+}
+
+/* ABNORMAL ink: the red strip is inked across the toe-tag in four steps over 320 ms (Requirement 2.8). */
+.jar-art__strip {
+  animation: jar-ink var(--ink-ms) steps(4) both;
+}
+
+@keyframes jar-ink {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* One bubble per preserved or not replayed Jar, on a 6 s cycle (Requirement 2.12). */
+.jar-art__bubble {
+  animation: jar-bubble var(--bubble-ms) ease-in infinite;
+}
+
+@keyframes jar-bubble {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  80% { opacity: 0.4; }
+  100% { transform: translateY(-64px); opacity: 0; }
+}
+
+/* One lightning flash across the barred window at the start (Requirement 2.2). */
+.storm-window__flash {
+  animation: storm-flash var(--flash-ms) linear 1 both;
+}
+
+@keyframes storm-flash {
+  0% { opacity: 0.35; }
+  6% { opacity: 1; }
+  12% { opacity: 0.5; }
+  20% { opacity: 0.9; }
+  100% { opacity: 0.35; }
+}
+
+.storm-window__bolt {
+  animation: storm-bolt var(--flash-ms) linear 1 both;
+}
+
+@keyframes storm-bolt {
+  0%, 5% { opacity: 0; }
+  6%, 12% { opacity: 1; }
+  13%, 100% { opacity: 0; }
+}
+
+/*
+ * The "IT'S MOVING" stamp (Requirement 2.10). It sits beside the rack that holds the first
+ * rattled jar, above the shelf, so it never covers a toe-tag. It is decorative, so it is
+ * aria-hidden and takes no pointer events.
+ */
+.rack-slot {
+  position: relative;
+}
+
+.its-moving-stamp {
+  position: absolute;
+  top: -0.6rem;
+  right: 0.5rem;
+  z-index: 2;
+  pointer-events: none;
+  padding: 0.1em 0.45em;
+  border: 3px solid var(--after);
+  border-radius: 2px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  color: var(--after);
+  background: transparent;
+  transform: rotate(-8deg);
+  white-space: nowrap;
+  animation: stamp-slam var(--stamp-ms) ease-in both;
+}
+
+@keyframes stamp-slam {
+  0% { opacity: 0; transform: rotate(-8deg) scale(2.2); }
+  60% { opacity: 1; transform: rotate(-8deg) scale(0.94); }
+  100% { opacity: 1; transform: rotate(-8deg) scale(1); }
+}
+
+/*
+ * Reduced_Motion (Requirement 2.13): no CSS animation or transition runs. The `no-motion` class
+ * is set by `useReducedMotion`, and the media query covers the first paint before script runs.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.no-motion,
+.no-motion *,
+.no-motion *::before,
+.no-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Reduced_Motion omits the bubbles and the lightning flash outright (Requirement 2.13). */
+@media (prefers-reduced-motion: reduce) {
+  .jar-art__bubble,
+  .storm-window__flash,
+  .storm-window__bolt {
+    display: none;
+  }
+}
+
+.no-motion .jar-art__bubble,
+.no-motion .storm-window__flash,
+.no-motion .storm-window__bolt {
+  display: none;
+}
