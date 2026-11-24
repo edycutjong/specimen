@@ -1,0 +1,2 @@
+<!-- turn-07 · 2026-11-24 · spike S2-CLI · scratch workspaces from `spikes/kiro/setup-stop.sh <ws> json 30`, `<ws> exit1 30` and `<ws> slow 5 8000` · `kiro-cli chat --no-interactive --agent-engine v3 --trust-workspace --trust-tools=@hollowinn "$(sed 1d prompts/turn-07.md)"` — the same prompt for all three runs; only the Stop hook differs -->
+Reply with the single word READY and do nothing else.

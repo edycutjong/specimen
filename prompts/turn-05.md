@@ -1,0 +1,2 @@
+<!-- turn-05 · 2026-11-24 · spike S0 control · scratch workspace from `spikes/kiro/setup-ws.sh /tmp/specimen-p1a/ws-s0v2` · same as turn-04 but `--agent-engine v2` (this machine's global setting is chat.agentEngine = v3; the flag must win). Run twice: (a) `--trust-tools=@hollowinn` — v2 picked the hollow-inn-x duplicate and was denied; (b) `--trust-tools=@hollowinn,@hollow-inn-x` -->
+Use the MCP tools exactly once: search_rooms with guests=2 on the hollowinn server. Then reply with the result in one line.
