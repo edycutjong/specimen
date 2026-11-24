@@ -4,6 +4,7 @@ import { captureCommand, isCaptureName, runCapture } from "./hooks/run.js";
 import { createManifestGroup } from "./manifest.js";
 import { createReplayCommand } from "./replay.js";
 import { createCheckSpecCommand } from "./check-spec.js";
+import { createFileCommand } from "./file.js";
 import { logDiag } from "./io/log.js";
 import { nodeIO } from "./io/port.js";
 import { findWorkspaceRoot } from "./io/root.js";
@@ -34,7 +35,8 @@ export function createProgram(): Command {
     .addCommand(createHookGroup())
     .addCommand(createManifestGroup())
     .addCommand(createReplayCommand())
-    .addCommand(createCheckSpecCommand());
+    .addCommand(createCheckSpecCommand())
+    .addCommand(createFileCommand());
 }
 
 /**
@@ -50,8 +52,8 @@ export async function run(argv: readonly string[]): Promise<void> {
   try {
     await createProgram().parseAsync([...argv]);
   } catch (err) {
-    if (err instanceof CommanderError && (argv[2] === "replay" || argv[2] === "check-spec")) {
-      // A usage error of `replay` or `check-spec` (unknown option, missing argument) is exit 2. Help is exit 0.
+    if (err instanceof CommanderError && (argv[2] === "replay" || argv[2] === "check-spec" || argv[2] === "file")) {
+      // A usage error of `replay`, `check-spec` or `file` (unknown option, missing argument) is exit 2. Help is exit 0.
       process.exitCode = err.exitCode === 0 ? 0 : 2;
       return;
     }
