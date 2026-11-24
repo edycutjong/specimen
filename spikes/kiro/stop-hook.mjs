@@ -13,6 +13,8 @@ process.stdin.on("data", (d) => (raw += d));
 process.stdin.on("end", async () => {
   mkdirSync(outdir, { recursive: true });
   const started = Date.now();
+  // Entry record, written before any sleep: tells "invoked then killed by the timeout" apart from "never invoked".
+  appendFileSync(`${outdir}/stop-entry.jsonl`, JSON.stringify({ at: new Date().toISOString(), mode }) + "\n");
   if (mode === "slow") await new Promise((r) => setTimeout(r, Number(sleepMs)));
   const flag = `${outdir}/blocked-once`;
   const first = !existsSync(flag);

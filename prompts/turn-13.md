@@ -1,0 +1,2 @@
+<!-- turn-13 · 2026-11-24 · D-425 measurement: does the hook receive the server's `425.00` literal unchanged? · scratch workspace from `spikes/kiro/setup-ws.sh /tmp/specimen-p1a/ws-d425`, then the `hollowinn` server args changed to `["spikes/kiro/toy-stdio.ts","v1","money-literal"]` (absolute paths) · `kiro-cli chat --no-interactive --agent-engine v3 --trust-workspace --trust-tools=@hollowinn "$(sed 1d prompts/turn-13.md)"` -->
+Use the MCP tools exactly once: quote with room_id=R-101 and nights=2 on the hollowinn server. Then reply with the result in one line.

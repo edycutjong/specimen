@@ -3,4 +3,4 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createToyInn, type ToyVersion } from "../s1-browser/src/toy-inn";
 
 const version = (process.argv[2] ?? "v1") as ToyVersion;
-await createToyInn(version).connect(new StdioServerTransport());
+await createToyInn(version, { moneyLiteral: process.argv[3] === "money-literal" }).connect(new StdioServerTransport());

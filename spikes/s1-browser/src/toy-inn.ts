@@ -5,13 +5,14 @@ import { z } from "zod";
 import rooms from "./rooms.json";
 
 export type ToyVersion = "v1" | "v2";
+export type ToyOptions = { moneyLiteral?: boolean };
 
 type Room = { id: string; name: string; nightly: number; sleeps: number };
 const ROOMS = rooms as Room[];
 
 const json = (value: unknown) => ({ content: [{ type: "text" as const, text: JSON.stringify(value) }] });
 
-export function createToyInn(version: ToyVersion): McpServer {
+export function createToyInn(version: ToyVersion, opts: ToyOptions = {}): McpServer {
   const server = new McpServer({ name: "toy-inn", version: version === "v1" ? "1.0.0" : "2.0.0" });
   const bookings: { id: string; room_id: string; nights: number }[] = [];
 
@@ -29,6 +30,11 @@ export function createToyInn(version: ToyVersion): McpServer {
       if (!room) return { isError: true, content: [{ type: "text" as const, text: `unknown room ${room_id}` }] };
       const total = room.nightly * nights;
       // v2 is the planted break the product is about: the field is renamed and the unit becomes cents.
+      if (version === "v1" && opts.moneyLiteral) {
+        // D-425 probe: money as a two-decimal JSON number literal, written as text (JSON.stringify would print 425).
+        const text = `{"room_id":${JSON.stringify(room_id)},"nights":${nights},"total":${total.toFixed(2)},"currency":"USD"}`;
+        return { content: [{ type: "text" as const, text }] };
+      }
       return version === "v1"
         ? json({ room_id, nights, total, currency: "USD" })
         : json({ room_id, nights, total_cents: Math.round(total * 100), currency: "USD" });
