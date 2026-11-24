@@ -52,8 +52,8 @@ Bug Fix workflow) run headless from `kiro-cli`, and what does each phase cost?
 6. Every spec phase runs headless with `--mode spec` and a plain-words prompt. `/spec analyze_requirements <name>` sent as
    the bare prompt (without `--mode spec`) is read as text — the Analyze pass ran when phrased as a spec-mode prompt.
 7. Spec-mode authoring cost 3.5–14.9 credits per phase on auto (turn-11 3.48 … turn-22 14.91) — far above the 1–3 we planned; whole-spec execution on
-   claude-haiku-5.5 cost 27–53 credits because it made hundreds of tool calls.
-8. In V3 headless, `--trust-tools` accepts the shell tool as `run_command` (used in turns 18–28).
+   claude-haiku-5.5 cost 27.45 and 53.23 credits (606 and 461 tool calls) — cost did not track the call count.
+8. In V3 headless, `--trust-tools` accepts the shell tool as `run_command` (turns 18, 19, 23, 25, 26, 28).
 9. In our first recording attempt, a session resumed with `--resume-id` reached a new hollow-inn process: the booking
    state from the first turn was gone (observed once; that transcript was discarded, commit `0bc41c0`). We made hollow-inn's `search_rooms` a stateless catalogue lookup so a recorded session replays on one fresh server.
 10. A curator that writes the three EARS sections around a CLI-written repro block can be held to a structural checker:

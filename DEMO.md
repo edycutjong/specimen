@@ -65,6 +65,6 @@ quote). `specimen replay` also writes a new file under `replays/` each run.
 
 One real headless Kiro session against the public `@modelcontextprotocol/server-memory@1.0.0` was captured as 5 jars
 (`field/server-memory/jars/`) and replayed against 1.0.0 and 2.2.1 — see `evidence/field/server-memory.md`. Both replays are
-SHIP on the recorded set, while an input-schema diff flags all 9 tools (three gained optional inputs, six changed only
-nested descriptions or constraints). No break was found in that hour; that is the result. Reproduce:
+SHIP on the recorded set, while an input-schema diff flags all 9 tools (every one changed its `$schema` dialect URI; three
+also gained optional inputs — details in the evidence file). No break was found in that hour; that is the result. Reproduce:
 `sh field/server-memory/replay.sh 2.2.1`.

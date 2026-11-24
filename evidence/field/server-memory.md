@@ -10,8 +10,8 @@ sh field/server-memory/replay.sh 1.0.0   # self-replay
 sh field/server-memory/replay.sh 2.2.1
 ```
 
-`replay.sh` builds a scratch workspace whose `.specimen/replay.json` is `field/server-memory/replay.json` (it allows the
-memory tools; the repo's own replay.json allows only hollow-inn's), then runs
+`replay.sh` builds a scratch workspace whose `.specimen/replay.json` is `field/server-memory/replay.json` (it allows six of
+the nine memory tools — the three `delete_*` tools are excluded; the repo's own replay.json allows only hollow-inn's), then runs
 `specimen replay --server "sh field/server-memory/run.sh <version>" --baseline "sh field/server-memory/run.sh 1.0.0"`.
 
 | target | verdict | jars compared | preserved | rattled | cracked | input-schema diff vs 1.0.0 | exit |
@@ -19,13 +19,16 @@ memory tools; the repo's own replay.json allows only hollow-inn's), then runs
 | 1.0.0 (self-replay) | SHIP | 5 | 5 | 0 | 0 | nothing | 0 |
 | 2.2.1 | SHIP | 5 | 5 | 0 | 0 | inputSchema changed on 9 of 9 tools | 0 |
 
-Outputs: `replay-1.0.0.txt`, `replay-2.2.1.txt` (CLI output + exit code), `server-memory-1.0.0-self.json`,
-`server-memory-vs-2.2.1.json` (Replay_Results; their `server` label was shortened to remove a local absolute path).
+Outputs: `replay-1.0.0.txt`, `replay-2.2.1.txt` (CLI output + exit code, produced by `replay.sh`); `server-memory-1.0.0-self.json`,
+`server-memory-vs-2.2.1.json` (Replay_Results from the first, equivalent hand-run of the same `specimen replay` command
+before `replay.sh` packaged it; their `server` label was shortened to remove a local absolute path).
 
 What the input-schema diff is reacting to (`server-memory-tools-1.0.0.json` vs `server-memory-tools-2.2.1.json`, the
-`tools/list` of each version): three tools gained OPTIONAL top-level inputs — `search_nodes` (`limit`,
-`observationLimit`), `read_graph` (`entityTypes`, `observationLimit`), `open_nodes` (`observationLimit`); the other six
-changed only nested descriptions or constraints. No input was removed and every `required` list is unchanged.
+`tools/list` of each version; the diff compares each whole `inputSchema`): all nine tools changed their `$schema` dialect
+URI (draft-07 → 2020-12); three also gained OPTIONAL top-level inputs — `search_nodes` (`limit`, `observationLimit`),
+`read_graph` (`entityTypes`, `observationLimit`), `open_nodes` (`observationLimit`); four gained a description on their
+top-level property (`create_entities`, `create_relations`, `add_observations`, `delete_observations`); `delete_entities`
+and `delete_relations` changed nothing but the dialect URI. No input was removed and every `required` list is unchanged.
 
 What this shows, and only this: across 1.0.0 → 2.2.1 the five recorded calls (create_entities, create_relations,
 search_nodes, open_nodes, read_graph) return the same responses, while an input-schema diff flags every tool. It is NOT a

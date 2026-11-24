@@ -10,5 +10,5 @@ What happened, in order:
 4. `check-spec` failed the first attempt on all three jars — `shall_continue` (no "SHALL CONTINUE TO" line) and `unchanged_jar` (the section did not say "no preserved jar"); Kiro session `sess_601d64af…`. The six FAIL lines, as the CLI quoted them to the curator: `01-attempt1-checkspec.txt`.
 5. The CLI re-ran the curator once with those failures quoted; the second attempt passed for all three jars (session `sess_cf4ce9a8…`).
 
-Re-check: `npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-0002` (and SPC-0006, SPC-0007) → `PASS` each.
-Credits (Kiro `usage_summary`, `scripts/kiro-credits.mjs`): 0.3563 + 0.3065 = 0.6628.
+Re-check: `npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-0002 --replay replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-24T20-41-40.470Z.json` (and SPC-0006, SPC-0007) → `PASS` each. (Without `--replay` the newest file in `replays/` is used — after step 4 that is the v2.1 run, where these jars are preserved, so check-spec answers `not_red`.)
+Credits (Kiro `usage_summary`, `scripts/kiro-credits.mjs`): 0.66 for both attempts.

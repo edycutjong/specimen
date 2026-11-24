@@ -1,11 +1,11 @@
 # Kiro prompts
 
 Every prompt sent to Kiro while building this repository, verbatim and numbered in the order they ran — except one
-`/usage` balance probe on day 1 (0.18 credits) and the curator prompts that `specimen file` builds at run time (row "(CLI)"). Line 1 of each file
-(an HTML comment) records the date, the exact `kiro-cli` command, the engine and the working directory; the prompt is the
+`/usage` balance probe on day 1 (0.18 credits) and the curator prompts that `specimen file` builds at run time (row "(CLI)"). One local absolute path in `turn-19.md` is replaced by `<repo-root>`; nothing else is edited. Line 1 of each file
+(an HTML comment) records the exact `kiro-cli` command, the engine and the working directory, and for the `turn-NN` files the date; the prompt is the
 rest of the file. Commits that contain Kiro's output start with `kiro:`; glue, tests and harnesses written without Kiro
 start with `claude-direct:`; commits with any other prefix (`docs:`, `evidence:`, `field:`, `jars:`, `chore:`) contain no
-Kiro-written code. Prompts that say a spec "has been reviewed and approved" are instructions to the headless agent so it
+Kiro-written code. Prompts that say a spec or its requirements are "approved" are instructions to the headless agent so it
 does not stop to ask — no human approval step was taken (the IDE approvals are a human step we did not run).
 
 | Turn | What Kiro did | Credits |
@@ -39,4 +39,4 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 27 | Bug Fix workflow: design.md + tasks.md for the quote spec | 6.32 |
 | 28 | executed the quote bugfix tasks → hollow-inn v2.1 (model claude-haiku-5.5) | 1.29 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
-Spike prompts (04–12) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
+Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
