@@ -11,6 +11,10 @@ import {
 
 // Feature: jar-capture, Property 15: Redaction idempotence
 // **Validates: Requirements 7.23**
+//
+// Idempotence rule ("subset", user-approved): redacting an already-redacted value gives the same
+// text or value, and the second pass's pointers are a subset of the first pass's pointers. Matches
+// already replaced by the marker are no longer visible to the second pass, so it cannot add pointers.
 
 const RUNS = { numRuns: 200 };
 
@@ -139,7 +143,7 @@ describe("redaction idempotence (Property 15)", () => {
     }
   });
 
-  it("redacting a redacted JSON response gives the same text and no new pointers", () => {
+  it("redacting a redacted JSON response gives the same text and only a subset of the first pass's pointers", () => {
     fc.assert(
       fc.property(jsonTextArb, (text) => {
         const first = redactResponse(text, config);
@@ -154,7 +158,7 @@ describe("redaction idempotence (Property 15)", () => {
     );
   });
 
-  it("redacting a redacted text response gives the same text and no pointers", () => {
+  it("redacting a redacted text response gives the same text and only a subset of the first pass's pointers", () => {
     fc.assert(
       fc.property(plainTextArb, (text) => {
         expect(isJsonResponse(text)).toBe(false);
@@ -171,7 +175,7 @@ describe("redaction idempotence (Property 15)", () => {
     );
   });
 
-  it("redacting a redacted input gives the same value and no new pointers", () => {
+  it("redacting a redacted input gives the same value and only a subset of the first pass's pointers", () => {
     fc.assert(
       fc.property(valueArb, (input) => {
         const first = redactInput(input, config);

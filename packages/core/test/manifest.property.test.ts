@@ -9,12 +9,9 @@ const RUNS = { numRuns: 200 };
 
 const LINE_FORM = /^[0-9a-f]{64}  .+$/;
 
-/**
- * Characters kept out of generated paths. Backslash and newline are rejected by the format.
- * `\r`, `\u2028` and `\u2029` are excluded because a line that holds one does not parse back,
- * since `.` in the parser does not match them (see the note in the test report).
- */
-const UNSAFE = /[\n\\\r\u2028\u2029]/;
+/** Characters a Manifest path may not contain, matching manifestPathError. */
+const FORBIDDEN = ["\n", "\r", "\u2028", "\u2029", "\\"] as const;
+const UNSAFE = /[\n\r\u2028\u2029\\]/;
 
 const safeSegment = fc
   .string({ unit: "grapheme", minLength: 1, maxLength: 6 })
@@ -22,6 +19,15 @@ const safeSegment = fc
 const safePath = fc
   .array(safeSegment, { minLength: 1, maxLength: 3 })
   .map((parts) => parts.join("/"));
+
+/** A non-empty path with one forbidden character inserted at a random position. */
+const poisonedPathArb = (base: fc.Arbitrary<string>) =>
+  fc
+    .record({ path: base, bad: fc.constantFrom(...FORBIDDEN), seed: fc.nat() })
+    .map(({ path, bad, seed }) => {
+      const at = seed % (path.length + 1);
+      return path.slice(0, at) + bad + path.slice(at);
+    });
 
 const hashArb = fc.uint8Array({ minLength: 32, maxLength: 32 }).map((b) => Buffer.from(b).toString("hex"));
 
@@ -54,30 +60,62 @@ describe("Manifest format and diff (Property 18)", () => {
     );
   });
 
-  it("formatManifest rejects any path containing a newline or a backslash, even among valid entries", () => {
+  it("formatManifest rejects any path containing a newline, carriage return, U+2028, U+2029 or backslash, even among valid entries", () => {
     fc.assert(
-      fc.property(
-        entriesArb,
-        safePath,
-        fc.constantFrom("\n", "\\"),
-        fc.nat(),
-        hashArb,
-        (valid, path, bad, seed, hash) => {
-          const at = seed % (path.length + 1);
-          const poisoned = path.slice(0, at) + bad + path.slice(at);
-          expect(() => formatManifest([...valid, { path: poisoned, sha256: hash }])).toThrow();
-        },
-      ),
+      fc.property(entriesArb, poisonedPathArb(safePath), hashArb, (valid, poisoned, hash) => {
+        expect(() => formatManifest([...valid, { path: poisoned, sha256: hash }])).toThrow();
+      }),
       RUNS,
     );
   });
 
-  it("parseManifest reports the line of a path that contains a backslash", () => {
+  it("formatManifest rejects an empty path", () => {
     fc.assert(
-      fc.property(entriesArb, safePath, hashArb, (valid, path, hash) => {
-        const bad = `${hash}  ${path}\\x\n`;
+      fc.property(entriesArb, hashArb, (valid, hash) => {
+        expect(() => formatManifest([...valid, { path: "", sha256: hash }])).toThrow();
+      }),
+      RUNS,
+    );
+  });
+
+  it("parseManifest reports the line of a path containing a forbidden character", () => {
+    fc.assert(
+      fc.property(entriesArb, poisonedPathArb(safePath), hashArb, (valid, poisoned, hash) => {
+        const bad = `${hash}  ${poisoned}\n`;
         const result = parseManifest(formatManifest(valid) + bad);
-        expect(result).toEqual({ error: { line: valid.length + 1 } });
+        expect(result).toHaveProperty("error");
+        // A newline splits the path, so the first bad line can be a later one. Without a
+        // newline the bad line is the one that holds the path.
+        if (!poisoned.includes("\n")) {
+          expect(result).toEqual({ error: { line: valid.length + 1 } });
+        }
+      }),
+      RUNS,
+    );
+  });
+
+  it("format and parse agree on every path: formatManifest accepts it exactly when parseManifest reads it back", () => {
+    const anyPathArb = fc
+      .array(
+        fc.oneof(fc.string({ unit: "binary", maxLength: 3 }), fc.constantFrom(...FORBIDDEN)),
+        { maxLength: 6 },
+      )
+      .map((parts) => parts.join(""));
+
+    fc.assert(
+      fc.property(anyPathArb, hashArb, (path, hash) => {
+        let accepted = true;
+        try {
+          formatManifest([{ path, sha256: hash }]);
+        } catch {
+          accepted = false;
+        }
+        const parsed = parseManifest(`${hash}  ${path}\n`);
+        if (accepted) {
+          expect(parsed).toEqual({ entries: [{ path, sha256: hash }] });
+        } else {
+          expect(parsed).toHaveProperty("error");
+        }
       }),
       RUNS,
     );

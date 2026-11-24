@@ -89,6 +89,16 @@
         "executionId": "017cee05-421f-42ed-99de-d2929f09e42b",
         "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
         "timestamp": 1795542183808
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546190330
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546421660
       }
     ],
     "3.2 Implement `specimen manifest write|check` in the CLI": [
@@ -368,6 +378,16 @@
         "executionId": "017cee05-421f-42ed-99de-d2929f09e42b",
         "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
         "timestamp": 1795543014536
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546846675
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546983661
       }
     ],
     "5. Redaction": [
@@ -399,6 +419,16 @@
         "executionId": "017cee05-421f-42ed-99de-d2929f09e42b",
         "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
         "timestamp": 1795543528042
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546046670
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546189468
       }
     ],
     "5.4 Write property test for text response redaction and hash mode": [
@@ -423,6 +453,16 @@
         "executionId": "017cee05-421f-42ed-99de-d2929f09e42b",
         "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
         "timestamp": 1795543744159
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795547025684
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795547071853
       }
     ],
     "5.6 Write property test for redact config validation": [
@@ -557,6 +597,37 @@
         "executionId": "017cee05-421f-42ed-99de-d2929f09e42b",
         "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
         "timestamp": 1795545801110
+      }
+    ],
+    "8.2 Write the Hook_File tests in `packages/cli/test/wiring.test.ts`": [
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546422116
+      }
+    ],
+    "8.3 Write the hollow-inn end-to-end test in `packages/cli/test/e2e-quote.test.ts`": [
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546556126
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546671330
+      }
+    ],
+    "8.4 Write the measured-payload end-to-end test in `packages/cli/test/e2e-s3.test.ts`": [
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546671806
+      },
+      {
+        "executionId": "251b440e-a005-473d-b7a6-fb74dce80a83",
+        "chatSessionId": "sess_8ed72f1c-d070-4556-a1de-ce5e826b749b",
+        "timestamp": 1795546779332
       }
     ]
   }

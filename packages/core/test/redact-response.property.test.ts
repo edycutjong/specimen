@@ -231,25 +231,35 @@ function matchesOracle(s: string, patterns: readonly string[]): boolean {
   return patterns.some((p) => [...s.matchAll(new RegExp(p, "g"))].some((m) => m[0].length > 0));
 }
 
-type Located = { node: GNode; ptr: string; visible: boolean };
+type Located = { node: GNode; ptr: string };
 type Oracle = { located: Located[]; numbers: GNum[] };
+
+/** True when a string inside the node matches a pattern, or a key inside it is sensitive. */
+function containsOracle(node: GNode, keys: ReadonlySet<string>, patterns: readonly string[]): boolean {
+  if (node.kind === "str") return matchesOracle(node.text, patterns);
+  if (node.kind === "num" || node.kind === "lit") return false;
+  if (node.kind === "arr") {
+    return node.items.some((item) => containsOracle(item.node, keys, patterns));
+  }
+  return node.members.some((m) => keys.has(m.key) || containsOracle(m.value, keys, patterns));
+}
 
 /**
  * Oracle for the redaction rules, written from the decoded document. It collects the outermost
  * values to replace and every number that is kept. A located value is not searched further.
- * `visible` is true when JSON.parse exposes the value at its pointer. For a duplicated key,
- * JSON.parse keeps only the last member, so an earlier duplicate is not visible.
+ * A key that occurs more than once in an object is replaced in every member when any member
+ * with that key is redacted. JSON.parse keeps only the last duplicate, so this keeps every
+ * recorded pointer resolving to the marker.
  */
 function oracle(
   node: GNode,
   ptr: string,
-  visible: boolean,
   keys: ReadonlySet<string>,
   patterns: readonly string[],
   out: Oracle,
 ): void {
   if (node.kind === "str") {
-    if (matchesOracle(node.text, patterns)) out.located.push({ node, ptr, visible });
+    if (matchesOracle(node.text, patterns)) out.located.push({ node, ptr });
     return;
   }
   if (node.kind === "num") {
@@ -258,19 +268,21 @@ function oracle(
   }
   if (node.kind === "lit") return;
   if (node.kind === "arr") {
-    node.items.forEach((item, i) =>
-      oracle(item.node, `${ptr}/${i}`, visible, keys, patterns, out),
-    );
+    node.items.forEach((item, i) => oracle(item.node, `${ptr}/${i}`, keys, patterns, out));
     return;
   }
-  for (const [index, m] of node.members.entries()) {
+  for (const m of node.members) {
     const childPtr = `${ptr}/${escapeToken(m.key)}`;
-    const isLast = node.members.slice(index + 1).every((other) => other.key !== m.key);
-    const childVisible = visible && isLast;
-    if (keys.has(m.key)) {
-      out.located.push({ node: m.value, ptr: childPtr, visible: childVisible });
+    const duplicateRedacted = node.members.some(
+      (other) =>
+        other.key === m.key &&
+        node.members.filter((x) => x.key === m.key).length > 1 &&
+        containsOracle(other.value, keys, patterns),
+    );
+    if (keys.has(m.key) || duplicateRedacted) {
+      out.located.push({ node: m.value, ptr: childPtr });
     } else {
-      oracle(m.value, childPtr, childVisible, keys, patterns, out);
+      oracle(m.value, childPtr, keys, patterns, out);
     }
   }
 }
@@ -295,7 +307,7 @@ function resolvePointer(root: Json, ptr: string): Json | undefined {
 const MARKER_JSON = JSON.stringify(MARKER);
 
 describe("redactResponse property: raw-text fidelity", () => {
-  it("changes only redacted value bytes, keeps number literals, and still parses as JSON", () => {
+  it("changes only redacted value bytes, keeps number literals, parses as JSON, and every pointer resolves to the marker", () => {
     fc.assert(
       fc.property(docArb, configKeysArb, (doc, keyList) => {
         const { text, spans } = serialize(doc);
@@ -307,7 +319,7 @@ describe("redactResponse property: raw-text fidelity", () => {
         if (!compiled.ok) return;
 
         const out: Oracle = { located: [], numbers: [] };
-        oracle(doc.root, "", true, new Set(keyList), PATTERNS, out);
+        oracle(doc.root, "", new Set(keyList), PATTERNS, out);
         const located = out.located
           .map((l) => ({ ...l, span: spanOf(spans, l.node) }))
           .sort((a, b) => a.span.start - b.span.start);
@@ -350,9 +362,9 @@ describe("redactResponse property: raw-text fidelity", () => {
           expect(result.responseText.slice(at, at + n.raw.length)).toBe(n.raw);
         }
 
-        // Each visible pointer resolves to the marker in the parsed output. A hidden duplicate is skipped.
+        // Every recorded pointer resolves to the marker in the parsed output, duplicates included.
         for (const l of located) {
-          if (l.visible) expect(resolvePointer(parsed, l.ptr)).toBe(MARKER);
+          expect(resolvePointer(parsed, l.ptr)).toBe(MARKER);
         }
       }),
       RUNS,

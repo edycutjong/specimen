@@ -171,7 +171,28 @@ function redactJsonResponse(text: string, c: Compiled): ResponseResult {
   return { responseText, response, pointers, textRedacted: false };
 }
 
-/** Collects the outermost values to replace. A located value is not searched further. */
+/** True when the value, or any value inside it, would be replaced. */
+function containsRedaction(value: ScanNode, c: Compiled): boolean {
+  switch (value.kind) {
+    case "scalar":
+      return false;
+    case "string":
+      return matchesAny(value.decoded, c.res);
+    case "array":
+      return value.items.some((item) => containsRedaction(item, c));
+    case "object":
+      return value.members.some(
+        (member) => c.keys.has(member.key) || containsRedaction(member.value, c),
+      );
+  }
+}
+
+/**
+ * Collects the outermost values to replace. A located value is not searched further.
+ * A key that appears more than once in one object is replaced in every member when any of
+ * its members is redacted. JSON.parse keeps only the last duplicate, so replacing just the
+ * redacted member would leave a recorded pointer resolving to an unredacted value.
+ */
 function locate(value: ScanNode, ptr: string, c: Compiled, spans: Span[]): void {
   switch (value.kind) {
     case "scalar":
@@ -184,16 +205,27 @@ function locate(value: ScanNode, ptr: string, c: Compiled, spans: Span[]): void 
     case "array":
       value.items.forEach((item, index) => locate(item, `${ptr}/${index}`, c, spans));
       return;
-    case "object":
+    case "object": {
+      const counts = new Map<string, number>();
+      for (const member of value.members) {
+        counts.set(member.key, (counts.get(member.key) ?? 0) + 1);
+      }
+      const redactedDuplicates = new Set<string>();
+      for (const member of value.members) {
+        if ((counts.get(member.key) ?? 0) > 1 && containsRedaction(member.value, c)) {
+          redactedDuplicates.add(member.key);
+        }
+      }
       for (const member of value.members) {
         const childPtr = `${ptr}/${pointerToken(member.key)}`;
-        if (c.keys.has(member.key)) {
+        if (c.keys.has(member.key) || redactedDuplicates.has(member.key)) {
           spans.push({ start: member.value.start, end: member.value.end, ptr: childPtr });
         } else {
           locate(member.value, childPtr, c, spans);
         }
       }
       return;
+    }
   }
 }
 

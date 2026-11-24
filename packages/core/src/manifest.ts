@@ -12,7 +12,26 @@ export type ManifestEntry = { path: string; sha256: string };
 export type ManifestDiff = { missing: string[]; changed: string[]; unlisted: string[] };
 
 const HEX64 = /^[0-9a-f]{64}$/;
-const LINE = /^([0-9a-f]{64})  (.+)$/;
+// The path group takes any text. manifestPathError decides which paths are allowed, so the
+// parser and the formatter share one rule.
+const LINE = /^([0-9a-f]{64})  ([\s\S]*)$/;
+
+/**
+ * Characters a Manifest path may not contain. A line break in any form ends or splits a line:
+ * `\n` ends it, `\r`, `\u2028` and `\u2029` are line terminators for JavaScript regular
+ * expressions. A backslash would need the escaped form that `sha256sum` uses.
+ */
+const FORBIDDEN_IN_PATH = /[\n\r\u2028\u2029\\]/;
+
+/**
+ * Returns the reason a Manifest path is not allowed, or null when it is allowed. Both
+ * formatManifest and parseManifest use this, so every path one accepts, the other accepts too.
+ */
+export function manifestPathError(path: string): string | null {
+  if (path === "") return "manifest path is empty";
+  if (FORBIDDEN_IN_PATH.test(path)) return "manifest path contains a line break or backslash";
+  return null;
+}
 
 const encoder = new TextEncoder();
 
@@ -37,16 +56,15 @@ function sortPaths(paths: string[]): string[] {
 
 /**
  * Formats entries as Manifest text, one `<sha256>  <path>` line per entry, sorted by code
- * point. Throws when a sha256 is not 64 lowercase hex characters, when a path is empty, or
- * when a path contains a newline or a backslash, because `sha256sum` would need its escaped
- * form for those.
+ * point. Throws when a sha256 is not 64 lowercase hex characters or when a path is not
+ * allowed by manifestPathError. Every path it accepts round-trips through parseManifest.
  */
 export function formatManifest(entries: ManifestEntry[]): string {
   const sorted = [...entries].sort((a, b) => compareCodePoints(a.path, b.path));
   let out = "";
   for (const e of sorted) {
-    if (e.path === "") throw new Error("manifest path is empty");
-    if (/[\n\\]/.test(e.path)) throw new Error("manifest path contains a newline or backslash");
+    const pathError = manifestPathError(e.path);
+    if (pathError !== null) throw new Error(pathError);
     if (!HEX64.test(e.sha256)) throw new Error("manifest sha256 is not 64 lowercase hex characters");
     out += `${e.sha256}  ${e.path}\n`;
   }
@@ -55,7 +73,7 @@ export function formatManifest(entries: ManifestEntry[]): string {
 
 /**
  * Parses Manifest text. Every line must match `<64 lowercase hex>  <path>` and end with "\n",
- * and a path must not contain a backslash. Returns the 1-based number of the first bad line.
+ * and the path must pass manifestPathError. Returns the 1-based number of the first bad line.
  * Empty text is an empty Manifest.
  */
 export function parseManifest(text: string): { entries: ManifestEntry[] } | { error: { line: number } } {
@@ -69,7 +87,7 @@ export function parseManifest(text: string): { entries: ManifestEntry[] } | { er
     const match = LINE.exec(lines[i] ?? "");
     const sha256 = match?.[1];
     const path = match?.[2];
-    if (sha256 === undefined || path === undefined || path.includes("\\")) {
+    if (sha256 === undefined || path === undefined || manifestPathError(path) !== null) {
       return { error: { line: i + 1 } };
     }
     entries.push({ path, sha256 });

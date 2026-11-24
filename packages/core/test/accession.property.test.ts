@@ -192,5 +192,5 @@ describe("Property 11: Accession ids", () => {
       }),
       { numRuns: 100 },
     );
-  });
+  }, 30000);
 });

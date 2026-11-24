@@ -39,6 +39,25 @@ describe("formatManifest", () => {
     expect(() => formatManifest([{ path: "a\\b", sha256: H1 }])).toThrow();
   });
 
+  it("rejects an empty path", () => {
+    expect(() => formatManifest([{ path: "", sha256: H1 }])).toThrow();
+  });
+
+  it.each([
+    ["carriage return", "a\rb"],
+    ["U+2028 line separator", "a\u2028b"],
+    ["U+2029 paragraph separator", "a\u2029b"],
+  ])("rejects a path containing a %s, the same way parseManifest does", (_name, path) => {
+    expect(() => formatManifest([{ path, sha256: H1 }])).toThrow();
+    expect(parseManifest(`${H1}  ${path}\n`)).toEqual({ error: { line: 1 } });
+  });
+
+  it("accepts a path with a space, a tab or a non-ASCII character, and round-trips it", () => {
+    const path = "dir with space/tab\tée\u{1F600}.jsonl";
+    const entries = [{ path, sha256: H1 }];
+    expect(parseManifest(formatManifest(entries))).toEqual({ entries });
+  });
+
   it("rejects a sha256 that is not 64 lowercase hex characters", () => {
     expect(() => formatManifest([{ path: "a", sha256: H1.toUpperCase() }])).toThrow();
     expect(() => formatManifest([{ path: "a", sha256: "abc" }])).toThrow();

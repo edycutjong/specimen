@@ -195,7 +195,7 @@ Schema comments document that `seq` is unique within a jar and gives call start 
 
 `readJar` splits on `\n`. A final empty segment after the last newline is not a line. A non-empty final segment is an `incomplete` error. A blank segment before the final line is a `blank` error. An `unrecognized_keys` zod issue becomes an `unknown_field` error with the key name.
 
-`jsonPointerSchema` accepts the empty string or `/`-separated tokens in which `~` appears only as `~0` or `~1`, and requires the first token to be one of the Jar_Line fields (`input`, `response`).
+`jsonPointerSchema` rejects the empty string, because it does not point into a field. It accepts only `/`-separated tokens in which `~` appears only as `~0` or `~1`, and requires the first token to be one of the Jar_Line fields (`input`, `response`).
 
 ### core/payload.ts
 
