@@ -14,12 +14,12 @@ export function createV2(opts: InnOptions = {}): McpServer {
     "search_rooms",
     {
       description:
-        "Find rooms free for a stay that sleep at least `guests`, in room order. Returns at most `limit` rooms (default 5).",
+        "Find rooms that sleep at least `guests`, in room order (a catalogue lookup: bookings do not hide rooms; `book` refuses overlapping stays). Returns at most `limit` rooms (default 5).",
       inputSchema: { check_in: date, nights, guests: z.number().int().min(1).max(8), limit: z.number().int().min(1).max(50).optional() },
       annotations: { readOnlyHint: true },
     },
     async ({ check_in, nights, guests, limit }) => {
-      const rooms = ROOMS.filter((r) => r.max_guests >= guests && !isBookedFor(state, r.id, check_in, nights))
+      const rooms = ROOMS.filter((r) => r.max_guests >= guests)
         .slice(0, limit ?? 5)
         .map(roomView);
       return ok({ check_in, nights, guests, rooms });

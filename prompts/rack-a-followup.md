@@ -1,0 +1,2 @@
+<!-- RACK A follow-up · the one same-session follow-up the recording gate allows for a missing call (specs: seed data) — the RACK A agent sent limit: 50 instead of omitting the limit · `scripts/record-sessions.sh followup <workspace> a "$(sed 1d prompts/rack-a-followup.md)"` (kiro-cli … --resume-id <RACK A session>) -->
+Search again for rooms for 3 guests checking in 2026-12-04 for 2 nights, and this time call search_rooms without the limit argument at all — leave it out — then tell me how many rooms came back.

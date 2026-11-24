@@ -48,15 +48,15 @@ describe("hollow-inn v1", () => {
     expect(again.json.booking_id).toBe("BK-0001");
   });
 
-  it("a booked room drops out of search for overlapping nights and cannot be double-booked", async () => {
+  it("search is a catalogue lookup (a booking does not hide a room) and book refuses overlapping stays", async () => {
     const { call } = await open();
     await call("book", { room_id: "r-04", check_in: "2026-12-04", nights: 2, guest: "M. Shelley" });
     const s = await call("search_rooms", { check_in: "2026-12-05", nights: 1, guests: 3 });
-    expect(s.json.rooms.map((x: { id: string }) => x.id)).not.toContain("r-04");
-    const after = await call("search_rooms", { check_in: "2026-12-06", nights: 1, guests: 3 });
-    expect(after.json.rooms.map((x: { id: string }) => x.id)).toContain("r-04");
+    expect(s.json.rooms.map((x: { id: string }) => x.id)).toContain("r-04");
     const dup = await call("book", { room_id: "r-04", check_in: "2026-12-05", nights: 1, guest: "V. Frankenstein" });
     expect(dup.isError).toBe(true);
+    const later = await call("book", { room_id: "r-04", check_in: "2026-12-06", nights: 1, guest: "V. Frankenstein" });
+    expect(later.json.booking_id).toBe("BK-0002");
   });
 
   it("cancel_booking cancels once, then refuses", async () => {
