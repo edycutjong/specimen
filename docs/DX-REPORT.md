@@ -11,7 +11,7 @@ prompt (Kiro's billing page says simple prompts can cost less than 1 credit and 
 `/usage` balance (readable headless only on `--agent-engine v2`; on v3 the text `/usage` is sent to the model as a
 prompt) could not be used, because the 4,000-credit event pool is shared with other projects that were running Kiro at
 the same time.
-**Before (assumed) vs after (measured, 17 sessions, 7.67 credits):**
+**Before (assumed) vs after (measured, 19 sessions, 7.96 credits):**
 
 | Prompt kind | Assumed | Measured |
 |---|---|---|
