@@ -10,9 +10,9 @@
   ],
   "permissions": {
     "rules": [
-      { "permission": "allow", "tool": "fs_read" },
-      { "permission": "allow", "tool": "fs_write", "match": [".kiro/specs/**"] },
-      { "permission": "deny", "tool": "fs_write", "match": ["**"], "exclude": [".kiro/specs/**"] }
+      { "capability": "fs_read", "effect": "allow" },
+      { "capability": "fs_write", "match": [".kiro/specs/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["**"], "exclude": [".kiro/specs/**"], "effect": "deny" }
     ]
   }
 }
