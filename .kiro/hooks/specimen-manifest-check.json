@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "specimen-manifest-check-pre-task",
+      "trigger": "PreTaskExec",
+      "action": {
+        "type": "command",
+        "command": "npx --no-install specimen manifest check"
+      }
+    },
+    {
+      "name": "specimen-manifest-check-post-task",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "command",
+        "command": "npx --no-install specimen manifest check"
+      }
+    }
+  ]
+}

@@ -13,3 +13,6 @@ __pycache__/
 .next/
 playwright-report/
 test-results/
+.specimen/pending.jsonl
+.specimen/hook.log
+.specimen/*.lock

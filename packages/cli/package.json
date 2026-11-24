@@ -1,0 +1,19 @@
+{
+  "name": "@specimen/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The specimen command: capture hooks, firewall, manifest and replay.",
+  "type": "module",
+  "bin": {
+    "specimen": "./bin/specimen.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@specimen/core": "*",
+    "commander": "^14.0.3",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  }
+}

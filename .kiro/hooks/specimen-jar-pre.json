@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "specimen-jar-pre",
+      "trigger": "PreToolUse",
+      "matcher": "@hollowinn",
+      "action": {
+        "type": "command",
+        "command": "npx --no-install specimen hook pre --server hollowinn"
+      }
+    }
+  ]
+}
