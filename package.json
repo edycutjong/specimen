@@ -1,0 +1,19 @@
+{
+  "name": "specimen-jar",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "workspaces": ["packages/*", "servers/*", "apps/*", "spikes/*"],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "spike:s1": "npm run -w spikes/s1-browser check"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.0"
+  }
+}
