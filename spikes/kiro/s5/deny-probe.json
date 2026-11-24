@@ -1,0 +1,35 @@
+{
+  "name": "s5-deny-probe",
+  "description": "Spike S5 probe: the curator permission block with a neutral prompt, to test the fs_write deny rule itself",
+  "prompt": "You write exactly the files the user asks for, using your write tool. Always attempt the tool call; never refuse in advance. If a write is refused, report the exact refusal text you received.",
+  "tools": [
+    "read",
+    "write"
+  ],
+  "includeMcpJson": false,
+  "permissions": {
+    "rules": [
+      {
+        "capability": "fs_read",
+        "effect": "allow"
+      },
+      {
+        "capability": "fs_write",
+        "match": [
+          ".kiro/specs/**"
+        ],
+        "effect": "allow"
+      },
+      {
+        "capability": "fs_write",
+        "match": [
+          "**"
+        ],
+        "exclude": [
+          ".kiro/specs/**"
+        ],
+        "effect": "deny"
+      }
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+<!-- turn-08 · 2026-11-24 · spike S5 (allow half) · scratch workspace = copy of this repo's `.kiro/agents` + `.kiro/steering` + `spikes/kiro/s5/repro-block.md` (as `repro-block.md`), cwd = that workspace · `kiro-cli chat --no-interactive --agent-engine v3 --agent specimen-curator --trust-workspace "$(sed 1d prompts/turn-08.md)"` — NO --trust-tools -->
+File a bugfix spec for the rattled jars in repro-block.md. The slug is get-weather-temp-field.
