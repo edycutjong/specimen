@@ -1,0 +1,2 @@
+<!-- RACK A · fixed recording prompt (specs: seed data) · run by scripts/record-sessions.sh in a scratch Kiro workspace with the specimen capture hooks · `kiro-cli chat --no-interactive --agent-engine v3 --trust-workspace --trust-tools=@hollowinn "$(sed 1d prompts/rack-a.md)"` -->
+Find a room with a fireplace for 3 guests checking in 2026-12-04 for 2 nights. Search without a result limit so you see every room, compare the two cheapest fireplace rooms, quote the cheaper one, book it for M. Shelley, then list my bookings.

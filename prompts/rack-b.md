@@ -1,0 +1,2 @@
+<!-- RACK B · fixed recording prompt (specs: seed data) · run by scripts/record-sessions.sh in a scratch Kiro workspace with the specimen capture hooks · `kiro-cli chat --no-interactive --agent-engine v3 --trust-workspace --trust-tools=@hollowinn "$(sed 1d prompts/rack-b.md)"` -->
+Show at most 3 rooms for 2 guests checking in 2026-12-11 for 1 night, quote two of them, book the cheaper, then cancel that booking.
