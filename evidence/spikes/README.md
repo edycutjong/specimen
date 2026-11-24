@@ -35,16 +35,16 @@ tool ran) and the `/usage` reads (the v2 `/usage` read is client-side and left t
 The plan assumed 1 credit per simple prompt and 3 per spec task. Measured: simple prompts cost about half of that; a spec
 design + tasks generation cost 3.48. The rate is final after the first feature-spec task batch on day 2.
 
-## Decision D-425 — how hollow-inn writes money
+## Money serialisation — how hollow-inn will write `425.00` (decision D-425)
 The demo's headline pair is `quote` → `total: 425.00` in v1 and `total_cents: 42500` in v2. Measured: a TypeScript server
 that returns the number 425 serialises it as `425` (`JSON.stringify` drops trailing zeros; S1 printed `v1 /total=425`).
-Chosen: hollow-inn writes its response text with a money-aware serialiser that emits money as a **two-decimal JSON number
+Chosen: hollow-inn (built next, on day 2) will write its response text with a money-aware serialiser that emits money as a **two-decimal JSON number
 literal** (`"total":425.00`, `"nightly":212.50`). That is valid JSON, it is what the fixture specifies ("USD, two
 decimals"), and it parses to the number 425 — so the v1 → v2 pair stays numeric on both sides and the detector's
 "suspected rename ×100" holds (not a TYPE change). Kiro passes the server's response text into the hook byte for byte
 — **measured** (`prompts/turn-13.md`, 2026-11-24 23:55 WIB, 0.21 credits): the toy server in `money-literal` mode answered
 `quote`, and the PostToolUse hook received `"tool_response": "{\"room_id\":\"R-101\",\"nights\":2,\"total\":425.00,\"currency\":\"USD\"}"`
-— the literal survived; the agent itself answered "425.00 USD". So the jar keeps `425.00` and the cabinet can show the
+— the literal survived for this one-field text response (n = 1; escapes, non-ASCII, long or multi-block responses not yet tested — re-checked with the real hollow-inn); the agent itself answered "425.00 USD". So the jar keeps `425.00` and the cabinet can show the
 recorded literal, provided the jar writer never re-serialises the parsed response (redaction edits value spans in the raw text).
 Rejected: a string `"425.00"` (turns the headline into a TYPE change + rename) and a bare `425` (contradicts the fixture
 and every asset). Probes: [`spikes/s1-browser/test/money-literal.test.ts`](../../spikes/s1-browser/test/money-literal.test.ts) (parse + diff) and the turn-13 capture above.
