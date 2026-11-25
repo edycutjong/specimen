@@ -7,7 +7,7 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ReplayButton } from "../src/components/ReplayButton.js";
 import { ServerSwitch } from "../src/components/ServerSwitch.js";
-import { splitChanges, versionNote, V21_FIX_LEAD } from "../src/changes.js";
+import { splitChanges, versionNote } from "../src/changes.js";
 import changesMarkdown from "../../../servers/hollow-inn/CHANGES.md?raw";
 
 afterEach(() => {
@@ -82,19 +82,6 @@ describe("ServerSwitch", () => {
     expect(tabbable.map((radio) => radio.textContent)).toEqual(["v2.1"]);
   });
 
-  it("shows the CHANGES.md entry for the selected Version and the v2.1 lead (3.5, 3.9)", () => {
-    setViewportWide(true);
-    const { rerender } = render(<ServerSwitch version="v2.1" onVersionChange={() => undefined} />);
-
-    const note = screen.getByRole("region", { name: "Changes in v2.1" });
-    expect(within(note).getByRole("heading", { name: /v2\.1\.0/ })).toBeTruthy();
-    expect(within(note).getByText(V21_FIX_LEAD)).toBeTruthy();
-    expect(note.textContent).toContain("returns total (dollars, 425.00) again");
-
-    rerender(<ServerSwitch version="v1" onVersionChange={() => undefined} />);
-    const baseline = screen.getByRole("region", { name: "Changes in v1" });
-    expect(within(baseline).queryByText(V21_FIX_LEAD)).toBeNull();
-  });
 });
 
 describe("ServerSwitch with a replay running", () => {
@@ -109,7 +96,7 @@ describe("ServerSwitch with a replay running", () => {
       </>,
     );
 
-    const replay = screen.getByRole("button", { name: "Replay v2" });
+    const replay = screen.getByRole("button", { name: "Replay cabinet v2" });
     expect(replay.getAttribute("aria-disabled")).toBe("true");
 
     for (const radio of screen.getAllByRole("radio")) {
@@ -130,8 +117,8 @@ describe("ServerSwitch with a replay running", () => {
 
     rerender(<ReplayButton version="v1" running={false} onReplay={onReplay} />);
     expect(screen.queryByText(/ ms$/)).toBeNull();
-    expect(screen.getByRole("button", { name: "Replay v1" }).getAttribute("aria-disabled")).toBe("false");
-    fireEvent.click(screen.getByRole("button", { name: "Replay v1" }));
+    expect(screen.getByRole("button", { name: "Replay cabinet v1" }).getAttribute("aria-disabled")).toBe("false");
+    fireEvent.click(screen.getByRole("button", { name: "Replay cabinet v1" }));
     expect(onReplay).toHaveBeenCalledTimes(1);
   });
 });

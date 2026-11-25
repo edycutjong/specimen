@@ -21,6 +21,11 @@ afterEach(() => {
   cleanup();
 });
 
+/** The full text of one half of the CountsPair: its label and value are separate elements. */
+function halfText(selector: ".counts-pair__schema" | ".counts-pair__replay"): string | null {
+  return document.querySelector(selector)?.textContent ?? null;
+}
+
 function countsOf(result: CabinetReplayResult | null, schemaDiffError?: string): CountsPairViewModel {
   return buildViewModel({
     result,
@@ -36,25 +41,25 @@ describe("CountsPair with real replays", () => {
   it("shows v1 as 0 of 6 schema changes and no jars changed (6.7)", () => {
     const { container } = render(<CountsPair counts={countsOf(replays.v1)} replayed />);
 
-    expect(screen.getByText("schema diff: 0 of 6 tools changed")).toBeTruthy();
-    expect(screen.getByText("replay: 0 tools · 0 jars changed")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe("schema diff: 0 of 6 tools changed");
+    expect(halfText(".counts-pair__replay")).toBe("replay: 0 tools · 0 jars changed");
     expect(container.querySelector(".counts-pair__added")).toBeNull();
   });
 
   it("shows v2 with the added tool name and the replay impact (6.2, 6.5)", () => {
     render(<CountsPair counts={countsOf(replays.v2)} replayed />);
 
-    expect(screen.getByText("schema diff: 1 of 6 tools changed")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
     expect(screen.getByText("added booking_cancel")).toBeTruthy();
-    expect(screen.getByText("replay: 3 tools · 5 jars changed")).toBeTruthy();
+    expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
   });
 
   it("shows v2.1 with the added tool name and the remaining replay impact (6.6)", () => {
     render(<CountsPair counts={countsOf(replays["v2.1"])} replayed />);
 
-    expect(screen.getByText("schema diff: 1 of 6 tools changed")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
     expect(screen.getByText("added booking_cancel")).toBeTruthy();
-    expect(screen.getByText("replay: 2 tools · 2 jars changed")).toBeTruthy();
+    expect(halfText(".counts-pair__replay")).toBe("replay: 2 tools · 2 jars changed");
   });
 
   it("puts the schema half in --muted and the replay half in --after (6, colour rule)", () => {
@@ -72,8 +77,8 @@ describe("CountsPair with real replays", () => {
     const single = singleJarResult(replays.v2);
     render(<CountsPair counts={countsOf(single)} replayed />);
 
-    expect(screen.getByText("replay: 1 tool · 1 jar changed")).toBeTruthy();
-    expect(screen.getByText("schema diff: 1 of 6 tools changed")).toBeTruthy();
+    expect(halfText(".counts-pair__replay")).toBe("replay: 1 tool · 1 jar changed");
+    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
   });
 
   it("shows no figures while the Version has not been replayed (6.8)", () => {
@@ -89,8 +94,8 @@ describe("CountsPair schemaDiffError", () => {
     const counts = countsOf(replays.v2, "baseline tools/list failed");
     render(<CountsPair counts={counts} replayed />);
 
-    expect(screen.getByText("schema diff: unavailable — baseline tools/list failed")).toBeTruthy();
-    expect(screen.queryByText(/of 6 tools changed/)).toBeNull();
-    expect(screen.getByText("replay: 3 tools · 5 jars changed")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe("schema diff: unavailable — baseline tools/list failed");
+    expect(halfText(".counts-pair__schema")).not.toMatch(/of 6 tools changed/);
+    expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
   });
 });

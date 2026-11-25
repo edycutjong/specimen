@@ -1,0 +1,106 @@
+/*
+ * VersionNotes under the CountsPair (Requirements 3.5, 3.9). The heading names the version release,
+ * and a collapsed "What changed" disclosure holds the CHANGES.md entry, with its table. Colours come
+ * from the Token_File.
+ */
+
+.version-notes {
+  margin: 16px 0 0;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.version-notes__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.version-notes__lead {
+  margin: 6px 0 0;
+  color: var(--tag);
+}
+
+.version-notes__details {
+  margin-top: 10px;
+  min-width: 0;
+}
+
+.version-notes__summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--rule);
+  background: var(--glass);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.version-notes__summary:hover {
+  border-color: var(--tag);
+}
+
+.version-notes__summary:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+}
+
+.version-notes__body {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  background: var(--glass);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.version-notes__body p,
+.version-notes__body li {
+  margin: 6px 0;
+}
+
+.version-notes__body ul,
+.version-notes__body ol {
+  margin: 6px 0;
+  padding-left: 22px;
+}
+
+.version-notes__body code {
+  font-family: var(--font-data);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+/* The CHANGES table: a real table that fits the column, with a ruled header row. */
+.version-notes__body table {
+  width: 100%;
+  margin: 10px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 15px;
+}
+
+.version-notes__body th,
+.version-notes__body td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.version-notes__body th {
+  color: var(--tag);
+  font-weight: 700;
+  border-bottom: 2px solid var(--tag);
+}

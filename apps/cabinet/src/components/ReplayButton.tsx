@@ -6,6 +6,7 @@
  */
 import { useEffect, useState } from "react";
 import type { HollowInnVersion } from "../browser-replay.js";
+import "../styles/controls.css";
 
 export const ELAPSED_TICK_MS = 16;
 
@@ -44,7 +45,7 @@ export function ReplayButton({ version, running, onReplay }: ReplayButtonProps) 
           if (!running) onReplay();
         }}
       >
-        Replay {version}
+        Replay cabinet {version}
       </button>
       {running ? (
         <span className="replay-button__elapsed" aria-hidden="true">

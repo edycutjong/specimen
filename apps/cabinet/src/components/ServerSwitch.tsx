@@ -2,15 +2,14 @@
  * The ServerSwitch (Requirement 3). It offers exactly the Versions v1, v2 and v2.1. At 600 px and
  * wider it is a segmented control (radio group with roving tabindex, arrow keys move and select).
  * Below 600 px it is a native select. The selected Version is exposed as `aria-checked` in the
- * segmented form and as the select value in the narrow form. Under the switch it shows the
- * matching CHANGES.md entry (Requirement 3.5), and the v2.1 lead line (Requirement 3.9).
+ * segmented form and as the select value in the narrow form. The matching CHANGES.md entry is not
+ * part of this control: the App shows it under the CountsPair (see VersionNotes).
  *
  * The switch never takes a running flag: it stays enabled while a replay runs (Requirement 3.11).
  */
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { HollowInnVersion } from "../browser-replay.js";
-import { renderMarkdown } from "../markdown/render-markdown.js";
-import { V21_FIX_LEAD, versionNote } from "../changes.js";
+import "../styles/controls.css";
 
 /** The Versions the switch offers, in display order (Requirement 3.1). */
 export const SWITCH_VERSIONS: readonly HollowInnVersion[] = ["v1", "v2", "v2.1"];
@@ -49,7 +48,6 @@ export type ServerSwitchProps = {
 
 export function ServerSwitch({ version, onVersionChange }: ServerSwitchProps) {
   const wide = useWideViewport();
-  const note = versionNote(version);
 
   return (
     <div className="server-switch">
@@ -69,13 +67,6 @@ export function ServerSwitch({ version, onVersionChange }: ServerSwitchProps) {
           ))}
         </select>
       )}
-      {note !== null ? (
-        <section className="server-switch__note" aria-label={`Changes in ${version}`}>
-          <h3 className="server-switch__note-heading">{note.heading.replace(/`/g, "")}</h3>
-          {version === "v2.1" ? <p className="server-switch__lead">{V21_FIX_LEAD}</p> : null}
-          <div className="server-switch__body">{renderMarkdown(note.body)}</div>
-        </section>
-      ) : null}
     </div>
   );
 }

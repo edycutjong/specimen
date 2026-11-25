@@ -27,10 +27,10 @@
   pointer-events: none;
 }
 
-/* The riveted iron frame that holds the top of the page, the organs and the content. */
+/* The riveted iron frame that holds the stamp, the organs, the storm window and the content. */
 .cabinet-frame__iron {
   position: relative;
-  padding: 24px 16px 20px;
+  padding: 20px 16px 20px;
   border: 8px solid color-mix(in srgb, var(--muted) 35%, var(--bg));
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   box-shadow:
@@ -58,13 +58,17 @@
 .cabinet-frame__rivet--bl { bottom: -10px; left: -10px; }
 .cabinet-frame__rivet--br { bottom: -10px; right: -10px; }
 
+/* The top band of the wall: the stamp top-left, the organ row under it. */
 .cabinet-frame__top {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  max-width: 100%;
 }
 
-/* The stamp is a rubber-stamp frame in manila, tilted a little off square. */
+/* The stamp is a rubber-stamp frame in manila, tilted -2 degrees, top-left of the wall. */
 .cabinet-frame__stamp {
   margin: 0 0 12px;
   padding: 4px 12px;
@@ -72,18 +76,30 @@
   color: var(--tag);
   background: color-mix(in srgb, var(--bg) 70%, transparent);
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 900;
   line-height: 1.2;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  max-width: 100%;
   transform: rotate(-2deg);
+  transform-origin: left center;
 }
 
-/* The storm window is an SVG with its own viewBox, so it only needs a width. */
+/*
+ * The storm window sits at the right of the wall, absolutely placed and behind the content. The first
+ * shelf is on the content layer, so it stands in front of the lower part of the window (Requirement 14.2).
+ */
 .cabinet-frame__window {
+  position: absolute;
+  top: 170px;
+  right: 16px;
+  z-index: 0;
   display: block;
-  width: min(220px, 70%);
-  margin: 4px auto 0;
+  width: 240px;
+  max-width: 60%;
+  height: auto;
+  pointer-events: none;
 }
 
 /* The four organs. Sutures sit between them from 600 px up; below that the organs wrap. */
@@ -91,9 +107,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px 6px;
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 .cabinet-frame__organ {
@@ -138,9 +154,12 @@
   }
 }
 
+/* The content (header of the page is outside the frame). It layers above the window. */
 .cabinet-frame__content {
   position: relative;
-  margin-top: 20px;
+  z-index: 1;
+  margin-top: 24px;
+  min-width: 0;
 }
 
 /* HowJarsWereMade: a ruled section under the wall, with the hook files as text blocks. */
@@ -185,6 +204,11 @@
   font-size: 0.875rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.how-made__hook {
+  margin: 12px 0;
+  min-width: 0;
 }
 
 .how-made__ship {

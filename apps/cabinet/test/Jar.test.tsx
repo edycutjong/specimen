@@ -243,9 +243,9 @@ describe("Jar toe-tag and strips as HTML (Requirements 8.4, 8.5, 8.6, 8.9)", () 
 });
 
 describe("Jar focus ring (Requirement 8.12)", () => {
-  it("draws a 3 px --ink outline on the focused button in the stylesheet", () => {
+  it("draws a 3 px --before outline on the focused button in the stylesheet", () => {
     // Vitest skips CSS processing, so the stylesheet is read from disk. `npm test` runs at the repo root.
     const jarCss = readFileSync(resolve("apps/cabinet/src/components/Jar.css"), "utf8");
-    expect(jarCss).toMatch(/\.jar__button:focus-visible[\s\S]*?outline:\s*3px solid var\(--ink\)/);
+    expect(jarCss).toMatch(/\.jar__button:focus-visible[\s\S]*?outline:\s*3px solid var\(--before\)/);
   });
 });

@@ -6,8 +6,8 @@
  * from the Token_File through `var(--token)`. Shades that the Token_File does not name are derived
  * with `color-mix()` from those tokens, so the file contains no hex literal.
  *
- * Text is not drawn here. The toe-tag words (accession, tool name, ABNORMAL or CRACKED) are HTML
- * drawn by `components/Jar.tsx` over the boxes exported as `TOE_TAG_BOX` and `FLAG_STRIP_BOX`.
+ * Text and the toe-tag are not drawn here. The tag (accession, tool name, barcode and the ABNORMAL or
+ * CRACKED strip) is HTML drawn by `components/Jar.tsx` over the jar. Only the tag's string is drawn here.
  * Every state is distinct by shape even without that text: see `lookOf` and the per-state notes.
  */
 import { useId, type CSSProperties, type ReactElement, type ReactNode } from "react";
@@ -29,13 +29,10 @@ export const INNER =
   "M26 33 Q15 35 15 49 L15 173 Q15 185 27 185 L93 185 Q105 185 105 173 L105 49 Q105 35 94 33 Z";
 
 /**
- * The toe-tag's shape box in jar viewBox units, before its rotation. Task 5.2 positions the HTML
- * accession and tool-name text inside this box.
+ * The string that holds the toe-tag. It runs from the lid to the tag's eyelet. The tag itself is HTML
+ * (components/Jar.tsx), so the eyelet sits at the end of this path, in jar viewBox units.
  */
-export const TOE_TAG_BOX = { x: 26, y: 116, width: 76, height: 48 } as const;
-
-/** The strip that carries ABNORMAL or CRACKED, in jar viewBox units before the tag rotation. */
-export const FLAG_STRIP_BOX = { x: 29, y: 148, width: 73, height: 14 } as const;
+export const STRING_PATH = "M40 27 C 26 60 -2 100 -6 136";
 
 /** Toe-tag rotation in degrees. A rattled tag hangs at a different angle from a calm one. */
 export function toeTagRotation(state: JarState): number {
@@ -311,42 +308,12 @@ export function JarArt({ state, accession, tool, tilt = 0, className }: JarArtPr
       />
       <IronLid lidFill={`url(#${ids.lid})`} boltFill={`url(#${ids.bolt})`} unsealed={unsealed} />
       <path
-        d="M40 27 C 34 60 22 96 22 128"
+        d={STRING_PATH}
         fill="none"
         style={{ stroke: mixed("var(--tag)", 90, "white") }}
         strokeWidth={1.4}
         strokeOpacity={0.85}
       />
-      <g transform={`translate(62 140) rotate(${toeTagRotation(state)})`}>
-        <path
-          d="M-36 -18 L-30 -24 L40 -24 L40 24 L-30 24 L-36 18 Z"
-          style={{ fill: "var(--tag)", stroke: mixed("var(--tag)", 60, "black") }}
-          strokeWidth={0.8}
-        />
-        <circle cx={-28} cy={0} r={4.6} style={{ fill: mixed("var(--tag)", 85, "black") }} />
-        <circle cx={-28} cy={0} r={2.4} style={{ fill: "var(--label-ink)" }} />
-        <line
-          x1={-40}
-          y1={-14}
-          x2={-28}
-          y2={0}
-          style={{ stroke: mixed("var(--tag)", 90, "white") }}
-          strokeWidth={1.4}
-        />
-        {flag ? (
-          <rect className="jar-art__strip" x={-33} y={8} width={73} height={14} style={{ fill: "var(--after)" }} />
-        ) : (
-          <line
-            x1={-19}
-            y1={16}
-            x2={32}
-            y2={16}
-            style={{ stroke: "var(--label-ink)" }}
-            strokeOpacity={0.35}
-            strokeWidth={0.8}
-          />
-        )}
-      </g>
     </>
   );
 

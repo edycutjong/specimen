@@ -3,20 +3,17 @@
  * The numerals are SVG strokes, so no font face is needed for them.
  */
 
+/*
+ * The three steps sit in a row when the page has room, and wrap to two rows when it is narrow
+ * (a 2 + 1 layout). A step never gets less than 240 px, so its label does not get cut off.
+ */
 .guide-strip {
   list-style: none;
-  margin: 0;
+  margin: 20px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-}
-
-@media (min-width: 600px) {
-  .guide-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 10px 12px;
 }
 
 .guide-strip__step {

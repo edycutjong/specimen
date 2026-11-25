@@ -251,7 +251,7 @@ describe("App: non-modal right panel leaves the page operable (Requirement 10.11
       const targets: HTMLElement[] = [
         jarButton(CRACKED_JAR),
         screen.getByRole("radio", { name: "v1" }),
-        screen.getByRole("button", { name: "Replay v2" }),
+        screen.getByRole("button", { name: "Replay cabinet v2" }),
       ];
       for (const target of targets) {
         expect(target.closest("[inert]")).toBeNull();

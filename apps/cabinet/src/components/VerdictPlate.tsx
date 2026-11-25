@@ -3,11 +3,18 @@
  * `buildViewModel` derived from `verdict()` and the Replay_Result. The component computes no
  * figure of its own, except the Replay_Time rounded to whole milliseconds for display.
  *
+ * The result has two halves. The plaque is the verdict word, the version and the counts line, and
+ * it sits in the page header. The ledger is the coverage, filed counter, skipped, quarantined and
+ * spoiled lines, the reason or SHIP wording, and the timing line. It sits under the CountsPair. The
+ * App renders each half with its own `part`. With the default `part="both"` the plate holds the
+ * whole result in one status region, which is the standalone form.
+ *
  * The status region is always in the page, so a screen reader sees the region exist before the
  * Reveal completes. Its content is added once, when `revealed` becomes true, and only while a
  * replay has a verdict (Requirement 2.17). Before that, the plate shows no verdict word.
  */
 import { pluralise, type VerdictPlateViewModel } from "../cabinet-model.js";
+import "../styles/verdict.css";
 
 export type VerdictPlateProps = {
   plate: VerdictPlateViewModel;
@@ -18,6 +25,8 @@ export type VerdictPlateProps = {
    * 250 ms, not the Reduced_Motion value of 0, so the line matches Requirement 2.5.
    */
   revealIntervalMs: number;
+  /** Which half of the result to render. "both" renders the whole result in one status region. */
+  part?: "plaque" | "ledger" | "both";
 };
 
 /** The SHIP wording of Requirement 4.14. The line never calls the server safe (Requirement 4.13). */
@@ -38,17 +47,29 @@ export function timingLine(plate: VerdictPlateViewModel, revealIntervalMs: numbe
   );
 }
 
-function ResultLines({ plate, revealIntervalMs }: { plate: VerdictPlateViewModel; revealIntervalMs: number }) {
+/** The verdict word, the version and the counts line: the plaque half. */
+function PlaqueLines({ plate }: { plate: VerdictPlateViewModel }) {
+  const verdict = plate.verdict;
+  if (verdict === null) return null;
+  const wordClass = verdict === "HOLD" ? "verdict-plate__word verdict-plate__word--hold" : "verdict-plate__word verdict-plate__word--ship";
+  return (
+    <>
+      <p className={wordClass} style={{ color: verdictColour(verdict) }}>
+        {verdict}
+      </p>
+      <p className="verdict-plate__version">{plate.version}</p>
+      <p className="verdict-plate__counts">{plate.countsLine}</p>
+    </>
+  );
+}
+
+/** The coverage, filed, skipped, quarantined, spoiled, reason or SHIP, and timing lines: the ledger half. */
+function LedgerLines({ plate, revealIntervalMs }: { plate: VerdictPlateViewModel; revealIntervalMs: number }) {
   const verdict = plate.verdict;
   if (verdict === null) return null;
   const timing = timingLine(plate, revealIntervalMs);
   return (
     <>
-      <p className="verdict-plate__word" style={{ color: verdictColour(verdict) }}>
-        {verdict}
-      </p>
-      <p className="verdict-plate__version">hollow-inn {plate.version}</p>
-      <p className="verdict-plate__counts">{plate.countsLine}</p>
       <p className="verdict-plate__coverage">{plate.coverageLine}</p>
       <p className="verdict-plate__filed">{plate.filedLine}</p>
       {plate.skippedLine !== undefined ? <p className="verdict-plate__skipped">{plate.skippedLine}</p> : null}
@@ -66,15 +87,19 @@ function ResultLines({ plate, revealIntervalMs }: { plate: VerdictPlateViewModel
   );
 }
 
-export function VerdictPlate({ plate, revealed, revealIntervalMs }: VerdictPlateProps) {
+export function VerdictPlate({ plate, revealed, revealIntervalMs, part = "both" }: VerdictPlateProps) {
   const showResult = revealed && plate.verdict !== null;
+  const showPlaque = part !== "ledger";
+  const showLedger = part !== "plaque";
+  const label = part === "ledger" ? "Verdict details" : "Verdict";
   return (
-    <section className="verdict-plate" aria-label="Verdict">
-      {plate.verdict === null ? (
+    <section className={`verdict-plate verdict-plate--${part}`} aria-label={label}>
+      {plate.verdict === null && showPlaque ? (
         <p className="verdict-plate__idle">hollow-inn {plate.version} has not been replayed yet.</p>
       ) : null}
       <div role="status" className="verdict-plate__status">
-        {showResult ? <ResultLines plate={plate} revealIntervalMs={revealIntervalMs} /> : null}
+        {showResult && showPlaque ? <PlaqueLines plate={plate} /> : null}
+        {showResult && showLedger ? <LedgerLines plate={plate} revealIntervalMs={revealIntervalMs} /> : null}
       </div>
     </section>
   );

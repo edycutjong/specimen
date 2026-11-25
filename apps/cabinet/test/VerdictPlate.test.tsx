@@ -46,7 +46,7 @@ describe("VerdictPlate with real replays", () => {
     render(<VerdictPlate plate={plate} revealed revealIntervalMs={INTERVAL_MS} />);
 
     expect(screen.getByText("HOLD").style.color).toBe("var(--after)");
-    expect(screen.getByText("hollow-inn v2")).toBeTruthy();
+    expect(screen.getByText("v2")).toBeTruthy();
     expect(screen.getByText("5 preserved · 4 rattled · 1 cracked")).toBeTruthy();
     expect(screen.getByText(coverageString(replays.v2.coverage))).toBeTruthy();
     expect(screen.getByText("5 red · 3 filed as Kiro bugfix specs")).toBeTruthy();

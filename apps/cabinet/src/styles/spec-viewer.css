@@ -12,11 +12,15 @@
   font-size: 18px;
 }
 
+/* A section heading of the drawer: the body face, bold, uppercase, --muted (not the display face). */
 .spec-viewer__heading {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 900;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .spec-viewer__status {
@@ -27,6 +31,7 @@
   margin: 0;
   font-family: var(--font-data);
   font-size: 15px;
+  color: var(--ink);
 }
 
 .spec-viewer__badge {
@@ -60,6 +65,17 @@
 
 .spec-viewer__link a {
   color: var(--tag);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.spec-viewer__link a:hover {
+  color: var(--ink);
+}
+
+.spec-viewer__link a:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
 }
 
 .spec-viewer__body {

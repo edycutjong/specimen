@@ -13,8 +13,10 @@ import { ServerSwitch } from "./components/ServerSwitch.js";
 import { ShelfRow } from "./components/ShelfRow.js";
 import { SpoiledTray } from "./components/SpoiledTray.js";
 import { VerdictPlate } from "./components/VerdictPlate.js";
-import { REVEAL_INTERVAL_MS, STAMP_TEXT, useReducedMotion, useReveal } from "./reveal.js";
+import { VersionNotes } from "./components/VersionNotes.js";
+import { REVEAL_INTERVAL_MS, useReducedMotion, useReveal } from "./reveal.js";
 import "./styles/motion.css";
+import "./styles/header.css";
 
 /** The Version selected on page load (Requirement 2.1). */
 const PAGE_VERSION: HollowInnVersion = "v2";
@@ -142,56 +144,68 @@ export function App(): ReactElement {
 
   // The VerdictPlate and the GuideStrip pulse wait for the whole Reveal to complete.
   const revealed = reveal.complete;
-  const stampRack =
-    reveal.stampAccession === null
-      ? null
-      : (viewModel.racks.find((rack) => rack.jars.some((jar) => jar.accession === reveal.stampAccession))?.code ??
-        null);
 
   return (
-    <CabinetFrame>
+    <>
       <header className="cabinet-header">
-        <h1 className="cabinet-wordmark">SPECIMEN JAR</h1>
+        <div className="cabinet-header__top">
+          <div className="cabinet-brand">
+            <h1 className="cabinet-wordmark">
+              <span className="cabinet-wordmark__specimen">SPECIMEN</span>{" "}
+              <span className="cabinet-wordmark__jar">JAR</span>
+            </h1>
+            <p className="cabinet-tagline">MCP calls · jarred · replayed</p>
+          </div>
+          <div className="cabinet-plate-slot">
+            {error !== null ? (
+              <div className="verdict-error">
+                <p className="verdict-error__message" role="alert">
+                  {error}
+                </p>
+                <button ref={retryButton} type="button" className="verdict-error__retry" onClick={onReplay}>
+                  Retry
+                </button>
+              </div>
+            ) : (
+              <VerdictPlate
+                plate={viewModel.plate}
+                revealed={revealed}
+                revealIntervalMs={REVEAL_INTERVAL_MS}
+                part="plaque"
+              />
+            )}
+          </div>
+        </div>
         <div className="cabinet-controls">
           <ServerSwitch version={version} onVersionChange={onVersionChange} />
           <ReplayButton version={version} running={running} onReplay={onReplay} />
         </div>
-        <div className="cabinet-plate-slot">
-          {error !== null ? (
-            <div className="verdict-error">
-              <p className="verdict-error__message" role="alert">
-                {error}
-              </p>
-              <button ref={retryButton} type="button" className="verdict-error__retry" onClick={onReplay}>
-                Retry
-              </button>
-            </div>
-          ) : (
-            <VerdictPlate plate={viewModel.plate} revealed={revealed} revealIntervalMs={REVEAL_INTERVAL_MS} />
-          )}
-        </div>
       </header>
 
-      <main className="cabinet-main">
-        <CountsPair counts={viewModel.counts} replayed={viewModel.replayed} />
-        <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
+      <CabinetFrame>
+        <main className="cabinet-main">
+          <CountsPair counts={viewModel.counts} replayed={viewModel.replayed} />
+          <VerdictPlate
+            plate={viewModel.plate}
+            revealed={revealed}
+            revealIntervalMs={REVEAL_INTERVAL_MS}
+            part="ledger"
+          />
+          <VersionNotes version={version} />
+          <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
 
-        {viewModel.racks.map((rack) => (
-          <div key={rack.code} className="rack-slot">
-            <ShelfRow
-              rack={rack}
-              isRevealed={reveal.isRevealed}
-              expandedAccession={openKey}
-              drawerId={DRAWER_ID}
-              onActivate={onActivate}
-            />
-            {stampRack === rack.code ? (
-              <span className="its-moving-stamp" aria-hidden="true">
-                {STAMP_TEXT}
-              </span>
-            ) : null}
-          </div>
-        ))}
+          {viewModel.racks.map((rack) => (
+            <div key={rack.code} className="rack-slot">
+              <ShelfRow
+                rack={rack}
+                isRevealed={reveal.isRevealed}
+                expandedAccession={openKey}
+                stampAccession={reveal.stampAccession}
+                drawerId={DRAWER_ID}
+                onActivate={onActivate}
+              />
+            </div>
+          ))}
 
         <Legend skippedToolsPresent={viewModel.skippedToolsPresent} />
         <SpoiledTray spoiled={viewModel.spoiled} />
@@ -207,6 +221,7 @@ export function App(): ReactElement {
           />
         </div>
       </main>
-    </CabinetFrame>
+      </CabinetFrame>
+    </>
   );
 }

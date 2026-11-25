@@ -25,7 +25,7 @@ import { createPortal } from "react-dom";
 import type { BugfixSpec, ResultEntry } from "@specimen/core";
 import type { CabinetReplayResult, HollowInnVersion } from "../browser-replay.js";
 import type { JarViewModel } from "../cabinet-model.js";
-import { JarArt } from "../jar-art.js";
+import { CrackLine, JarArt } from "../jar-art.js";
 import "../styles/jar-drawer.css";
 import { LabReportTable } from "./LabReportTable.js";
 import { SpecViewer } from "./SpecViewer.js";
@@ -274,8 +274,6 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
   const panel =
     activeTab === "jarred" ? (
       <>
-        <h3 className="jar-drawer__subheading">Jarred input</h3>
-        <pre className="jar-drawer__data">{formatJson(jar.input)}</pre>
         <h3 className="jar-drawer__subheading">Jarred body</h3>
         <pre className="jar-drawer__data">{jar.responseText ?? "no response recorded"}</pre>
       </>
@@ -296,6 +294,7 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
       aria-modal={modal ? "true" : undefined}
       aria-labelledby={headingId}
     >
+      <CrackLine className="jar-drawer__crack" />
       <header className="jar-drawer__header">
         <span className="jar-drawer__mini" aria-hidden="true">
           <JarArt className="jar-drawer__svg" state={jar.state} accession={jar.accession} tool={jar.tool} />
@@ -318,19 +317,6 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
       </header>
 
       <div className="jar-drawer__body">
-        <div role="tablist" aria-label="Jar data" className="jar-drawer__tabs">
-          {tabButton("jarred", "Jarred")}
-          {tabButton("replayed", "Replayed")}
-        </div>
-
-        {replayed ? null : (
-          <p className="jar-drawer__statement">No replay has been made for this Version ({version}).</p>
-        )}
-
-        <div id={panelId} role="tabpanel" aria-labelledby={`${tabListLabel}-${activeTab}`} tabIndex={0} className="jar-drawer__panel">
-          {panel}
-        </div>
-
         {replayed && entry !== null ? (
           <section className="jar-drawer__section" aria-label="Lab report">
             <h3 className="jar-drawer__subheading">Lab report</h3>
@@ -340,6 +326,26 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
 
         <section className="jar-drawer__section" aria-label="Bugfix spec for this Jar">
           <SpecViewer jar={jar} specs={specs} result={result} />
+        </section>
+
+        <section className="jar-drawer__section" aria-label="Jarred input">
+          <h3 className="jar-drawer__subheading">Jarred input</h3>
+          <pre className="jar-drawer__data">{formatJson(jar.input)}</pre>
+        </section>
+
+        <section className="jar-drawer__section" aria-label="Jar bodies">
+          <div role="tablist" aria-label="Jar data" className="jar-drawer__tabs">
+            {tabButton("jarred", "Jarred")}
+            {tabButton("replayed", "Replayed")}
+          </div>
+
+          {replayed ? null : (
+            <p className="jar-drawer__statement">No replay has been made for this Version ({version}).</p>
+          )}
+
+          <div id={panelId} role="tabpanel" aria-labelledby={`${tabListLabel}-${activeTab}`} tabIndex={0} className="jar-drawer__panel">
+            {panel}
+          </div>
         </section>
       </div>
     </section>

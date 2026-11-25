@@ -1,10 +1,14 @@
 /**
- * The cabinet frame (Requirements 14.1 to 14.3): a green-black stone wall with an inline SVG
- * grain, a riveted iron frame, the barred storm window, the stamp, and the four organs MCP,
- * HOOKS, REPLAY and SPEC joined by sutures and bolted in place.
+ * The cabinet wall (Requirements 14.1 to 14.3): a green-black stone wall with an inline SVG grain,
+ * a riveted iron frame, the stamp and the four organs MCP, HOOKS, REPLAY and SPEC joined by sutures,
+ * and the barred storm window behind the first shelf.
  *
- * The frame is decorative apart from its text. It takes children, which the page places inside
- * the iron frame, and it derives nothing from the replay.
+ * The wall is one composition. The stamp sits top-left with the organ row under it. The storm window
+ * is positioned at the right side of the wall, behind the content, so the first shelf stands in front
+ * of its lower part. The page header is not part of the wall. The App renders it above the frame.
+ *
+ * The frame is decorative apart from its text. It takes children, which the page places on the wall,
+ * and it derives nothing from the replay.
  */
 import { Fragment, useId, type ReactElement, type ReactNode } from "react";
 import { StormWindow, Suture } from "../jar-art.js";
@@ -45,23 +49,23 @@ export function CabinetFrame({ children }: CabinetFrameProps): ReactElement {
           <span key={corner} aria-hidden="true" className={`cabinet-frame__rivet cabinet-frame__rivet--${corner}`} />
         ))}
 
-        <header className="cabinet-frame__top">
+        <div className="cabinet-frame__top">
           <p className="cabinet-frame__stamp">{FRAME_STAMP}</p>
-          <StormWindow className="cabinet-frame__window" />
-        </header>
-
-        <div className="cabinet-frame__organs" role="group" aria-label="Organs">
-          {ORGANS.map((organ, index) => (
-            <Fragment key={organ}>
-              {index > 0 ? <Suture w={48} className="cabinet-frame__suture" /> : null}
-              <span className="cabinet-frame__organ">
-                <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--left" />
-                <span>{organ}</span>
-                <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--right" />
-              </span>
-            </Fragment>
-          ))}
+          <div className="cabinet-frame__organs" role="group" aria-label="Organs">
+            {ORGANS.map((organ, index) => (
+              <Fragment key={organ}>
+                {index > 0 ? <Suture w={48} className="cabinet-frame__suture" /> : null}
+                <span className="cabinet-frame__organ">
+                  <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--left" />
+                  <span>{organ}</span>
+                  <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--right" />
+                </span>
+              </Fragment>
+            ))}
+          </div>
         </div>
+
+        <StormWindow className="cabinet-frame__window" />
 
         <div className="cabinet-frame__content">{children}</div>
       </div>

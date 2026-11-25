@@ -3,9 +3,20 @@
  * tokens.css only. Mobile first: the base rules apply below 600 px.
  */
 
-/* One rack: plate, task and meta above the shelf. */
+/*
+ * One rack. Below 1024 px the rack plate stacks above the jars. From 1024 px the plate is a 260 px
+ * left column and the jars fill the right column.
+ */
 .shelf {
-  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 0 0 40px;
+  padding-top: 30px;
+  min-width: 0;
+}
+
+.shelf-plate {
   min-width: 0;
 }
 
@@ -21,8 +32,15 @@
 .shelf-task {
   margin: 8px 0 0;
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink);
+  opacity: 0.85;
   overflow-wrap: break-word;
+}
+
+.shelf-task q {
+  quotes: "\201C" "\201D";
 }
 
 .shelf-meta {
@@ -31,48 +49,89 @@
   flex-wrap: wrap;
   gap: 4px 12px;
   color: var(--muted);
-  font-family: var(--font-body);
-  font-size: 16px;
+  font-family: var(--font-data);
+  font-size: 14px;
 }
 
-/* The jar grid. Two 140 px cells plus an 8 px gap fit in 288 px, the width at 320 px. */
+.shelf-meta .data {
+  font-size: 14px;
+}
+
+/* The jar grid. Below 600 px three cells sit in a row and the rest wrap. */
 ol.shelf-grid {
   list-style: none;
-  margin: 16px 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   min-width: 0;
 }
 
 @media (min-width: 600px) {
   ol.shelf-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 16px;
   }
 }
 
-/* One Jar_Cell: the jar above its share of the iron shelf lip. */
+@media (min-width: 1024px) {
+  .shelf {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+}
+
+/* 180 px cells with a 28 px gap at 1280 px and wider (Requirement 7.7 with the desktop cell size). */
+@media (min-width: 1280px) {
+  ol.shelf-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 28px;
+  }
+}
+
+/* One Jar_Cell: the jar above its share of the iron shelf lip. The stamp is positioned on the cell. */
 .shelf-cell {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-/* The iron shelf lip under each jar, with the stencilled position code. */
+/*
+ * The iron shelf lip under each jar: 14 px tall, a steel gradient with rivets every 120 px and a soft
+ * shadow below it. The position code sits under the lip.
+ */
 .shelf-lip {
+  position: relative;
+  height: 14px;
   margin-top: 4px;
-  border-top: 6px solid var(--rule);
-  padding-top: 2px;
-  text-align: center;
+  border-radius: 2px;
+  background-image: linear-gradient(to bottom, color-mix(in srgb, var(--muted) 40%, var(--bg)), color-mix(in srgb, var(--muted) 14%, var(--bg)));
+  box-shadow: 0 6px 8px -4px color-mix(in srgb, var(--bg) 85%, transparent);
 }
 
+.shelf-lip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 50% 50%, var(--muted) 0 1.5px, color-mix(in srgb, var(--bg) 80%, transparent) 2.5px, transparent 3px);
+  background-size: 120px 14px;
+  background-position: 12px 0;
+  background-repeat: repeat-x;
+}
+
+/* Position codes are identifiers, so they use the data face, not the display face (Requirement 7.6). */
 .shelf-code {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 18px;
+  display: block;
+  margin-top: 6px;
+  text-align: center;
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 14px;
   line-height: 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
   color: var(--muted);
 }
 

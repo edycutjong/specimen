@@ -50,10 +50,19 @@ input {
   color: inherit;
 }
 
-/* Focus ring for every control (Requirement 8.12 sets 3 px in --ink for jars). */
+/* Focus ring for every control: 3 px in --before with a 2 px offset (the design pass, item 12). */
 :focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--before);
   outline-offset: 2px;
+}
+
+/* Links and summaries get the same ring and a visible hover. */
+a:hover {
+  color: var(--ink);
+}
+
+summary {
+  cursor: pointer;
 }
 
 /* Type roles (Requirement 9.3 to 9.6). Every size is 14 px or larger (Requirement 9.7). */
@@ -89,7 +98,7 @@ input {
   line-height: 1.4;
 }
 
-/* Layout. The jar grid keeps at least two 140 px cells at 320 px. */
+/* Layout. The jar grid keeps at least three cells in a row at 320 px (shelf.css). */
 
 .page {
   min-width: 0;
@@ -98,21 +107,7 @@ input {
   padding: 16px;
 }
 
-/* The header element in App.tsx. Below 600 px the wordmark, controls and plate stack in a column. */
-.cabinet-header {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
-.shelf-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-  min-width: 0;
-}
-
+/* The jar grid of each rack is `ol.shelf-grid` (shelf.css). Its children never widen past their cell. */
 .shelf-grid > * {
   min-width: 0;
 }
@@ -123,16 +118,10 @@ input {
   min-width: 0;
 }
 
-/* 600 px and up: verdict at full size, header on one row. */
+/* 600 px and up: the page keeps a wider margin. */
 @media (min-width: 600px) {
   .verdict-word {
     font-size: 56px;
-  }
-
-  .cabinet-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
   }
 
   .page {

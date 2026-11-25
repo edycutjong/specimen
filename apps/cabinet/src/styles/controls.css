@@ -1,0 +1,129 @@
+/*
+ * ServerSwitch and ReplayButton (Requirements 3.2, 3.6, 3.7 and the design pass). Colours come from
+ * the Token_File, and shades come from color-mix() of those tokens. Every control has a 3 px --before
+ * focus ring with a 2 px offset (Requirement 8.12 extended to the controls).
+ */
+
+.server-switch {
+  min-width: 0;
+}
+
+/* The iron segmented control: a 2 px rule frame on a dark plate. */
+.server-switch__segments {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  border: 2px solid var(--rule);
+  background: color-mix(in srgb, var(--bg) 80%, black);
+}
+
+/* A segment is at least 56 by 44 px, with the data face at 700 16 px. */
+.server-switch__segment {
+  min-width: 56px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.server-switch__segment + .server-switch__segment {
+  border-left: 2px solid var(--rule);
+}
+
+.server-switch__segment:hover {
+  background: color-mix(in srgb, var(--glass) 75%, var(--rule));
+  color: var(--ink);
+}
+
+/* The selected segment is the inked one. */
+.server-switch__segment[aria-checked="true"],
+.server-switch__segment[aria-checked="true"]:hover {
+  background: var(--ink);
+  color: var(--label-ink);
+}
+
+.server-switch__segment:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Below 600 px the native select stands in for the segments. */
+.server-switch__select {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--rule);
+  background: color-mix(in srgb, var(--bg) 80%, black);
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.server-switch__select:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+}
+
+.replay-button {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  min-width: 0;
+}
+
+/* REPLAY CABINET: the display face at 20 px in caps, outlined in ink. */
+.replay-button__control {
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 22px;
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.replay-button__control:hover,
+.replay-button__control:focus-visible {
+  background: var(--ink);
+  color: var(--label-ink);
+}
+
+.replay-button__control:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+}
+
+/* While a replay runs the button keeps focus but reads as disabled. */
+.replay-button__control[aria-disabled="true"],
+.replay-button__control[aria-disabled="true"]:hover {
+  border-color: var(--muted);
+  background: transparent;
+  color: var(--muted);
+  cursor: progress;
+}
+
+/* The elapsed milliseconds of a running replay, in the data face. */
+.replay-button__elapsed {
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

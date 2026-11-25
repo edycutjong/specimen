@@ -78,6 +78,16 @@
   to { clip-path: inset(0 0 0 0); }
 }
 
+/*
+ * SVG parts of the jar that carry no pointer or text: the skipped slash, the rattle arcs and the crack.
+ * They never take a pointer, so the jar button under them stays the only target.
+ */
+.jar-art__slash,
+.jar-art__arcs,
+.jar-art__crack {
+  pointer-events: none;
+}
+
 /* One bubble per preserved or not replayed Jar, on a 6 s cycle (Requirement 2.12). */
 .jar-art__bubble {
   animation: jar-bubble var(--bubble-ms) ease-in infinite;
@@ -114,9 +124,9 @@
 }
 
 /*
- * The "IT'S MOVING" stamp (Requirement 2.10). It sits beside the rack that holds the first
- * rattled jar, above the shelf, so it never covers a toe-tag. It is decorative, so it is
- * aria-hidden and takes no pointer events.
+ * The "IT'S MOVING" stamp (Requirement 2.10). It sits on the top-right corner of the cell of the
+ * first rattled jar (ShelfRow renders it inside that cell), so it never covers the rack plate and
+ * never sits over a toe-tag. It is decorative, so it is aria-hidden and takes no pointer events.
  */
 .rack-slot {
   position: relative;
@@ -124,20 +134,20 @@
 
 .its-moving-stamp {
   position: absolute;
-  top: -0.6rem;
-  right: 0.5rem;
-  z-index: 2;
+  top: -14px;
+  right: -12px;
+  z-index: 4;
   pointer-events: none;
-  padding: 0.1em 0.45em;
-  border: 3px solid var(--after);
+  padding: 4px 14px;
+  border: 4px double var(--after);
   border-radius: 2px;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 28px;
+  font-size: 34px;
   line-height: 1.1;
   letter-spacing: 0.06em;
   color: var(--after);
-  background: transparent;
+  background: var(--bg);
   transform: rotate(-8deg);
   white-space: nowrap;
   animation: stamp-slam var(--stamp-ms) ease-in both;

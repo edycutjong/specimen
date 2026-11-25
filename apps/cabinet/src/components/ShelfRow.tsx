@@ -5,10 +5,12 @@
  * the last letter of the rack code and the 1-based `seq` position (7.6).
  *
  * The view model supplies the order (`rack.jars` is already in seq order), so this component does
- * not sort. Reveal state, the open drawer and activation come from the parent.
+ * not sort. Reveal state, the open drawer and activation come from the parent. The "IT'S MOVING"
+ * stamp sits on the cell of the first rattled jar, at its top-right corner, and never over the plate.
  */
 import type { ReactElement } from "react";
 import { pluralise, type JarViewModel, type RackViewModel } from "../cabinet-model.js";
+import { STAMP_TEXT } from "../reveal.js";
 import "../styles/shelf.css";
 import { Jar } from "./Jar.js";
 
@@ -18,6 +20,8 @@ export type ShelfRowProps = {
   isRevealed: (jar: JarViewModel) => boolean;
   /** The accession of the jar whose JarDrawer is open, or null when no drawer is open. */
   expandedAccession: string | null;
+  /** The accession of the first rattled jar once the stamp is due, or null. The stamp sits on its cell. */
+  stampAccession?: string | null;
   /** The id of the JarDrawer that each jar controls. */
   drawerId: string;
   onActivate: (jar: JarViewModel) => void;
@@ -27,26 +31,29 @@ export function ShelfRow({
   rack,
   isRevealed,
   expandedAccession,
+  stampAccession = null,
   drawerId,
   onActivate,
 }: ShelfRowProps): ReactElement {
   const headingId = `shelf-${rack.code.replace(/ /g, "-").toLowerCase()}`;
   return (
     <section className="shelf" aria-labelledby={headingId}>
-      <header className="shelf-head">
-        <h2 id={headingId} className="shelf-title">
-          {rack.code}
-        </h2>
-        <p className="shelf-meta">
-          <span className="data" title={rack.sessionId}>
-            {rack.shortSessionId}
-          </span>
-          <span>{pluralise(rack.callCount, "call", "calls")}</span>
+      <div className="shelf-plate">
+        <header className="shelf-head">
+          <h2 id={headingId} className="shelf-title">
+            {rack.code}
+          </h2>
+          <p className="shelf-meta">
+            <span className="data" title={rack.sessionId}>
+              {rack.shortSessionId}
+            </span>
+            <span>{pluralise(rack.callCount, "call", "calls")}</span>
+          </p>
+        </header>
+        <p className="shelf-task">
+          <q>{rack.task}</q>
         </p>
-      </header>
-      <p className="shelf-task">
-        <q>{rack.task}</q>
-      </p>
+      </div>
       <ol className="shelf-grid" aria-label={`${rack.code} jars in call order`}>
         {rack.jars.map((jar) => (
           <li key={jar.accession} className="shelf-cell">
@@ -57,9 +64,13 @@ export function ShelfRow({
               drawerId={drawerId}
               onActivate={onActivate}
             />
-            <div className="shelf-lip">
-              <span className="shelf-code">{jar.positionCode}</span>
-            </div>
+            {stampAccession === jar.accession ? (
+              <span className="its-moving-stamp" aria-hidden="true">
+                {STAMP_TEXT}
+              </span>
+            ) : null}
+            <div className="shelf-lip" aria-hidden="true" />
+            <span className="shelf-code">{jar.positionCode}</span>
           </li>
         ))}
       </ol>

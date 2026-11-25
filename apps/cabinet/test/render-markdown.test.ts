@@ -64,6 +64,37 @@ describe("renderMarkdown", () => {
     expect(html("```\n<!-- kept -->\n```")).toBe("<div><pre><code>&lt;!-- kept --&gt;</code></pre></div>");
   });
 
+  it("renders a GFM pipe table as a header row, body rows and no raw pipes", () => {
+    const source = "| # | Tool | Change |\n|---|---|---|\n| (a) | `quote` | total is replaced |\n| (c) | `cancel_booking` | renamed |";
+    const output = html(source);
+
+    expect(output).toBe(
+      "<div><table><thead><tr>" +
+        '<th scope="col">#</th><th scope="col">Tool</th><th scope="col">Change</th>' +
+        "</tr></thead><tbody>" +
+        "<tr><td>(a)</td><td><code>quote</code></td><td>total is replaced</td></tr>" +
+        "<tr><td>(c)</td><td><code>cancel_booking</code></td><td>renamed</td></tr>" +
+        "</tbody></table></div>",
+    );
+    expect(output).not.toContain("|");
+  });
+
+  it("accepts a table without outer pipes and with alignment colons in the separator", () => {
+    const output = html("a | b\n:--|--:\n1 | 2");
+    expect(output).toContain("<th scope=\"col\">a</th><th scope=\"col\">b</th>");
+    expect(output).toContain("<td>1</td><td>2</td>");
+    expect(output).not.toContain("|");
+  });
+
+  it("keeps a line with pipes as prose when no delimiter row follows", () => {
+    expect(html("cat | dog")).toBe("<div><p>cat | dog</p></div>");
+  });
+
+  it("pads a short body row with empty cells and reads an escaped pipe as text", () => {
+    const output = html("| k | v |\n|---|---|\n| only \\| key |");
+    expect(output).toContain("<td>only | key</td><td></td>");
+  });
+
   it("returns no nodes for empty input", () => {
     expect(renderMarkdown("")).toEqual([]);
   });

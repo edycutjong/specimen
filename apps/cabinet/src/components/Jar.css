@@ -1,6 +1,7 @@
 /*
  * Jar.tsx styles (Requirements 8.4, 8.8, 8.12). Colours and faces come from the Token_File only.
- * Text sizes are fixed px values, so no viewport width shrinks them (Requirement 8.4).
+ * The jar art is at most 168 px wide. The toe-tag is sized in container units of the art, so it
+ * scales with a narrow cell. Its text sizes are fixed px values (Requirement 8.4).
  */
 .jar {
   position: relative;
@@ -20,16 +21,27 @@
   text-align: left;
 }
 
-/* Focus ring in --ink, 3 px wide, for every Jar_State (Requirement 8.12). */
+/* Focus ring in --before, 3 px wide, for every Jar_State (Requirement 8.12, focus rule of the header). */
 .jar__button:focus-visible,
 .jar__button:focus {
-  outline: 3px solid var(--ink);
-  outline-offset: 3px;
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
 }
 
+/* A jar lifts 2 px on hover and on keyboard focus. The lift moves the art only, not the shelf. */
 .jar__art {
   position: relative;
   display: block;
+  width: 100%;
+  max-width: 168px;
+  margin: 0 auto;
+  container-type: inline-size;
+  transition: transform 160ms ease-out;
+}
+
+.jar__button:hover .jar__art,
+.jar__button:focus-visible .jar__art {
+  transform: translateY(-2px);
 }
 
 .jar__svg {
@@ -39,24 +51,49 @@
   overflow: visible;
 }
 
-/* Covers the whole jar. Its children are placed in percentages of the jar's viewBox. */
+/* Covers the whole jar. Its children are placed in percentages of the jar. */
 .jar__overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-/* The toe-tag box. Its rotation is set inline, and its children use percentages of this box. */
+/*
+ * The toe-tag. It is 89 % of the art width, about 150 px at the 168 px art, and hangs over the lower
+ * front of the glass. The left edge is chamfered, so the notch sits where the string meets the tag.
+ */
 .jar__tag {
   position: absolute;
+  left: 4.5%;
+  top: 56%;
+  width: 89cqw;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 3% 4%;
-  box-sizing: border-box;
+  gap: 2px;
+  padding: 6px 12px 22px 22px;
+  background: var(--tag);
   color: var(--label-ink);
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  transform: rotate(var(--tag-rotate, -5deg));
+  transform-origin: 10px 10px;
   overflow: visible;
+}
+
+/* A flagged tag keeps its bottom band for the strip. The barcode sits above the strip, never under text. */
+.jar__tag--flagged {
+  padding-bottom: 40px;
+}
+
+/* The dark eyelet dot at the notch, where the string is fixed. */
+.jar__eyelet {
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--label-ink);
 }
 
 .jar__accession {
@@ -72,19 +109,23 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 1.2;
-  white-space: nowrap;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   word-break: normal;
 }
 
+/* A decorative barcode in the bottom band of the tag, 12 px tall, below the text. */
 .jar__barcode {
   position: absolute;
-  top: 10%;
-  right: 6%;
+  right: 12px;
+  bottom: 6px;
   display: flex;
   align-items: stretch;
   gap: 1px;
-  height: 36%;
+  height: 12px;
+}
+
+.jar__tag--flagged .jar__barcode {
+  bottom: 22px;
 }
 
 .jar__barcode > span {
@@ -93,17 +134,32 @@
   background: var(--label-ink);
 }
 
+/* The flag strip runs the full width of the tag along its bottom edge. */
 .jar__flag {
   position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 14px;
+  font-weight: 900;
+  font-size: 16px;
   line-height: 1;
-  color: var(--label-ink);
-  background: var(--after);
+  letter-spacing: 0.04em;
   white-space: nowrap;
+}
+
+.jar__flag--abnormal {
+  background: var(--after);
+  color: var(--label-ink);
+}
+
+.jar__flag--cracked {
+  background: var(--cracked);
+  color: var(--ink);
 }
 
 .jar__tip {

@@ -28,12 +28,30 @@
   background-attachment: local;
 }
 
+/* Fixed layout: Path 30 %, Replayed 22 %, Flag 18 %, Reference 30 %. Headings never break mid-word. */
 .lab-report__table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-family: var(--font-body);
   font-size: 15px;
   color: var(--ink);
+}
+
+.lab-report__table thead th:nth-child(1) {
+  width: 30%;
+}
+
+.lab-report__table thead th:nth-child(2) {
+  width: 22%;
+}
+
+.lab-report__table thead th:nth-child(3) {
+  width: 18%;
+}
+
+.lab-report__table thead th:nth-child(4) {
+  width: 30%;
 }
 
 .lab-report__table th,
@@ -45,8 +63,14 @@
   overflow-wrap: anywhere;
 }
 
+/* Column headings: the data face, 14 px, uppercase. Each heading stays on one line. */
 .lab-report__table thead th {
+  font-family: var(--font-data);
   font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
   color: var(--tag);
 }
 
@@ -56,11 +80,32 @@
   color: var(--tag);
 }
 
-/* Flag words are in the display face (Requirement 11.11). */
+/* Flag words are in the display face, Grenze Gotisch 900 at 16 px in --after (Requirement 11.11). */
 .lab-report__flag {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-weight: 900;
+  font-size: 16px;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--after);
+}
+
+/* A compatible addition is neutral, so its flag stays ink and is not red (Requirement 11.8). */
+.lab-report__row--compatible .lab-report__flag {
+  color: var(--ink);
+}
+
+/* The compatible additions group: a ruled divider above its heading row. */
+.lab-report__compatible th {
+  padding-top: 8px;
+  text-align: left;
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 1px dashed var(--rule);
 }
 
 /* Paths, values and literals are in the data face (Requirement 11.11). */
@@ -70,6 +115,11 @@
 }
 
 /* A changed row is red ink with struck path and replayed value, and its flag word is printed. */
+/* Every change row, changed or compatible, lays its cells out from the top. */
+.lab-report__row {
+  vertical-align: top;
+}
+
 .lab-report__row--changed {
   color: var(--after);
 }

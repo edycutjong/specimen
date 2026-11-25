@@ -1,0 +1,127 @@
+/*
+ * CountsPair (Requirement 6, the lab-notebook strip). A full-width strip on ruled paper with a 3 px
+ * --after margin line 48 px from the left. The schema half is on the left in --muted. The replay half
+ * is on the right in --after. A 1 px --rule divider sits between them. Colours come from the Token_File.
+ */
+
+.counts-pair {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+  margin: 16px 0 0;
+  padding: 16px 24px 16px 64px;
+  border: 1px solid var(--rule);
+  background-color: var(--glass);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--rule) 27px 28px);
+}
+
+/* The margin line of the notebook, 48 px from the left edge of the strip. */
+.counts-pair::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 3px;
+  background: var(--after);
+}
+
+.counts-pair__side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.counts-pair__side--schema {
+  min-width: 0;
+}
+
+.counts-pair__side--replay {
+  padding-left: 28px;
+}
+
+.counts-pair__divider {
+  flex: 0 0 1px;
+  width: 1px;
+  background: var(--rule);
+}
+
+/* The schema line: the label in the body face, then the value at 20 px. */
+.counts-pair__schema,
+.counts-pair__replay {
+  margin: 0;
+  font-family: var(--font-body);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.counts-pair__label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.counts-pair__schema .counts-pair__label {
+  color: var(--muted);
+}
+
+.counts-pair__replay .counts-pair__label {
+  color: var(--ink);
+}
+
+.counts-pair__schema .counts-pair__value {
+  font-size: 20px;
+  color: var(--muted);
+}
+
+/* The replay value is the figure of the page: Azeret Mono 700 at 34 px in --after. */
+.counts-pair__replay .counts-pair__value {
+  display: inline-block;
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.1;
+  color: var(--after);
+}
+
+.counts-pair__added {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+/* Below 720 px the two halves stack, and the divider becomes a horizontal rule. */
+@media (max-width: 719px) {
+  .counts-pair {
+    flex-direction: column;
+    padding: 16px 16px 16px 60px;
+  }
+
+  .counts-pair::before {
+    left: 40px;
+  }
+
+  .counts-pair__divider {
+    flex: 0 0 1px;
+    width: auto;
+    height: 1px;
+    margin: 12px 0;
+  }
+
+  .counts-pair__side--replay {
+    padding-left: 0;
+  }
+
+  .counts-pair__replay .counts-pair__value {
+    font-size: 28px;
+  }
+}

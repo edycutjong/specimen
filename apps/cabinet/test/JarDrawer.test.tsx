@@ -117,20 +117,20 @@ describe("JarDrawer not replayed (Requirement 10.14, 3.12)", () => {
     expect(jarred.getAttribute("aria-selected")).toBe("true");
     expect(screen.getByText("Jarred input")).toBeTruthy();
     expect(screen.getByText(/no replay has been made for this version/i)).toBeTruthy();
-    expect(screen.queryByRole("table")).toBeNull();
+    expect(screen.queryByRole("table", { name: /field-by-field diff/i })).toBeNull();
   });
 
   it("stays open on the same Jar when the Version changes to a not-replayed state", () => {
     const replayedFirst = replayedJar("v2", "SPC-0002");
     const { rerender } = render(drawerFor(replayedFirst, "v2", replays.v2));
-    expect(screen.getByRole("table")).toBeTruthy();
+    expect(screen.getByRole("table", { name: /field-by-field diff/i })).toBeTruthy();
 
     const notReplayed = jarIn(viewModelOf("v2.1", null), "SPC-0002");
     rerender(drawerFor(notReplayed, "v2.1", null));
 
     expect(headingOf().textContent).toBe("SPC-0002");
     expect(tabsOf().replayed.hasAttribute("disabled")).toBe(true);
-    expect(screen.queryByRole("table")).toBeNull();
+    expect(screen.queryByRole("table", { name: /field-by-field diff/i })).toBeNull();
   });
 });
 

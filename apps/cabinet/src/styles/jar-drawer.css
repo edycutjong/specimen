@@ -1,7 +1,8 @@
 /*
  * JarDrawer styles (Requirements 10.2 to 10.5). The form comes from the data-form attribute that
  * the component sets from the viewport width, so the CSS and the modal or non-modal behaviour can
- * never disagree. Colours come from the Token_File only. Text stays at 15 px or larger.
+ * never disagree. The drawer is a page of the lab notebook: ruled paper, a margin line and a crack in
+ * the top-right corner. Colours come from the Token_File only. Text stays at 14 px or larger.
  */
 
 .jar-drawer {
@@ -14,15 +15,40 @@
   max-width: 100%;
   overflow: hidden;
   color: var(--ink);
-  background: var(--glass);
+  background-color: var(--glass);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--rule) 27px 28px);
   font-family: var(--font-body);
   font-size: 16px;
 }
 
-/* Right panels: 480 px at 1280 px and wider, 420 px from 1024 px to 1279 px. */
+/* The 2 px --after margin line, 44 px from the left edge of the page. */
+.jar-drawer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 44px;
+  width: 2px;
+  background: var(--after);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* A small crack in the top-right corner, reusing the crack geometry of the jars. */
+.jar-drawer__crack {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 110px;
+  height: auto;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Right panels: 480 px at 1280 px and wider, 420 px from 1024 px to 1279 px. They start below the header. */
 .jar-drawer[data-form="panel-wide"],
 .jar-drawer[data-form="panel-narrow"] {
-  top: 0;
+  top: 104px;
   right: 0;
   bottom: 0;
   border-left: 2px solid var(--tag);
@@ -60,17 +86,26 @@
   height: 100%;
 }
 
+/* The drawer content sits above the ruled paper and the margin line. */
+.jar-drawer__header,
+.jar-drawer__body {
+  position: relative;
+  z-index: 1;
+}
+
 .jar-drawer__header {
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  padding: 16px;
+  padding: 16px 16px 16px 60px;
   border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--glass) 88%, transparent);
 }
 
+/* The mini jar is 64 px wide. */
 .jar-drawer__mini {
   flex: 0 0 auto;
-  width: 56px;
+  width: 64px;
 }
 
 .jar-drawer__svg {
@@ -85,43 +120,58 @@
   min-width: 0;
 }
 
+/* The accession: Azeret Mono 700 at 22 px. */
 .jar-drawer__heading {
   margin: 0;
   font-family: var(--font-data);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
+  line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
 /* The heading takes focus on open, so its focus ring is always visible. */
 .jar-drawer__heading:focus {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--before);
   outline-offset: 3px;
 }
 
-.jar-drawer__tool,
-.jar-drawer__place {
+.jar-drawer__tool {
   margin: 4px 0 0;
+  font-family: var(--font-data);
+  font-size: 18px;
   overflow-wrap: anywhere;
 }
 
 .jar-drawer__place {
+  margin: 4px 0 0;
   font-family: var(--font-data);
-  font-size: 15px;
+  font-size: 14px;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
+/* The flag as a red strip. CRACKED is the dim strip with ink letters. */
 .jar-drawer__flag {
+  display: inline-block;
   margin: 8px 0 0;
-  font-family: var(--font-data);
-  font-size: 15px;
-  font-weight: 700;
+  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 
-.jar-drawer__flag[data-flag="abnormal"],
+.jar-drawer__flag[data-flag="abnormal"] {
+  background: var(--after);
+  color: var(--label-ink);
+}
+
 .jar-drawer__flag[data-flag="cracked"] {
-  color: var(--after);
+  background: var(--cracked);
+  color: var(--ink);
 }
 
 .jar-drawer__close {
@@ -137,14 +187,42 @@
   cursor: pointer;
 }
 
+.jar-drawer__close:hover {
+  background: var(--tag);
+  color: var(--label-ink);
+}
+
+.jar-drawer__close:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+}
+
 .jar-drawer__body {
   display: grid;
-  gap: 16px;
+  gap: 22px;
   flex: 1 1 auto;
   min-height: 0;
-  padding: 16px;
+  padding: 16px 16px 16px 60px;
   overflow-y: auto;
   align-content: start;
+}
+
+/* Section headings: the body face, bold, uppercase, --muted. The display face is for the page title only. */
+.jar-drawer__subheading,
+.jar-drawer__section-heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.jar-drawer__section {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
 }
 
 .jar-drawer__tabs {
@@ -167,6 +245,10 @@
   cursor: pointer;
 }
 
+.jar-drawer__tab:hover {
+  color: var(--tag);
+}
+
 .jar-drawer__tab[aria-selected="true"] {
   border-bottom-color: var(--tag);
 }
@@ -177,7 +259,7 @@
 }
 
 .jar-drawer__tab:focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--before);
   outline-offset: 2px;
 }
 
@@ -188,17 +270,11 @@
 }
 
 .jar-drawer__panel:focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--before);
   outline-offset: 2px;
 }
 
-.jar-drawer__subheading {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 900;
-}
-
+/* The raw bodies in <pre>: long lines wrap anywhere, so nothing scrolls sideways. */
 .jar-drawer__data {
   margin: 0;
   padding: 10px;
@@ -218,8 +294,13 @@
   overflow-wrap: anywhere;
 }
 
-.jar-drawer__section {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
+@media (max-width: 599px) {
+  .jar-drawer__header,
+  .jar-drawer__body {
+    padding-left: 30px;
+  }
+
+  .jar-drawer::before {
+    left: 16px;
+  }
 }
