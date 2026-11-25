@@ -16,7 +16,7 @@ SPECIMEN JAR is a tool for people who build MCP servers. It tells you whether a 
    - CRACKED: the tool is gone or now errors.
    - SKIPPED: not allowed by `.specimen/replay.json`.
    - UNSEALED: not compared: an unpaired or orphaned call, a fully redacted response, or a result whose structuredContent or non-text content the text does not cover (a jar records text only).
-4. **Verdict.** SHIP only when at least one jar was compared and none is rattled, cracked, unsealed or skipped. Otherwise HOLD, with the reason.
+4. **Verdict.** SHIP only when at least one jar was compared, none is rattled, cracked, unsealed or skipped, and no jar line is spoiled (unparseable). Otherwise HOLD, with the reason.
 
 SHIP means "replay clean on the recorded set". It never means "this server is safe".
 

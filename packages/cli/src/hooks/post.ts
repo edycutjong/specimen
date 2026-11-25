@@ -28,19 +28,19 @@ const HOOK = "post";
 
 /**
  * Takes the next Accession_ID and persists the new counter. The counter is written before the
- * caller builds the Jar_Line. When the counter is missing or not a number, the highest id in
- * `jars/` is used instead, and a garbled counter is logged.
+ * caller builds the Jar_Line. The new id is one above the larger of the counter and the highest id
+ * already in `jars/`, so a missing, garbled (logged) or stale counter never repeats an id.
  */
 function takeAccession(io: HookIO, root: string, sessionId: string): string {
   const counterPath = specimenFile(root, "counter");
   const stored = io.fs.readText(counterPath);
-  let base = stored === undefined ? undefined : parseCounter(stored);
-  if (base === undefined) {
-    if (stored !== undefined) logDiag(root, HOOK, sessionId, "counter is not a non-negative integer");
-    const dir = jarsDirectory(root);
-    base = maxAccession(io.fs.listFiles(dir).map((name) => io.fs.readText(join(dir, name)) ?? ""));
-  }
-  const n = base + 1;
+  const counted = stored === undefined ? undefined : parseCounter(stored);
+  if (stored !== undefined && counted === undefined) logDiag(root, HOOK, sessionId, "counter is not a non-negative integer");
+  // The highest id already in jars/ is a floor for the counter: a stale or restored counter must never
+  // hand out an id a jar already holds (a2a round 06).
+  const dir = jarsDirectory(root);
+  const highest = maxAccession(io.fs.listFiles(dir).map((name) => io.fs.readText(join(dir, name)) ?? ""));
+  const n = Math.max(counted ?? 0, highest) + 1;
   const id = formatAccession(n);
   io.fs.writeAtomic(counterPath, `${n}\n`);
   return id;

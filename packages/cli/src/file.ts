@@ -22,9 +22,12 @@ import {
 import { dirname, join, relative, resolve } from "node:path";
 import { Command } from "commander";
 import {
+  ERROR_RESULT_REASON,
   canonicalJson,
   checkSpec,
+  isFileable,
   referenceOf,
+  sha256Hex,
   replayResultSchema,
   selectLatestReplay,
   type Failure,
@@ -41,8 +44,6 @@ const SLUG_MAX = 48;
 const CURATOR_AGENT = "specimen-curator";
 const REJECTED_NAME = "bugfix.rejected.md";
 
-/** The reason the replay engine gives a jar whose tool is not in the server's tools/list. */
-const MISSING_TOOL_REASON = "tool not in tools/list";
 const MARKER_START = "<!-- specimen:repro:start -->";
 const MARKER_END = "<!-- specimen:repro:end -->";
 
@@ -90,17 +91,30 @@ export const spawnKiro: KiroRunner = (call) =>
       clearTimeout(timer);
       resolvePromise(run);
     };
-    const child = spawn(call.command, call.args, { cwd: call.cwd, stdio: ["ignore", "ignore", "pipe"], env: { ...process.env, SPECIMEN_GATE: "off" } });
+    const child = spawn(call.command, call.args, {
+      cwd: call.cwd,
+      stdio: ["ignore", "ignore", "pipe"],
+      env: { ...process.env, SPECIMEN_GATE: "off" },
+      // Its own process group, so a timeout kills the curator and everything it started; the run
+      // settles only once the process has closed, so no late write lands after the skeleton is
+      // discarded (a2a round 06).
+      detached: true,
+    });
+    let timedOut = false;
     const timer = setTimeout(() => {
-      child.kill("SIGKILL");
-      settle({ exitCode: null, stderr, timedOut: true });
+      timedOut = true;
+      try {
+        if (child.pid !== undefined) process.kill(-child.pid, "SIGKILL");
+      } catch {
+        child.kill("SIGKILL");
+      }
     }, call.timeoutMs);
     child.stderr.setEncoding("utf8");
     child.stderr.on("data", (chunk: string) => {
       stderr += chunk;
     });
     child.on("error", (err) => settle({ exitCode: null, stderr: err.message, timedOut: false }));
-    child.on("close", (code) => settle({ exitCode: code, stderr, timedOut: false }));
+    child.on("close", (code) => settle({ exitCode: timedOut ? null : code, stderr, timedOut }));
   });
 
 /** One failed check, tied to the jar it was run for. */
@@ -154,13 +168,22 @@ function pathsOf(entry: ResultEntry): string[] {
  * The file name slug: the tool name followed by the sorted changed paths, in kebab case. A cracked
  * group uses `<tool>-missing-tool`. The result is at most 48 characters.
  */
-export function specSlug(tool: string, state: "rattled" | "cracked", paths: readonly string[]): string {
-  const raw = state === "cracked" ? `${tool} missing-tool` : [tool, ...paths].join(" ");
+export function specSlug(
+  tool: string,
+  state: "rattled" | "cracked",
+  paths: readonly string[],
+  reason?: string,
+): string {
+  const crack = reason === ERROR_RESULT_REASON ? "returns-error" : "missing-tool";
+  const raw = state === "cracked" ? `${tool} ${crack}` : [tool, ...paths].join(" ");
   const kebab = raw
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-  return kebab.slice(0, SLUG_MAX).replace(/-+$/, "");
+  if (kebab.length <= SLUG_MAX) return kebab;
+  // Two signatures that share their first 48 characters must not share a folder, now that a filed
+  // spec is never overwritten (a2a round 06): a truncated slug ends in 8 hex of the full signature.
+  return `${kebab.slice(0, SLUG_MAX - 9).replace(/-+$/, "")}-${sha256Hex(raw).slice(0, 8)}`;
 }
 
 /**
@@ -250,7 +273,9 @@ function referenceText(entry: ResultEntry): string {
         case "key":
           return `removed array item ${element.key}`;
         case "tool":
-          return `missing tool ${element.tool}`;
+          return entry.reason === ERROR_RESULT_REASON
+            ? `tool ${element.tool} now returns an error result`
+            : `missing tool ${element.tool}`;
       }
     });
     return parts.length === 0 ? "no reference element" : parts.join("; ");
@@ -400,18 +425,18 @@ export async function runFile(
   // A cracked jar is filed only as a missing tool, the one crack the replay proves from tools/list. A
   // start failure, a timeout, a dead session or an error result is not a missing tool, and a spec that
   // said so would invent the root cause (a2a round 05).
-  if (target.state === "cracked" && target.reason !== MISSING_TOOL_REASON) {
+  if (!isFileable(target)) {
     const cause = target.error ?? target.reason ?? "no cause recorded";
     return usage(
       io,
-      `jar ${jarId} is cracked by "${cause}", not by a tool missing from tools/list — only a missing tool is filed as a cracked jar; check the server start or re-run the replay`,
+      `jar ${jarId} is cracked by "${cause}", an operational failure — only a missing tool or an error result is filed as a cracked jar; check the server start or re-run the replay`,
     );
   }
 
   const state: "rattled" | "cracked" = target.state;
   const group = signatureGroup(result.jars, target);
   const preserved = result.jars.filter((jar) => jar.state === "preserved" && jar.tool === target.tool && jar.id !== null);
-  const slug = specSlug(target.tool, state, pathsOf(target));
+  const slug = specSlug(target.tool, state, pathsOf(target), target.reason);
   const relPath = `.kiro/specs/${slug}/bugfix.md`;
   const specPath = join(root, relPath);
   const skeleton = buildSkeleton(group);

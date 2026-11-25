@@ -14,6 +14,8 @@ import { z } from "zod";
 import {
   decideStop,
   filedJarIds,
+  isFileable,
+  listAllTools,
   replayResultSchema,
   validSessionId,
   type ReplayResult,
@@ -61,7 +63,8 @@ export const nodeStopPorts: StopPorts = {
   probe: async (server, root) => {
     const session = await makeStdioClientFactory(server, PROBE_TIMEOUT_MS, root)();
     try {
-      await session.client.listTools(undefined, { timeout: PROBE_TIMEOUT_MS });
+      // Every page, as the replay lists them: a page-2 failure must fail the probe, not crack every jar.
+      await listAllTools(session.client, PROBE_TIMEOUT_MS);
     } finally {
       await session.close().catch(() => undefined);
     }
@@ -168,7 +171,18 @@ export async function runStop(server: string, ports: StopPorts = nodeStopPorts):
     const redIds = result.jars
       .filter((jar) => (jar.state === "rattled" || jar.state === "cracked") && jar.id !== null)
       .map((jar) => jar.id as string);
-    const unfiledIds = redIds.filter((id) => !filed.has(id));
+    // Only a jar `specimen file` can file may hold the stop: the gate never sends the agent back for a
+    // spec the CLI must refuse (a2a round 06). An operational crack (start failure, timeout, dead
+    // session) is written to unresolved.md instead.
+    const fileableIds = new Set(result.jars.filter((jar) => jar.id !== null && isFileable(jar)).map((jar) => jar.id as string));
+    const unfiledIds = redIds.filter((id) => fileableIds.has(id) && !filed.has(id));
+    const operational = redIds.filter((id) => !fileableIds.has(id));
+    if (operational.length > 0) {
+      nodeFs.appendText(
+        specimenFile(root, "unresolved.md"),
+        `## ${new Date().toISOString()}\n\nsession: ${sessionId}\n\njars cracked by an operational failure (no spec can be filed; check the server): ${operational.join(", ")}\n\n`,
+      );
+    }
 
     const blocksSoFar = blocksIssued(root, sessionId);
     const decision = decideStop({

@@ -44,8 +44,13 @@ async function consume(client: Client): Promise<string[]> {
 for (const version of process.argv.slice(2)) {
   const transport = new StdioClientTransport({ command: "npx", args: ["tsx", "servers/hollow-inn/src/main.ts", version], stderr: "ignore" });
   const client = new Client({ name: "v1-consumer", version: "1.0.0" });
-  await client.connect(transport);
-  const lines = await consume(client);
-  await client.close();
+  let lines: string[];
+  try {
+    await client.connect(transport);
+    lines = await consume(client);
+  } catch (error) {
+    lines = [`connect: THREW ${error instanceof Error ? `${error.constructor.name}: ${error.message}` : String(error)}`];
+  }
+  await client.close().catch(() => undefined);
   process.stdout.write(`## hollow-inn ${version}\n${lines.map((line) => `- ${line}`).join("\n")}\n\n`);
 }

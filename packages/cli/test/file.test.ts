@@ -446,7 +446,7 @@ describe("runFile", () => {
 
     expect(code).toBe(FILE_EXIT.usage);
     expect(calls).toHaveLength(0);
-    expect(err()).toContain('cracked by "Request timed out", not by a tool missing from tools/list');
+    expect(err()).toContain('cracked by "Request timed out", an operational failure');
     expect(existsSync(join(ws.root, ".kiro/specs/cancel-booking-missing-tool"))).toBe(false);
   });
 

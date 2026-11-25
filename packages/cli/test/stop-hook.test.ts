@@ -272,6 +272,35 @@ describe("Stop gate: real hollow-inn replays", () => {
     expect(existsSync(join(root, ".specimen", "unresolved.md"))).toBe(false);
   }, REAL_TIMEOUT);
 
+  it("never blocks for jars cracked by an operational failure, and lists them in unresolved.md (a2a round 06)", async () => {
+    const root = workspace();
+    // The real v2 replay, with every red jar turned into a timeout crack: the shape `specimen file` refuses.
+    const operational: StopPorts["replay"] = async (options, io) => {
+      let text = "";
+      const code = await runReplay(options, { ...io, stdout: (chunk) => { text += chunk; } });
+      const result = JSON.parse(text) as { jars: Record<string, unknown>[]; counts: Record<string, number> };
+      for (const jar of result.jars) {
+        if (jar.state !== "rattled" && jar.state !== "cracked") continue;
+        jar.state = "cracked";
+        delete jar.reason;
+        jar.error = "Request timed out";
+        jar.changes = [];
+        jar.compatible = [];
+      }
+      const red = result.jars.filter((jar) => jar.state === "cracked").length;
+      result.counts = { ...result.counts, rattled: 0, cracked: red };
+      io.stdout(JSON.stringify(result));
+      return code;
+    };
+    const { ports, out } = portsFor(root, operational);
+    expect(await runStop(V2, ports)).toBe(0);
+    expect(out.join("")).toBe("");
+    expect(existsSync(gateFile(root))).toBe(false);
+    const unresolved = readFileSync(join(root, ".specimen", "unresolved.md"), "utf8");
+    expect(unresolved).toContain("operational failure");
+    for (const id of RED_V2) expect(unresolved).toContain(id);
+  }, REAL_TIMEOUT);
+
   it("E2: v2 with no filed spec blocks once and names every red jar", async () => {
     const root = workspace();
     const { ports, out } = portsFor(root);
