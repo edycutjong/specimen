@@ -14,6 +14,6 @@ Not the product. Two static pages served beside the cabinet on the same Vercel p
 the same code the cabinet runs; if it cannot load, the page shows the committed CLI replay and labels it RECORDED.
 
 The two HTML files are generated (not by Kiro) by a script kept outside this repository (it also renders the social card
-and the cabinet screenshots from the working folder). It reads every figure from `evidence/`, `replays/`, `prompts/` and
-`.kiro/` at generation time and stops on any mismatch; `scripts/check_submission_readiness.ts` checks the built pages are
+and the cabinet screenshots from the working folder). It takes every figure from `evidence/`, `replays/`, `prompts/` and
+`.kiro/` at generation time. The check you can run here is `scripts/check_submission_readiness.ts`: the built pages are
 present and request no third-party host. Links to this repository appear only when the build sets `VITE_REPO_PUBLIC=1`.
