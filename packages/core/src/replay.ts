@@ -22,7 +22,8 @@ import { canonicalJson, isJsonResponse, type Json } from "./json.js";
 import { normalize } from "./normalize.js";
 import type { PendingEntry } from "./pairing.js";
 import { decideTool, type ReplayPolicy, type VolatilePolicy } from "./policy.js";
-import { redactText, type Compiled } from "./redact.js";
+import { ERROR_RESULT_REASON, MISSING_TOOL_REASON } from "./fileable.js";
+import { MARKER, redactText, type Compiled } from "./redact.js";
 import { redactEntry } from "./replay-redact.js";
 import type { ReplayResult, ResultEntry } from "./replay-result.js";
 
@@ -233,7 +234,7 @@ async function replayJar(jar: JarLine, run: GroupRun, engine: Engine): Promise<R
     return build(jar, { state: "cracked", error: "server session was not started", ms: 0 });
   }
   if (!tools.has(jar.tool)) {
-    return build(jar, { state: "cracked", reason: "tool not in tools/list", ms: 0 });
+    return build(jar, { state: "cracked", reason: MISSING_TOOL_REASON, ms: 0 });
   }
 
   const started = engine.clock();
@@ -256,7 +257,7 @@ async function replayJar(jar: JarLine, run: GroupRun, engine: Engine): Promise<R
   const replayed = parseReplayed(replayedText);
 
   if (isErrorResult(result) && !isErrorShaped(jar.response)) {
-    return build(jar, { state: "cracked", error: replayedText, replayedText, replayed, ms });
+    return build(jar, { state: "cracked", reason: ERROR_RESULT_REASON, error: replayedText, replayedText, replayed, ms });
   }
 
   const judged = judgeJar(jar, replayedText, engine);
@@ -393,6 +394,33 @@ type Judged = {
 /** The unsealed reasons added by the a2a round 05 review: a clean text compare that cannot vouch for the result. */
 export const FULLY_REDACTED_REASON = "response fully redacted — nothing left to compare";
 export const UNCOMPARED_CONTENT_REASON = "result carries content its text does not cover — jar v1 records text only";
+export const REDACTED_GONE_REASON = "redacted path missing from the replay — presence changed, value not compared";
+
+/** True when the jar's stored text is nothing but redaction markers (or, in hash mode, the hash of one marker). */
+function fullyMarked(jar: JarLine, c: Compiled): boolean {
+  if (jar.response_length !== undefined) {
+    return jar.response_text === redactText(MARKER, { ...c, text: "hash" }).responseText;
+  }
+  return jar.text_redacted === true && jar.response_text.split(MARKER).join("").trim() === "";
+}
+
+/** True when an RFC 6901 Body-relative pointer (such as `/token` or `/items/0`) resolves in `body`. */
+function hasPointer(body: Json, tail: string): boolean {
+  let current: Json = body;
+  for (const raw of tail.slice(1).split("/")) {
+    const token = raw.replace(/~1/g, "/").replace(/~0/g, "~");
+    if (Array.isArray(current)) {
+      if (!/^(0|[1-9][0-9]*)$/.test(token) || Number(token) >= current.length) return false;
+      current = current[Number(token)] as Json;
+    } else if (current !== null && typeof current === "object") {
+      if (!Object.prototype.hasOwnProperty.call(current, token)) return false;
+      current = Object.getOwnPropertyDescriptor(current, token)?.value as Json;
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
 
 const UNCHANGED: Omit<Judged, "state"> = { changes: [], compatible: [], ignored: [] };
 
@@ -403,6 +431,11 @@ const UNCHANGED: Omit<Judged, "state"> = { changes: [], compatible: [], ignored:
  * Requirement 6 criterion 9).
  */
 function judgeJar(jar: JarLine, replayedText: string, engine: Engine): Judged {
+  // A text that pattern redaction replaced entirely compares two markers, which says nothing about the
+  // response (a2a round 06). In hash mode the same case stores the hash of the marker alone.
+  if (fullyMarked(jar, engine.redactConfig)) {
+    return { state: "unsealed", ...UNCHANGED, reason: FULLY_REDACTED_REASON };
+  }
   if (jar.response_length !== undefined) {
     return judgeHashed(jar, replayedText, engine.redactConfig);
   }
@@ -448,8 +481,23 @@ function judgeBodies(jar: JarLine, replayedText: string, engine: Engine): Judged
     return { state: "unsealed", changes: [], compatible: [], ignored: [""], reason: FULLY_REDACTED_REASON };
   }
 
-  const jarBody = removePointers(bodyOf(jar.response_text), excluded);
-  const replayedBody = removePointers(bodyOf(replayedText), excluded);
+  // A redacted value cannot be compared, but its presence can: a recorded redacted path that the replay
+  // no longer has is a change the removal below would hide (a2a round 06). Unsealed, not rattled, so no
+  // spec is ever asked to restore the marker text.
+  const recordedBody = bodyOf(jar.response_text);
+  const replayedRaw = bodyOf(replayedText);
+  const vanished = excluded.filter((tail) => hasPointer(recordedBody, tail) && !hasPointer(replayedRaw, tail)).sort(compareText);
+  if (vanished.length > 0) {
+    return {
+      state: "unsealed",
+      changes: [],
+      compatible: [],
+      ignored: excluded,
+      reason: `${REDACTED_GONE_REASON}: ${vanished.join(", ")}`,
+    };
+  }
+  const jarBody = removePointers(recordedBody, excluded);
+  const replayedBody = removePointers(replayedRaw, excluded);
   const jarNormal = normalize(jarBody, engine.volatilePolicy);
   const replayedNormal = normalize(replayedBody, engine.volatilePolicy);
 

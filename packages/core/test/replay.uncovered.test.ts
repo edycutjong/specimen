@@ -7,7 +7,10 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_REDACT_CONFIG,
+  ERROR_RESULT_REASON,
   FULLY_REDACTED_REASON,
+  REDACTED_GONE_REASON,
+  isFileable,
   SHIPPED_VOLATILE_POLICY,
   UNCOMPARED_CONTENT_REASON,
   compileRedact,
@@ -170,5 +173,36 @@ describe("a malformed tools/call result on a live connection", () => {
     });
     expect(outcome.resultEntries.map((entry) => entry.state)).toEqual(["cracked", "preserved"]);
     expect(outcome.resultEntries[0]?.error).toContain("-32602");
+  });
+});
+
+describe("round 06: presence of redacted paths, error results", () => {
+  it("unseals a jar whose redacted member is gone from the replay, instead of comparing what is left", async () => {
+    const recorded = JSON.stringify({ token: "[REDACTED]", total: 100 });
+    const outcome = await run(jar(recorded, ["/response/token"]), serverReturning({ content: [{ type: "text", text: JSON.stringify({ total: 100 }) }] }));
+    const entry = outcome.resultEntries[0];
+    expect(entry?.state).toBe("unsealed");
+    expect(entry?.reason).toBe(`${REDACTED_GONE_REASON}: /token`);
+  });
+
+  it("still preserves a jar whose redacted member is present with a new secret", async () => {
+    const recorded = JSON.stringify({ token: "[REDACTED]", total: 100 });
+    const outcome = await run(jar(recorded, ["/response/token"]), serverReturning({ content: [{ type: "text", text: JSON.stringify({ token: "fresh", total: 100 }) }] }));
+    expect(outcome.resultEntries[0]?.state).toBe("preserved");
+  });
+
+  it("cracks a call that now returns isError with the fileable error-result reason", async () => {
+    const outcome = await run(jar(TEXT), serverReturning({ content: [{ type: "text", text: "room is closed" }], isError: true }));
+    const entry = outcome.resultEntries[0];
+    expect(entry?.state).toBe("cracked");
+    expect(entry?.reason).toBe(ERROR_RESULT_REASON);
+    expect(entry !== undefined && isFileable(entry)).toBe(true);
+  });
+
+  it("files rattled jars and the two proven cracks, never an operational crack", () => {
+    expect(isFileable({ state: "rattled" })).toBe(true);
+    expect(isFileable({ state: "cracked", reason: "tool not in tools/list" })).toBe(true);
+    expect(isFileable({ state: "cracked" })).toBe(false);
+    expect(isFileable({ state: "unsealed", reason: ERROR_RESULT_REASON })).toBe(false);
   });
 });

@@ -329,7 +329,9 @@ describe("Property 11: Redacted-at-capture jars compare the re-redacted replayed
           makeScriptedClientFactory([tool("note", `${base} ${second}`)]),
         );
         const [entry] = outcome.resultEntries;
-        expect(entry?.state).toBe("preserved");
+        // A text that is nothing but the marker compared two markers: unsealed, never preserved (a2a round 06).
+        const onlyMarker = captured.responseText.split("[REDACTED]").join("").trim() === "";
+        expect(entry?.state).toBe(onlyMarker ? "unsealed" : "preserved");
         expect(entry?.changes).toEqual([]);
         expect(entry?.replayed_text).not.toContain(second);
       }),
