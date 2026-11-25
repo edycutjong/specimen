@@ -35,7 +35,7 @@ no-limit call, `SPC-0010`, which is the jar that rattles on `/rooms/r-08`, `/roo
 ## What it means for SPECIMEN JAR
 
 The jars still rattle, and they should: the response contract changed (`/total` removed, `/total_cents` added ×100,
-a tool renamed). One LLM agent that re-reads the tool descriptions on every call adapted this time, in n = 1 run per
+a tool renamed). One LLM agent with the new tool descriptions loaded adapted this time, in n = 1 run per
 task. Hypothesis, not tested here: code and clients that read `total` (a typed SDK, a cached plan, a downstream service, an
 agent with a stale tool list) would not have the new description and would get nothing. Replay reports the change; whether a given consumer survives it is a separate,
 per-consumer question — and this run is the measured answer for one consumer, on one day.
