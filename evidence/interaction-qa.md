@@ -20,4 +20,4 @@ first run (the accessible name did not start with the visible label) and was fix
 **What the first run found and what changed** (`prompts/turn-46.md`, `turn-47.md`): hover feedback was missing on three disclosures and the footer link; the favicon returned 404; the first jar sat at y = 624 on a 375 px phone. All three were fixed
 (first jar 453 px). The `Details` fold is closed by default, so the gate opens it before it measures the version-notes disclosure.
 
-Reproduce: `node assets/qa/ux-check.mjs <url> <out.json>` (kitchen script; not in this repository).
+The harness is a short Puppeteer + axe-core script kept outside this repository; the raw result above is what it printed.
