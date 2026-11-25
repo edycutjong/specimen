@@ -43,5 +43,8 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 29 | `cabinet-ui` feature spec: requirements.md | 4.10 |
 | 30 | `cabinet-ui` Analyze Requirements pass | 9.27 |
 | 31 | `cabinet-ui` design.md + tasks.md | 11.27 |
+| 32 | executed the `cabinet-ui` tasks, 45 tasks (699 tool calls, model claude-haiku-5.5) | 41.33 |
+| 33 | cabinet visual polish round 1 after a real-browser review (model claude-haiku-5.5) | 14.04 |
+| 34 | cabinet visual polish round 2 (model claude-haiku-5.5) | 3.64 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.

@@ -5,7 +5,7 @@ copied from a committed output file linked next to it.
 
 ## 1. Schema diff vs replay, on the same server change
 
-**Question:** a `tools/list` diff is the cheap check most teams already have. On the same v1 → v2 change of the demo
+**Question:** an input-schema diff of `tools/list` (tools removed, tools added, `inputSchema` changed — descriptions not compared) is the cheap check most teams already have. On the same v1 → v2 change of the demo
 server (hollow-inn), what does it see, and what does replaying the recorded calls see?
 
 **Run:** `npx tsx scripts/bench.ts detect` → [`evidence/bench/detect.md`](../evidence/bench/detect.md) (10 committed jars, baseline v1).
@@ -35,14 +35,15 @@ Positive fixtures: `/total 425` → `/total_cents 42500` (×100) and `4.35` → 
 **Run:** `scripts/consequence-run.sh v2 v1` then `node scripts/consequence-extract.mjs` — the fixed RACK A and RACK B
 prompts, headless `kiro-cli 3.6.0 --agent-engine v3`, fresh scratch workspaces, capture hooks off, v1 as the control, no
 re-prompting. Evidence and the full write-up: [`evidence/consequence-v2/`](../evidence/consequence-v2/README.md).
-Cost: 2.29 Kiro credits for the four sessions.
+Cost: 2.29 Kiro credits for the four sessions (Kiro's own `usage_summary`, [`prompts/README.md`](../prompts/README.md)).
 
 **Result:** the agent's own answer did **not** change. Under v2 it still said **$425.00** for the Hearth Room (v1:
-$425.00) and "$98.00 (9800 cents)" for the Lantern Room, and it cancelled through the renamed `booking_cancel`. It
-coped because v2 updated the tool description with the field ("`total_cents` is … in integer cents") and the agent read
-it. The room-list break (v2's default page drops `r-08`/`r-09`) was not exercised: in both RACK A runs the agent sent
+$425.00) and "$98.00 (9800 cents)" for the Lantern Room, and it cancelled through the renamed `booking_cancel`. v2
+updated the tool description with the field ("`total_cents` is … in integer cents") and the agent had that description
+loaded; we did not run an ablation, so this is the likely reason, not a measured one. The room-list break (v2's default page drops `r-08`/`r-09`) was not exercised: in both RACK A runs the agent sent
 `limit: 50` although the prompt asked for no limit.
 
 **What it changed:** we do not claim that the agent quoted rooms in cents. The claim stays at the contract level: the
-response changed in a way no schema diff and no unit test in the server saw, and a consumer that reads `total` breaks.
-One LLM agent that re-reads descriptions adapted, in one run per task.
+response changed in a way no input-schema diff (the check measured in experiment 1, which does not compare descriptions)
+and no unit test in the server saw; a consumer that still reads `total` would get nothing (not run here). One LLM agent
+with the new descriptions loaded adapted, in one run per task.
