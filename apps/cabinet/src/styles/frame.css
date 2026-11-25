@@ -8,7 +8,7 @@
 .cabinet-frame {
   position: relative;
   isolation: isolate;
-  padding: 12px;
+  padding: 8px;
   background-color: var(--bg);
   background-image:
     radial-gradient(ellipse at 30% 0%, color-mix(in srgb, var(--glass) 90%, transparent), transparent 65%),
@@ -30,7 +30,7 @@
 /* The riveted iron frame that holds the wall: the verdict text, the shelves and the bottom suture row. */
 .cabinet-frame__iron {
   position: relative;
-  padding: 20px 16px 20px;
+  padding: 4px 16px 20px;
   border: 8px solid color-mix(in srgb, var(--muted) 35%, var(--bg));
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   box-shadow:
@@ -102,7 +102,7 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -122,12 +122,12 @@
 }
 
 /*
- * From 600 px the wall keeps 24 px above the first shelf. The IT'S MOVING stamp sits above the first jar, so it
- * keeps at least 16 px clear of the GuideStrip (design pass, item 7).
+ * From 600 px the wall sits directly on the first shelf. The IT'S MOVING stamp sits inside the shelf's top padding,
+ * so the first jar row starts at most 440 px from the top of a 1440 x 900 screen (design pass, item 2).
  */
 @media (min-width: 600px) {
   .cabinet-wall {
-    margin-bottom: 24px;
+    margin-bottom: 0;
   }
 }
 
@@ -140,7 +140,7 @@
   }
 }
 
-/* The Details block: the lede and the ledger. It is open on a wide page, and a phone folds it behind a summary. */
+/* The Details fold, below the shelves at every width. Closed by default: the lede, the ledger lines and the version notes. */
 .cabinet-details {
   min-width: 0;
 }
@@ -161,13 +161,6 @@
 .cabinet-details__summary:focus-visible {
   outline: 3px solid var(--before);
   outline-offset: 2px;
-}
-
-/* On a wide page the Details block is always open, so its summary is not shown. */
-@media (min-width: 600px) {
-  .cabinet-details__summary {
-    display: none;
-  }
 }
 
 /* The one ledger row: the ledger lines, the version heading and the "What changed" disclosure. */
@@ -195,6 +188,8 @@
 /*
  * A wall 1180 px wide or more: the text column is the wall minus a 260 px window column and a 20 px gutter.
  * The wall is 1208 px at a 1280 px viewport with the JarDrawer closed, so the closed desktop layout keeps its window.
+ * The window stretches to the height of the text column. `contain: size` keeps its drawn height out of the row
+ * height, so a tall window never pushes the shelves down.
  */
 @container wall (min-width: 1180px) {
   .cabinet-wall__grid {
@@ -214,10 +209,11 @@
     display: block;
     grid-column: 2;
     grid-row: 1;
-    align-self: end;
+    align-self: stretch;
     width: 260px;
     max-width: 100%;
     height: auto;
+    contain: size;
     position: relative;
     z-index: 0;
     pointer-events: none;

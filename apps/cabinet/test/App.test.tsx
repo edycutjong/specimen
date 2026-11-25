@@ -32,6 +32,17 @@ afterEach(() => {
 });
 
 describe("App", () => {
+  it("shows the one-sentence pitch in the header and keeps the lede closed in the Details fold (design pass, item 1)", () => {
+    const { container } = render(<App />);
+    expect(container.querySelector(".cabinet-tagline")?.textContent).toBe(
+      "Every MCP call your Kiro agent makes, kept in a jar. Change the server, replay the cabinet: broken calls rattle red.",
+    );
+    const details = container.querySelector<HTMLDetailsElement>("details.cabinet-details");
+    expect(details?.open).toBe(false);
+    expect(details?.querySelector("summary")?.textContent).toBe("Details");
+    expect(details?.querySelector(".counts-pair__lede")).not.toBeNull();
+  });
+
   it("selects v2 on page load and shows its replayed result without a click", async () => {
     render(<App />);
 

@@ -44,23 +44,6 @@ function messageOf(caught: unknown): string {
   return "The replay failed without a message.";
 }
 
-/** The page's 600 px breakpoint. Without matchMedia (a test environment) the wide layout is assumed. */
-const WIDE_QUERY = "(min-width: 600px)";
-
-function useWideViewport(): boolean {
-  const supported = typeof window !== "undefined" && typeof window.matchMedia === "function";
-  const [wide, setWide] = useState<boolean>(() => (supported ? window.matchMedia(WIDE_QUERY).matches : true));
-  useEffect(() => {
-    if (!supported) return undefined;
-    const list = window.matchMedia(WIDE_QUERY);
-    const onChange = (event: MediaQueryListEvent): void => setWide(event.matches);
-    setWide(list.matches);
-    list.addEventListener("change", onChange);
-    return () => list.removeEventListener("change", onChange);
-  }, [supported]);
-  return wide;
-}
-
 /** Writes the header's height to `--cabinet-header-h`, so a right-hand JarDrawer can start below the sticky header. */
 function useHeaderHeightVariable(header: RefObject<HTMLElement | null>): void {
   useEffect(() => {
@@ -100,7 +83,6 @@ export function App(): ReactElement {
   // The storm at replay start: a --storm overlay over the shelves, and a window flash (design pass, item 10).
   const [stormOn, setStormOn] = useState(false);
   const reducedMotion = useReducedMotion();
-  const wide = useWideViewport();
   const headerRef = useRef<HTMLElement | null>(null);
   useHeaderHeightVariable(headerRef);
 
@@ -250,7 +232,7 @@ export function App(): ReactElement {
               <span className="cabinet-wordmark__specimen">SPECIMEN</span>{" "}
               <span className="cabinet-wordmark__jar">JAR</span>
             </h1>
-            <p className="cabinet-tagline">MCP calls · jarred · replayed</p>
+            <p className="cabinet-tagline">Every MCP call your Kiro agent makes, kept in a jar. Change the server, replay the cabinet: broken calls rattle red.</p>
           </div>
           <div className="cabinet-plate-slot">
             {error !== null ? (
@@ -291,20 +273,6 @@ export function App(): ReactElement {
                   revealed={revealed}
                   countUp={!reducedMotion}
                 />
-                {/* The lede, the ledger lines and the version notes. On a phone they fold behind this one Details (after the shelves). */}
-                <details className="cabinet-details" open={wide}>
-                  <summary className="cabinet-details__summary">Details</summary>
-                  <p className="counts-pair__lede">{ledeText(order.length)}</p>
-                  <div className="cabinet-ledger">
-                    <VerdictPlate
-                      plate={viewModel.plate}
-                      revealed={revealed}
-                      revealIntervalMs={REVEAL_INTERVAL_MS}
-                      part="ledger"
-                    />
-                    <VersionNotes version={version} verdict={viewModel.plate.verdict} revealed={revealed} />
-                  </div>
-                </details>
                 <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
               </div>
               <StormWindow className="cabinet-wall__window" lit={lit || stormOn} />
@@ -324,6 +292,21 @@ export function App(): ReactElement {
               />
             </div>
           ))}
+
+          {/* The Details fold: the lede, the ledger lines and the version notes. Closed by default at every width. */}
+          <details className="cabinet-details">
+            <summary className="cabinet-details__summary">Details</summary>
+            <p className="counts-pair__lede">{ledeText(order.length)}</p>
+            <div className="cabinet-ledger">
+              <VerdictPlate
+                plate={viewModel.plate}
+                revealed={revealed}
+                revealIntervalMs={REVEAL_INTERVAL_MS}
+                part="ledger"
+              />
+              <VersionNotes version={version} verdict={viewModel.plate.verdict} revealed={revealed} />
+            </div>
+          </details>
 
           <FrameSuture />
           <Legend skippedToolsPresent={viewModel.skippedToolsPresent} />
