@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="SPECIMEN JAR — a specimen jar with iron neck bolts on its own night-lab plate, its glowing green fluid flooding red from the bottom as the specimen inside twitches and an ABNORMAL strip inks across its toe-tag">
+  <!-- Static mark: favicon + raster source. Self-plated (green-black rounded plate) so it holds on GitHub light AND dark.
+       Direction night-lab-specimen (specs/design.md, P2c). The frozen moment, mid-flood: bioluminescent green
+       (state: preserved, primary token) above, red (state: rattled, accent token) rising from the bottom.
+       16px reading: plate · iron lid with two neck bolts (a T) · two-tone jar. Storm window behind drops out by design.
+       Colours: CSS custom property with a hex fallback; the hex applies when standalone. -->
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color: #1A2219"/>
+      <stop offset="1" style="stop-color: var(--bg, #10150F)"/>
+    </linearGradient>
+    <radialGradient id="storm" cx="50%" cy="20%" r="55%">
+      <stop offset="0" style="stop-color: var(--storm, #C9D6F2)" stop-opacity=".34"/>
+      <stop offset="1" style="stop-color: var(--storm, #C9D6F2)" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="60%" r="50%">
+      <stop offset="0" style="stop-color: var(--accent, #FF4A2E)" stop-opacity=".5"/>
+      <stop offset=".5" style="stop-color: var(--primary, #A8E35F)" stop-opacity=".16"/>
+      <stop offset="1" style="stop-color: var(--primary, #A8E35F)" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fluid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color: #D6FF9A"/>
+      <stop offset=".35" style="stop-color: var(--primary, #A8E35F)"/>
+      <stop offset="1" style="stop-color: #4F8A2A"/>
+    </linearGradient>
+    <linearGradient id="flood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color: #FF8A6C"/>
+      <stop offset=".3" style="stop-color: var(--accent, #FF4A2E)"/>
+      <stop offset="1" style="stop-color: #8E1C12"/>
+    </linearGradient>
+    <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color: #A3AC9F"/>
+      <stop offset=".45" style="stop-color: #5A6257"/>
+      <stop offset="1" style="stop-color: #2A3028"/>
+    </linearGradient>
+    <clipPath id="inner"><path d="M52 146 Q30 150 30 178 L30 408 Q30 430 52 430 L204 430 Q226 430 226 408 L226 178 Q226 150 204 146 Z"/></clipPath>
+    <clipPath id="plateclip"><rect x="16" y="16" width="480" height="480" rx="112"/></clipPath>
+  </defs>
+
+  <!-- plate: the lab at night -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#plate)"/>
+  <g clip-path="url(#plateclip)">
+    <!-- storm light through the barred window (environment only, never a state) -->
+    <rect x="16" y="16" width="480" height="300" fill="url(#storm)"/>
+    <path d="M150 300 L150 128 Q150 56 256 44 Q362 56 362 128 L362 300" fill="#0C110E" fill-opacity=".55" stroke="#3E4C55" stroke-width="6"/>
+    <g stroke="#2E3A40" stroke-width="7" stroke-linecap="round"><line x1="203" y1="62" x2="203" y2="300"/><line x1="256" y1="48" x2="256" y2="300"/><line x1="309" y1="62" x2="309" y2="300"/></g>
+    <path d="M348 60 L318 108 L338 112 L306 168" fill="none" style="stroke: var(--storm, #C9D6F2)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+    <ellipse cx="256" cy="330" rx="210" ry="190" fill="url(#glow)"/>
+  </g>
+
+  <!-- the jar, mid-rattle: tilted, shake double behind -->
+  <g transform="translate(143.4 60) scale(0.88)">
+    <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="none" style="stroke: var(--accent, #FF4A2E)" stroke-width="4" stroke-opacity=".3" transform="translate(-10 0) rotate(-4 128 440)"/>
+    <g transform="rotate(-4 128 440)">
+      <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="#192219" fill-opacity=".7"/>
+      <g clip-path="url(#inner)">
+        <rect x="20" y="186" width="216" height="254" fill="url(#fluid)"/>
+        <path d="M20 290 Q56 272 92 290 T164 290 T236 284 L236 440 L20 440 Z" fill="url(#flood)"/>
+        <ellipse cx="128" cy="186" rx="98" ry="6" fill="#E6FFB8" opacity=".6"/>
+        <!-- the specimen: a curled { — the jarred answer, twitching -->
+        <g transform="translate(120 248) rotate(-14) scale(1.9)">
+          <path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#0E120D" stroke-opacity=".45" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" style="stroke: var(--ink, #ECE6D3)" stroke-opacity=".9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <rect x="44" y="192" width="12" height="220" rx="6" fill="#ECE6D3" opacity=".16"/>
+      </g>
+      <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="none" style="stroke: var(--ink, #ECE6D3)" stroke-opacity=".85" stroke-width="9"/>
+      <!-- neck ring, iron lid, two neck bolts -->
+      <rect x="42" y="118" width="172" height="24" rx="6" fill="#2A3028"/>
+      <rect x="30" y="76" width="196" height="46" rx="10" fill="url(#iron)"/>
+      <rect x="-26" y="114" width="72" height="22" rx="5" fill="url(#iron)"/>
+      <rect x="-40" y="106" width="22" height="38" rx="5" fill="url(#iron)"/>
+      <rect x="210" y="114" width="72" height="22" rx="5" fill="url(#iron)"/>
+      <rect x="274" y="106" width="22" height="38" rx="5" fill="url(#iron)"/>
+      <!-- toe-tag with the red ABNORMAL strip (no text at icon scale) -->
+      <g transform="translate(136 384) rotate(5) scale(0.78)">
+        <path d="M-74 -34 L-62 -46 L80 -46 L80 46 L-62 46 L-74 34 Z" style="fill: var(--tag, #D9C49A)"/>
+        <circle cx="-56" cy="0" r="9" fill="#2A2418"/>
+        <rect x="-38" y="-30" width="96" height="9" rx="3" style="fill: var(--label-ink, #1E1912)"/>
+        <rect x="-38" y="-14" width="60" height="7" rx="3" style="fill: var(--label-ink, #1E1912)" opacity=".7"/>
+        <rect x="-70" y="12" width="150" height="26" style="fill: var(--accent, #FF4A2E)"/>
+      </g>
+    </g>
+    <!-- rattle arcs -->
+    <g fill="none" style="stroke: var(--accent, #FF4A2E)" stroke-width="14" stroke-linecap="round">
+      <path d="M-36 230 Q-62 280 -36 330"/>
+      <path d="M292 220 Q318 270 292 320"/>
+    </g>
+  </g>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="#333D31" stroke-width="4"/>
+</svg>
