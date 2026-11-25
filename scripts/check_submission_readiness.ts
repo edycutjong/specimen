@@ -63,20 +63,24 @@ const replays = existsSync(join(root, "replays")) ? readdirSync(join(root, "repl
 const newestV2 = replays.at(-1);
 const bad: string[] = [];
 let checked = 0;
+let jarsChecked = 0;
 for (const d of specDirs) {
   const bf = join(specsDir, d, "bugfix.md");
   if (!existsSync(bf) || !newestV2) continue;
   const ids = [...new Set([...read(bf).matchAll(/"id":\s*"(SPC-\d+)"/g)].map((m) => m[1]!))];
-  const id = ids[0];
-  if (!id) {
+  if (ids.length === 0) {
     bad.push(`${d}: no jar id`);
     continue;
   }
   checked++;
-  const r = spawnSync("npx", ["--no-install", "specimen", "check-spec", bf, "--jar", id, "--replay", join(root, "replays", newestV2)], { cwd: root, encoding: "utf8" });
-  if (r.status !== 0) bad.push(`${d} (${id}) exit ${r.status}`);
+  // a2a r07: every jar the spec names, not only the first (the quote spec names three)
+  for (const id of ids) {
+    jarsChecked++;
+    const r = spawnSync("npx", ["--no-install", "specimen", "check-spec", bf, "--jar", id, "--replay", join(root, "replays", newestV2)], { cwd: root, encoding: "utf8" });
+    if (r.status !== 0) bad.push(`${d} (${id}) exit ${r.status}`);
+  }
 }
-add("every bugfix spec passes `specimen check-spec`", checked > 0 && bad.length === 0 ? "PASS" : "FAIL", bad.length ? bad.join("; ") : `${checked} specs against ${newestV2}`);
+add("every bugfix spec passes `specimen check-spec`", checked > 0 && bad.length === 0 ? "PASS" : "FAIL", bad.length ? bad.join("; ") : `${checked} specs, ${jarsChecked} jars against ${newestV2}`);
 
 // 5. "Kiro filed" claims need the curator command's provenance.
 const claim = /Kiro has filed|filed by Kiro|Kiro-filed/i;
@@ -88,18 +92,30 @@ add("\"Kiro filed\" claims have curator provenance", claimed.length === 0 || pro
 const dist = join(root, "apps/cabinet/dist");
 if (existsSync(dist)) {
   const files = execFileSync("find", [dist, "-type", "f", "(", "-name", "*.html", "-o", "-name", "*.css", "-o", "-name", "*.js", ")"], { encoding: "utf8" }).split("\n").filter(Boolean);
+  // a2a r07: only an <a href> is navigation. Every other src/href (script, link, img, iframe, …), url(), @import and
+  // fetch() is a request, and a request to any host but our own fails the check, whichever host it is.
+  const OWN = "specimen.edycu.dev";
   const hosts = new Set<string>();
+  const nav = new Set<string>();
   for (const f of files) {
     const t = read(f);
-    for (const m of t.matchAll(/(?:src|href)=["']https?:\/\/([^/"']+)|url\(["']?https?:\/\/([^/)"']+)|@import\s+["']https?:\/\/([^/"']+)|fetch\(["']https?:\/\/([^/"']+)/g)) {
-      const h = m[1] ?? m[2] ?? m[3] ?? m[4];
-      if (h && !/(^|\.)w3\.org$/.test(h)) hosts.add(h);
+    for (const m of t.matchAll(/<([a-zA-Z][\w-]*)\b[^>]*?\s(?:src|href)=["']https?:\/\/([^/"'?#]+)/g)) {
+      (m[1]!.toLowerCase() === "a" ? nav : hosts).add(m[2]!);
+    }
+    for (const m of t.matchAll(/url\(["']?https?:\/\/([^/)"']+)|@import\s+["']https?:\/\/([^/"']+)|fetch\(["']https?:\/\/([^/"']+)/g)) {
+      hosts.add((m[1] ?? m[2] ?? m[3])!);
     }
   }
-  // Outbound <a href> links to GitHub are navigation, not requests; any other host is listed.
-  const other = [...hosts].filter((h) => !["github.com", "specimen.edycu.dev", "kiroween.devpost.com"].includes(h));
-  add("built cabinet requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (github.com and kiroween.devpost.com links are navigation; specimen.edycu.dev is our own host)`);
-} else add("built cabinet requests no third-party host", "FAIL", "apps/cabinet/dist missing: run `npm run build -w apps/cabinet` first");
+  const other = [...hosts].filter((h) => h !== OWN && !/(^|\.)w3\.org$/.test(h));
+  add("built site requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (cabinet, /landing/, /deck/); <a> links only: ${[...nav].sort().join(", ") || "none"}`);
+
+  // The deploy is the cabinet plus the landing and the deck (vercel.json): a cabinet-only dist is not the live site.
+  const need = ["index.html", "landing/index.html", "deck/index.html", "static/replay.js", "static/repo.json"];
+  const missing = need.filter((p) => !existsSync(join(dist, p)));
+  let repoPublic: unknown = null;
+  try { repoPublic = (JSON.parse(read(join(dist, "static/repo.json"))) as { public?: unknown }).public; } catch { /* reported as missing */ }
+  add("built site has the cabinet, landing, deck and replay bundle", missing.length === 0 ? "PASS" : "FAIL", missing.length ? `missing in apps/cabinet/dist: ${missing.join(", ")} — run the vercel.json buildCommand` : `${need.length} files; repo links ${repoPublic === true ? "ON" : "off (VITE_REPO_PUBLIC unset: turn on at the public flip)"}`);
+} else add("built site requests no third-party host", "FAIL", "apps/cabinet/dist missing: run the vercel.json buildCommand first");
 
 // 7. A kitchen file never sits in the repository.
 const leak = git("ls-files").out.split("\n").filter((p) => !p.startsWith(".kiro/") && /(^|\/)(CLAUDE|AGENTS)\.md$|^PRODUCT\.md$|(^|\/)\.claude\/|^specs\/|(^|\/)progress\.md$|graphify-out\/|(^|\/)\.env(\.[\w-]+)?$/.test(p) && !p.endsWith(".env.example"));
