@@ -40,6 +40,9 @@ const DEFAULT_TIMEOUT_SECONDS = 300;
 const SLUG_MAX = 48;
 const CURATOR_AGENT = "specimen-curator";
 const REJECTED_NAME = "bugfix.rejected.md";
+
+/** The reason the replay engine gives a jar whose tool is not in the server's tools/list. */
+const MISSING_TOOL_REASON = "tool not in tools/list";
 const MARKER_START = "<!-- specimen:repro:start -->";
 const MARKER_END = "<!-- specimen:repro:end -->";
 
@@ -171,6 +174,7 @@ export function signatureGroup(jars: readonly ResultEntry[], target: ResultEntry
       jar.id !== null &&
       jar.tool === target.tool &&
       jar.state === target.state &&
+      (jar.state !== "cracked" || jar.reason === target.reason) &&
       JSON.stringify(pathsOf(jar)) === key,
   );
 }
@@ -393,6 +397,17 @@ export async function runFile(
     return usage(io, `jar ${jarId} is ${target.state}, not rattled or cracked`);
   }
 
+  // A cracked jar is filed only as a missing tool, the one crack the replay proves from tools/list. A
+  // start failure, a timeout, a dead session or an error result is not a missing tool, and a spec that
+  // said so would invent the root cause (a2a round 05).
+  if (target.state === "cracked" && target.reason !== MISSING_TOOL_REASON) {
+    const cause = target.error ?? target.reason ?? "no cause recorded";
+    return usage(
+      io,
+      `jar ${jarId} is cracked by "${cause}", not by a tool missing from tools/list — only a missing tool is filed as a cracked jar; check the server start or re-run the replay`,
+    );
+  }
+
   const state: "rattled" | "cracked" = target.state;
   const group = signatureGroup(result.jars, target);
   const preserved = result.jars.filter((jar) => jar.state === "preserved" && jar.tool === target.tool && jar.id !== null);
@@ -416,6 +431,11 @@ export async function runFile(
     return FILE_EXIT.filed;
   }
 
+  // A filed spec is never overwritten: a failed or rejected re-run would otherwise replace it and then
+  // delete or rename it (a2a round 05).
+  if (existsSync(specPath)) {
+    return usage(io, `${relPath} already exists — a filed spec is never overwritten; move it away first to file it again`);
+  }
   mkdirSync(dirname(specPath), { recursive: true });
   writeFileSync(specPath, skeleton);
 

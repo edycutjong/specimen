@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { checkSpec, diff, type Json, type ResultEntry } from "@specimen/core";
 import { createProgram } from "../src/main.js";
@@ -49,6 +49,7 @@ function entry(p: {
   recorded: string | null;
   replayed: string | null;
   error?: string;
+  reason?: string;
 }): ResultEntry {
   const recorded = p.recorded === null ? null : (JSON.parse(p.recorded) as Json);
   const replayed = p.replayed === null ? null : (JSON.parse(p.replayed) as Json);
@@ -67,6 +68,7 @@ function entry(p: {
     replayed,
     ms: 3,
     ...(p.error !== undefined ? { error: p.error } : {}),
+    ...(p.reason !== undefined ? { reason: p.reason } : {}),
   };
 }
 
@@ -103,7 +105,7 @@ function jars(): ResultEntry[] {
       input: { booking_id: "b-7" },
       recorded: '{"booking_id":"b-7","status":"cancelled"}',
       replayed: null,
-      error: "tool cancel_booking is not listed",
+      reason: "tool not in tools/list",
     }),
   ];
 }
@@ -211,8 +213,12 @@ describe("signature group and slug", () => {
     expect(signatureGroup(all, target as ResultEntry).map((jar) => jar.id)).toEqual(["SPC-0001", "SPC-0002"]);
   });
 
-  it("groups every cracked jar of the tool", () => {
-    const all = [...jars(), entry({ id: "SPC-0006", seq: 6, tool: "cancel_booking", state: "cracked", input: {}, recorded: '{"ok":true}', replayed: null })];
+  it("groups every cracked jar of the tool with the same cause, and leaves out a crack with another cause", () => {
+    const all = [
+      ...jars(),
+      entry({ id: "SPC-0006", seq: 6, tool: "cancel_booking", state: "cracked", input: {}, recorded: '{"ok":true}', replayed: null, reason: "tool not in tools/list" }),
+      entry({ id: "SPC-0007", seq: 7, tool: "cancel_booking", state: "cracked", input: {}, recorded: '{"ok":true}', replayed: null, error: "Request timed out" }),
+    ];
     const target = all.find((jar) => jar.id === "SPC-0004");
     expect(signatureGroup(all, target as ResultEntry).map((jar) => jar.id)).toEqual(["SPC-0004", "SPC-0006"]);
   });
@@ -419,6 +425,45 @@ describe("runFile", () => {
     expect(out()).toBe("");
     expect(err().trim().split("\n")).toHaveLength(1);
     expect(err()).toContain("SPC-0003 is preserved, not rattled or cracked");
+  });
+
+  it("refuses a jar cracked by a timeout instead of filing it as a missing tool", async () => {
+    const timedOut = entry({
+      id: "SPC-0004",
+      seq: 4,
+      tool: "cancel_booking",
+      state: "cracked",
+      input: { booking_id: "b-7" },
+      recorded: '{"booking_id":"b-7","status":"cancelled"}',
+      replayed: null,
+      error: "Request timed out",
+    });
+    writeReplay(REPLAY, [...jars().filter((jar) => jar.id !== "SPC-0004"), timedOut]);
+    const { io, err } = captureIO();
+    const { runner, calls } = fakeRunner();
+
+    const code = await runFile("SPC-0004", withReplay, io, runner);
+
+    expect(code).toBe(FILE_EXIT.usage);
+    expect(calls).toHaveLength(0);
+    expect(err()).toContain('cracked by "Request timed out", not by a tool missing from tools/list');
+    expect(existsSync(join(ws.root, ".kiro/specs/cancel-booking-missing-tool"))).toBe(false);
+  });
+
+  it("never overwrites a filed spec, and leaves it byte for byte", async () => {
+    writeReplay();
+    const filed = join(ws.root, ".kiro/specs/cancel-booking-missing-tool/bugfix.md");
+    mkdirSync(dirname(filed), { recursive: true });
+    writeFileSync(filed, "an accepted spec\n");
+    const { io, err } = captureIO();
+    const { runner, calls } = fakeRunner();
+
+    const code = await runFile("SPC-0004", withReplay, io, runner);
+
+    expect(code).toBe(FILE_EXIT.usage);
+    expect(calls).toHaveLength(0);
+    expect(err()).toContain(".kiro/specs/cancel-booking-missing-tool/bugfix.md already exists");
+    expect(readFileSync(filed, "utf8")).toBe("an accepted spec\n");
   });
 
   it("exits 2 for an unknown jar id", async () => {
