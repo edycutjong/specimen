@@ -27,7 +27,7 @@ the v2 server while 5 of the 10 recorded calls come back different.
    The committed hook (`.kiro/hooks/specimen-jar-stop.json`) replays the current server, hollow-inn v2.1, which is SHIP, so
    in this repository as committed it allows every stop until someone changes v2.1. The gate rows below ran in scratch
    copies against v1 or v2: E1–E3 pass `--server` to `specimen hook stop` directly (`scripts/stop-gate-eval.sh:26`), the
-   live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`); each live run's header records its hook command, and `evidence/stop-gate/eval.md` names the server version per row.
+   live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`); each live run's header records its hook command; `evidence/stop-gate/eval.md` names the server in its E0, first E2 and E1 rows, and the rows after them continue those sessions (E3 also replays v2, `scripts/stop-gate-eval.sh:47`).
 
 ## Measured results (every number is a committed output)
 

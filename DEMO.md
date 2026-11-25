@@ -1,7 +1,7 @@
 # DEMO — reproduce what SPECIMEN JAR measured
 
 Every number below is printed by the command next to it; the outputs are committed under `evidence/`. The live cabinet,
-<https://specimen.edycu.dev/>, replays the same jars in the browser on load.
+<https://specimen.edycu.dev/>, replays the same jars in the browser on load; its cold open ends 4252–4403 ms after navigation start in headless Chrome, inside the 4500 ms design bound (`node scripts/cold-open-time.mjs`, 10 runs, `evidence/cold-open.md`).
 
 ## 0. Install
 
@@ -65,7 +65,7 @@ exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not
 `HOLD · covered` with exit 3 (`racks-vs-v2.1-after-filing-all.txt`). `specimen replay` also writes a new file under `replays/` each run.
 The three `quote` jars pass because `total` is kept and `total_cents` is an added field (`+1 field`, compatible). Strict mode makes an added field rattle:
 `npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1" --strict` prints `HOLD · 3 rattled · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
-exit 1 (`evidence/replay/racks-vs-v2.1-strict.txt`; re-run 2026-11-25 23:27 WIB, output identical).
+exit 1 (`evidence/replay/racks-vs-v2.1-strict.txt`).
 
 ## Notes — field shelf (hour 1)
 

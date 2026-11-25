@@ -278,10 +278,11 @@ describe("Cold-open bound (design, 4.5 s)", () => {
   });
 
   // Wall clock under jsdom. The 4.5 s bound is a browser property: it is measured in a real browser on the live page
-  // (scripts/cold-open-time.mjs → evidence/cold-open.md). jsdom renders ten SVG jars more slowly than a browser and
-  // shares the CPU with the rest of the suite (4.27–4.67 s seen for the same page, where Chrome needs 4.25–4.40 s from
-  // navigation start), so this case allows JSDOM_RENDER_ALLOWANCE_MS on top of the bound. What it still catches is
-  // a hidden wait: any timer the schedule does not account for adds its full length here.
+  // (scripts/cold-open-time.mjs → evidence/cold-open.md). Under jsdom, with the other test files running in parallel,
+  // the same page takes 4.27–4.34 s from render in the committed suite logs (evidence/tests.txt) and went over 4.5 s
+  // under load, where Chrome needs 4.25–4.40 s from navigation start; so this case allows JSDOM_RENDER_ALLOWANCE_MS
+  // on top of the bound. It catches a hidden wait longer than its headroom (about 0.9 s on a 4.3 s run); a shorter
+  // one is not caught here, and the real bound is the browser measurement.
   const JSDOM_RENDER_ALLOWANCE_MS = 750;
   it("adds no hidden wait to a real-time cold open: render to the stamp and the verdict stays inside the bound plus the jsdom allowance", async () => {
     installReducedMotion(false);

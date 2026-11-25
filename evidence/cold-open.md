@@ -4,7 +4,7 @@ Command: `PUP=<dir with puppeteer>/ node scripts/cold-open-time.mjs https://spec
 Run: 2026-11-25 23:24 WIB, headless Chrome (puppeteer), 1440×900, a fresh browser context (empty cache) per run, production deployment `dpl_Hkbr7EKYnqgCHxsZqWm79sU3eLyf`, created 23:10:41 WIB, 12 s after commit 7aa78ec (`vercel inspect`).
 Measured: ms from navigation start (network and parse included) to (a) the verdict word on the plate, which is the end of the cold open (lightning lead 620 ms, Reveal of 10 jars 2250 ms, settle 700 ms, count-up 400 ms, plus the in-browser replay), and (b) the "IT'S MOVING" stamp, which appears 700 ms after the first rattled jar is revealed.
 
-Design bound (`COLD_OPEN_BOUND_MS`, apps/cabinet/src/reveal.ts): 4500 ms. Every run is inside it; the largest is 4403 ms, 97 ms under.
+Design bound (`COLD_OPEN_BOUND_MS`, apps/cabinet/src/reveal.ts): 4500 ms. ("median" below is the upper of the two middle values: the script prints `sorted[n/2]`.) Every run is inside it; the largest is 4403 ms, 97 ms under.
 
 Output, pasted unedited:
 
