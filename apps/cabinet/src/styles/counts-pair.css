@@ -120,6 +120,26 @@
 
 /* From 1024 px the replay headline stays on one line: nowrap, and the size scales with the viewport (QA round 3, item 7). */
 @media (min-width: 1024px) {
+  .counts-pair {
+    display: grid;
+    grid-template-columns: auto minmax(300px, 1fr) auto;
+    align-items: stretch;
+  }
+
+  /* The schema label sits on its own line, and its value stays on one line beside the rest of the strip. */
+  .counts-pair__side--schema .counts-pair__label {
+    display: block;
+  }
+
+  .counts-pair__schema .counts-pair__value {
+    white-space: nowrap;
+  }
+
+  /* The connector takes the free width up to 440 px, so its comparison runs in three or four lines. */
+  .counts-pair__connector {
+    max-width: 440px;
+  }
+
   .counts-pair__replay .counts-pair__value {
     white-space: nowrap;
     font-size: clamp(28px, 2.4vw, 34px);
@@ -201,6 +221,7 @@
  */
 @container counts (max-width: 899px) {
   .counts-pair {
+    display: flex;
     flex-direction: column;
   }
 

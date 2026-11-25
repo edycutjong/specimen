@@ -75,7 +75,7 @@
 .cabinet-tagline {
   margin: 4px 0 0;
   font-family: var(--font-body);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.3;
   color: color-mix(in srgb, var(--ink) 85%, transparent);
   overflow-wrap: break-word;
@@ -185,22 +185,30 @@
 }
 
 /*
- * From 1280 px the pitch sits in the header's free band: under the controls, left of the plate. At 20 px the sentence is
- * 1034 px long, wider than the band (848 px at 1280), so it wraps to two lines. The header reserves 40 px under the
- * controls for those lines (QA round 3, item 1), so they never sit on the controls.
+ * From 1280 px the pitch sits in the header's free band: under the controls and above the bottom of the plate row,
+ * left of the plate. The band runs from the wordmark's left edge (24 px) to the plate's left edge (the plate is 400 px
+ * wide, 24 px from the right edge, so `right` is 424 px). At 18 px the sentence is 931 px, so it is one line from
+ * 1400 px up, where the band is 952 px or wider. The header keeps its 8 px bottom padding, so the header at 1440 px
+ * is 138 px tall, the height it had before turn-39.
  */
 @media (min-width: 1280px) {
-  .cabinet-header {
-    padding-bottom: 48px;
-  }
-
   .cabinet-tagline {
     position: absolute;
     left: 24px;
-    right: 432px;
+    right: 424px;
     bottom: 8px;
     max-width: none;
     margin: 0;
+  }
+}
+
+/*
+ * Below 1400 px the band is narrower than the sentence, so the pitch wraps to two lines (2 x 23.4 px). The header
+ * reserves 28 px under the plate row for them, so the two lines sit below the controls (their top is at 101 px).
+ */
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .cabinet-header {
+    padding-bottom: 28px;
   }
 }
 

@@ -17,13 +17,14 @@
 }
 
 /*
- * From 600 px the shelf has room above its jars for the IT'S MOVING stamp: the top padding is 56 px, so the stamp
- * keeps 12 px or more clear of the GuideStrip above it (QA round 3, item 11). From 600 px to 1023 px the plate sits above the jars,
- * so the row gap is wide enough for the stamp to clear the plate.
+ * From 600 px the shelf has room above its jars for the IT'S MOVING stamp. The top padding is 57 px, the least that keeps
+ * the stamp's rotated box 12 px or more below the GuideStrip (measured 12.4 px; 56 px gives 11.4). The stamp sits 38 px
+ * above its cell (motion.css), so the cell top, and the first jar row, starts at 489 px at 1440 x 900. From 600 px to
+ * 1023 px the plate sits above the jars, so the row gap is wide enough for the stamp to clear the plate.
  */
 @media (min-width: 600px) {
   .shelf {
-    padding-top: 58px;
+    padding-top: 57px;
   }
 }
 
