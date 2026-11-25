@@ -4,6 +4,8 @@
 # Usage: scripts/stop-gate-live.sh [out.md]                 agent may only read/write files (it cannot run `specimen file`)
 #        TRUST_SHELL=1 scripts/stop-gate-live.sh out.md      agent may also run shell commands in the scratch copy (it can file the spec)
 #        GATE=off TRUST_SHELL=1 scripts/stop-gate-live.sh out.md   the control run: same prompt, no stop or turn hook
+#        SCENARIO=break [GATE=off] TRUST_SHELL=1 scripts/stop-gate-live.sh out.md   UNCOACHED arm: scratch at v1, the stop hook replays v1, the prompt is a plain
+#                                                      refactor ("rename quote.total to total_cents") that really breaks the quote jars; no word about hooks
 # Costs a few tenths of a Kiro credit per run. The repo itself is never touched.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -20,11 +22,15 @@ rm -f "$S"/.specimen/turn.json "$S"/.specimen/gate-*.json "$S"/.specimen/unresol
 cd "$S" || exit 2
 for d in quote-total-total-cents search-rooms-rooms-rooms-r-08-rooms-r-09 cancel-booking-missing-tool; do rm -rf ".kiro/specs/$d"; done
 # the gate under test replays against v2; the capture hooks are removed so the probe records nothing
-sed -i.bak 's/hollow-inn\/src\/main.ts v2.1/hollow-inn\/src\/main.ts v2/' .kiro/hooks/specimen-jar-stop.json && rm -f .kiro/hooks/specimen-jar-stop.json.bak
+SRV=v2; [ "${SCENARIO:-}" = "break" ] && SRV=v1
+sed -i.bak "s/hollow-inn\/src\/main.ts v2.1/hollow-inn\/src\/main.ts $SRV/" .kiro/hooks/specimen-jar-stop.json && rm -f .kiro/hooks/specimen-jar-stop.json.bak
 rm -f .kiro/hooks/specimen-jar-pre.json .kiro/hooks/specimen-jar-post.json
 [ "${GATE:-on}" = "off" ] && rm -f .kiro/hooks/specimen-jar-stop.json .kiro/hooks/specimen-jar-turn.json
 git init -q && git add -A >/dev/null 2>&1 && git -c user.email=eval@example.com -c user.name=eval commit -qm base >/dev/null 2>&1
 PROMPT="${PROMPT_OVERRIDE:-}"
+if [ -z "$PROMPT" ] && [ "${SCENARIO:-}" = "break" ]; then
+  PROMPT='In servers/hollow-inn/src/v1.ts, rename the quote tool'"'"'s output field `total` to `total_cents`, expressed as an integer number of cents, and update its description to match. Reply DONE when finished.'
+fi
 [ -n "$PROMPT" ] || PROMPT='Add the single comment line "// gate probe" as the first line of servers/hollow-inn/src/v1.ts, then reply with the word DONE. If a hook sends you back with a reason, read it and say in one sentence what you will do about it, then do it.'
 START=$(date +%s)
 kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5 --trust-workspace --trust-tools="$TOOLS" "$PROMPT" > "$S/live.log" 2>&1
@@ -33,7 +39,7 @@ END=$(date +%s)
 {
   echo "# Agent Stop gate — one live headless Kiro session"
   echo
-  echo "Generated $(date -u +%Y-%m-%dT%H:%M:%SZ) by \`scripts/stop-gate-live.sh\`; \`kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5\`, scratch copy, gate = ${GATE:-on}; stop hook = \`specimen hook stop --server \"npx tsx servers/hollow-inn/src/main.ts v2\"\` (timeout 30 s), no bugfix spec filed, trusted tools \`$TOOLS\`. exit $RC, $((END-START)) s."
+  echo "Generated $(date -u +%Y-%m-%dT%H:%M:%SZ) by \`scripts/stop-gate-live.sh\`; \`kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5\`, scratch copy, gate = ${GATE:-on}; stop hook = \`specimen hook stop --server \"npx tsx servers/hollow-inn/src/main.ts $SRV\"\` (timeout 30 s), no bugfix spec filed, trusted tools \`$TOOLS\`. exit $RC, $((END-START)) s."
   echo
   echo "Prompt: \`$PROMPT\`"
   echo
@@ -53,5 +59,9 @@ END=$(date +%s)
   echo "Specs in the scratch copy after the run: \`$(ls .kiro/specs | tr '\n' ' ')\`"
   echo
   echo "File after the run (first lines of servers/hollow-inn/src/v1.ts): \`$(head -2 servers/hollow-inn/src/v1.ts | tr '\n' ' ' | cut -c1-120)\`"
+  if [ "${SCENARIO:-}" = "break" ]; then
+    echo
+    echo "Lines of servers/hollow-inn/src/v1.ts mentioning total_cents after the run: \`$(grep -c total_cents servers/hollow-inn/src/v1.ts)\`; diff vs base: \`$(git diff --stat | tail -1)\`"
+  fi
 } > "$OUT"
 echo "wrote $OUT (kiro exit $RC)"

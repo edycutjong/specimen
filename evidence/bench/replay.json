@@ -1,0 +1,16 @@
+{
+  "specimen replay, hollow-inn v1": {
+    "n": 10,
+    "min": 1831,
+    "p50": 2254,
+    "p95": 2780,
+    "max": 2780
+  },
+  "specimen replay, hollow-inn v2.1": {
+    "n": 10,
+    "min": 2176,
+    "p50": 2365,
+    "p95": 2452,
+    "max": 2452
+  }
+}

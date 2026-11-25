@@ -7,6 +7,7 @@
  */
 import preHook from "../../../../.kiro/hooks/specimen-jar-pre.json?raw";
 import postHook from "../../../../.kiro/hooks/specimen-jar-post.json?raw";
+import { repoIsPublic } from "../repo-public.js";
 import "../styles/frame.css";
 
 /** The `/.kiro` folder on GitHub (Requirement 14.9). */
@@ -71,10 +72,14 @@ export function HowJarsWereMade() {
 
       <p>
         The hook configuration and the rest of the Kiro setup are in{" "}
-        <a className="how-made__link" href={KIRO_GITHUB_URL} target="_blank" rel="noopener noreferrer">
-          /.kiro on GitHub
-        </a>
-        .
+        {repoIsPublic() ? (
+          <a className="how-made__link" href={KIRO_GITHUB_URL} target="_blank" rel="noopener noreferrer">
+            /.kiro on GitHub
+          </a>
+        ) : (
+          <code>/.kiro</code>
+        )}
+        {repoIsPublic() ? "" : " in the repo (private until submission)"}.
       </p>
 
       <p className="how-made__ship">{SHIP_LINE}</p>

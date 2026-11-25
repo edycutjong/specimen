@@ -91,6 +91,7 @@ cabinet and no kitchen file tracked; the demo video URL is the one field allowed
 scripts/stop-gate-eval.sh                  # E1–E3 through the real hooks in a scratch copy → evidence/stop-gate/eval.md (no Kiro call)
 TRUST_SHELL=1 scripts/stop-gate-live.sh    # one live headless Kiro session in a scratch copy, gate ON (the agent files specs through the curator, so it costs a few Kiro credits)
 GATE=off TRUST_SHELL=1 scripts/stop-gate-live.sh evidence/stop-gate/live-control-off.md   # the same prompt with no gate
+SCENARIO=break TRUST_SHELL=1 scripts/stop-gate-live.sh evidence/stop-gate/live-break-on.md   # uncoached: a plain refactor that really breaks the quote jars (add GATE=off for the control)
 ```
 
 `evidence/stop-gate/eval.md` shows the exact JSON the hook prints. In the live run the agent edited `servers/`, said DONE, was sent back with

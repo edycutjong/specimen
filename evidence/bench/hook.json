@@ -1,0 +1,16 @@
+{
+  "hook pre (PreToolUse)": {
+    "n": 30,
+    "min": 404,
+    "p50": 465,
+    "p95": 628,
+    "max": 711
+  },
+  "hook post (PostToolUse)": {
+    "n": 30,
+    "min": 422,
+    "p50": 474,
+    "p95": 668,
+    "max": 801
+  }
+}

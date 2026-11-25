@@ -4,7 +4,7 @@
  * the committed files, so the test fails if the page shows anything other than those files.
  */
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEMO_LINE, HowJarsWereMade, KIRO_GITHUB_URL, SHIP_LINE } from "../src/components/HowJarsWereMade.js";
 
 /** The committed hook files, read as raw text the same way the component imports them. */
@@ -66,7 +66,16 @@ describe("HowJarsWereMade text (Requirements 14.10 and 14.11)", () => {
 });
 
 describe("HowJarsWereMade links (Requirement 14.9)", () => {
-  it("links to /.kiro on GitHub with noopener and noreferrer", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("shows /.kiro as plain text while the repo is private", () => {
+    render(<HowJarsWereMade />);
+    expect(screen.queryByRole("link", { name: "/.kiro on GitHub" })).toBeNull();
+    expect(screen.getByText("/.kiro")).toBeTruthy();
+  });
+
+  it("links to /.kiro on GitHub with noopener and noreferrer once the repo is public", () => {
+    vi.stubEnv("VITE_REPO_PUBLIC", "1");
     render(<HowJarsWereMade />);
     const link = screen.getByRole("link", { name: "/.kiro on GitHub" });
 

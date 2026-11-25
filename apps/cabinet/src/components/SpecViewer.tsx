@@ -6,6 +6,7 @@
  * PASS badge needs a live `checkSpec()` pass for a red jar, so it never comes from a cached CLI
  * result. The spec text goes through the local markdown renderer, which never builds raw HTML.
  */
+import { repoIsPublic } from "../repo-public.js";
 import { checkSpec, citesId, type BugfixSpec, type ResultEntry } from "@specimen/core";
 import sliceNote from "../../../../evidence/slice/01-specimen-file.md?raw";
 import type { CabinetReplayResult } from "../browser-replay.js";
@@ -99,14 +100,18 @@ export function SpecViewer({ jar, specs, result, onSourceOpened }: SpecViewerPro
             Filed by the specimen-curator agent through <code>specimen file</code> on {SPEC_FILED_DATE} (WIB).
           </p>
           <p className="spec-viewer__link">
-            <a
-              href={`${GITHUB_BLOB_URL}${choice.spec.name}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => onSourceOpened?.()}
-            >
-              View {choice.spec.name} on GitHub
-            </a>
+            {repoIsPublic() ? (
+              <a
+                href={`${GITHUB_BLOB_URL}${choice.spec.name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => onSourceOpened?.()}
+              >
+                View {choice.spec.name} on GitHub
+              </a>
+            ) : (
+              <code>{choice.spec.name}</code>
+            )}
           </p>
           <div className="spec-viewer__body">{renderMarkdown(choice.spec.text)}</div>
         </>

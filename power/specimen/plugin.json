@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "specimen",
+  "version": "0.1.0",
+  "description": "Replay what an agent recorded against an MCP server, against a new version of that server, before you ship it.",
+  "author": {
+    "name": "edycutjong"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/edycutjong/specimen",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "regression",
+    "replay",
+    "jar",
+    "specimen",
+    "hollow-inn",
+    "hooks",
+    "ship",
+    "hold",
+    "bugfix-spec"
+  ]
+}

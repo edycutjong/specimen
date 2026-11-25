@@ -31,9 +31,12 @@ the v2 server while 5 of the 10 recorded calls come back different.
 | hollow-inn v1, self-replay | SHIP · 10 of 10 jars preserved | `evidence/bench/detect.md` |
 | hollow-inn v2 (three author-made breaks) | HOLD · 5 preserved · 4 rattled · 1 cracked | `evidence/bench/detect.md`, `evidence/replay/racks-vs-v2.txt` |
 | input-schema diff of the same v2 change | 2 changes (removed `cancel_booking`, added `booking_cancel`); the `quote` rename and the `search_rooms` default are invisible to it | `evidence/bench/detect.md` |
+| `specimen hook pre` / `post` latency (30 cold `npx` processes each, this laptop) | pre p50 465 ms · p95 628 ms; post p50 474 ms · p95 668 ms (the stop hook's budget is 30 s) | `evidence/bench/hook.md` |
+| `specimen replay` of all 10 jars (10 cold runs per server, this laptop) | v1 p50 2254 ms; v2.1 p50 2365 ms (p95 = slowest of 10: 2780 / 2452 ms) | `evidence/bench/replay.md` |
 | hollow-inn v2.1 (fixed by Kiro from three filed bugfix specs) | SHIP · 10 of 10 preserved · 5 of 6 tools covered (`get_room` was never called by the agent) | `evidence/replay/racks-vs-v2.1-ship.txt` |
 | Stop gate, E1–E3 (the real `specimen hook` commands driven with scripted Stop payloads; no Kiro session) | v1 → allow; v2 with no spec → block naming all 5 red jars; v2 with the `quote` spec filed → block naming only SPC-0009, SPC-0010; 4th stop → allow + `unresolved.md`; 2.3–2.8 s per replaying stop, 0.4 s when nothing under `servers/` changed | `evidence/stop-gate/eval.md` |
 | Stop gate in a live headless Kiro session (N = 1 per row; the prompt tells the agent what to do if a hook sends it back; its edit, one comment line in `servers/`, is unrelated to the red jars, which come from the server under test being v2) | gate ON: the agent was sent back once and ran `specimen file` for the red jars; without shell trust it said it could not; gate OFF: it answered DONE; a turn that edited nothing was not blocked | `evidence/stop-gate/live-shell.md`, `live-control-off.md`, `live-no-edit.md` |
+| Stop gate, UNCOACHED break (N = 1 per arm; scratch at hollow-inn v1; prompt = "rename quote's `total` to `total_cents`, integer cents, reply DONE", no word about hooks or replay) | gate ON: the agent said DONE, was sent back once, replayed, ran `specimen file` for the 3 broken `quote` jars, the curator's check rejected the draft (`expected does not name the reference`), and the agent reported the jars still rattled and asked which way to go; gate OFF: DONE, "I did not run the test suite or the replay", the same 2-line change left in place (both arms ≈ 2.2 credits incl. curator sessions) | `evidence/stop-gate/live-break-on.md`, `live-break-off.md` |
 | Tests | 1023 passing in 117 files (vitest + fast-check), `tsc --noEmit` exit 0 | `evidence/tests.txt` |
 | Consequence run: did the agent's own answer change under v2? | No — its answer was unchanged (`$425.00`); v2's tool description names `total_cents` and the agent had it loaded (no ablation was run, so that is the likely reason, not a measurement). A consumer that reads `total` was not run | `evidence/consequence-v2/README.md` |
 | Field shelf: a public MCP server (`server-memory` 1.0.0 → 2.2.1) | SHIP 5 of 5 on the recorded set — a null result, reported as one | `evidence/field/server-memory.md` |
@@ -49,7 +52,11 @@ npm test
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"     # HOLD, exit 3 once its red jars are filed
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"   # SHIP, exit 0
 npm run bench -- detect                                                      # rewrites evidence/bench/detect.md
+npm run bench -- hook                                                        # p50/p95 of the capture hooks → evidence/bench/hook.md
+npm run bench -- replay                                                      # p50/p95 of a full replay → evidence/bench/replay.md
 ```
+
+A Kiro Power with the workflow as one skill is in [`power/specimen/`](power/specimen/) (`plugin.json` + `skills/specimen-replay/SKILL.md`, written by Kiro in turn 49; no MCP server in it, and it has not been imported in the Kiro IDE).
 
 Add it to your own project with `specimen init` (writes the Kiro hooks, an `mcp.json` entry check, `.specimen/replay.json` with
 a replay allow-list pre-filled from `readOnlyHint`, and checks the `kiro-cli` engine). Reproduction steps with the expected

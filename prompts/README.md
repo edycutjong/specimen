@@ -60,6 +60,7 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 46 | cabinet UX fixes from the live axe + hover/focus gate (accession contrast, accessible name starts with the visible label, hover/press on summaries and the footer link, favicon); cut by a wall-clock timeout inside item 5 | 2.51 |
 | 47 | continuation of 46: tests for items 1–4 and the phone first-screen spacing (first jar y 624 → 453 at 375×812); cut by a timeout at its final measurement, tests/typecheck/build re-run by the autopilot | 1.49 |
 | 48 | the Agent Stop gate: `specimen hook prompt` (turn snapshot), `specimen hook stop --server` (replay + block while a red jar is unfiled, 3-block cap, fail open), the pure `decideStop` in `packages/core`, 33 new tests, and `specimen init` now writes the turn hook and a 30 s timeout on the stop hook; the autopilot re-ran tests/typecheck and ran the E1–E3 evals through the real hooks (`scripts/stop-gate-eval.sh`) | 3.30 |
+| 49 | the Kiro Power `power/specimen/` (`plugin.json` + one skill `specimen-replay`, no MCP server); the autopilot spot-checked the exit codes, flags and the 3-block cap against `packages/cli/src` and changed nothing | 0.15 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
 

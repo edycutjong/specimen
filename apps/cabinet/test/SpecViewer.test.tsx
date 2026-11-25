@@ -6,7 +6,7 @@
  */
 import { cleanup, render, screen } from "@testing-library/react";
 import type { BugfixSpec } from "@specimen/core";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   getBugfixSpecs,
   runReplay,
@@ -76,7 +76,15 @@ describe("SpecViewer filing status (Requirements 12.4, 12.5, 12.7, 12.8)", () =>
 });
 
 describe("SpecViewer spec body and link (Requirements 12.1, 12.3, 12.6)", () => {
-  it("links the spec file on GitHub with rel=\"noopener noreferrer\" and renders its text", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("shows the spec path as plain text while the repo is private", () => {
+    render(<SpecViewer jar={jarOf("SPC-0002", "v2", v2)} specs={SPECS} result={v2} />);
+    expect(screen.queryByRole("link")).toBeNull();
+  });
+
+  it("links the spec file on GitHub with rel=\"noopener noreferrer\" and renders its text once the repo is public", () => {
+    vi.stubEnv("VITE_REPO_PUBLIC", "1");
     const { container } = render(<SpecViewer jar={jarOf("SPC-0002", "v2", v2)} specs={SPECS} result={v2} />);
 
     const link = screen.getByRole("link", { name: /quote-total-total-cents/ });
