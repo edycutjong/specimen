@@ -289,8 +289,7 @@ async function ensureSession(run: GroupRun, engine: Engine): Promise<void> {
   run.session = session;
 
   try {
-    const listing = await session.client.listTools(undefined, { timeout: engine.timeoutMs });
-    const tools = listing.tools.map(toListed);
+    const tools = await listAllTools(session.client, engine.timeoutMs);
     run.tools = new Set(tools.map((tool) => tool.name));
     if (engine.targetTools === undefined) {
       engine.targetTools = tools;
@@ -322,6 +321,32 @@ async function closeQuietly(session: Session | undefined): Promise<void> {
 /** A tools/list entry reduced to its name and input schema. */
 function toListed(tool: { name: string; inputSchema?: unknown }): ListedTool {
   return { name: tool.name, inputSchema: (tool.inputSchema ?? null) as Json };
+}
+
+/** The most tools/list pages one listing follows before it gives up. */
+export const MAX_LIST_PAGES = 100;
+
+/**
+ * Every tool of a server, following `nextCursor` page by page (MCP tools/list is paginated: a
+ * server may return its tools across several pages). Reading only the first page would crack
+ * every jar whose tool is on a later page as "tool not in tools/list", and would hide those
+ * tools from the schema diff. A cursor seen twice, or more than MAX_LIST_PAGES pages, rejects,
+ * so a server that pages forever cannot hang the replay.
+ */
+export async function listAllTools(client: Pick<Client, "listTools">, timeoutMs: number): Promise<ListedTool[]> {
+  const tools: ListedTool[] = [];
+  const seen = new Set<string>();
+  let cursor: string | undefined;
+  for (let page = 0; page < MAX_LIST_PAGES; page += 1) {
+    const listing = await client.listTools(cursor === undefined ? undefined : { cursor }, { timeout: timeoutMs });
+    tools.push(...listing.tools.map(toListed));
+    const next = listing.nextCursor;
+    if (next === undefined) return tools;
+    if (seen.has(next)) throw new Error(`tools/list repeated the cursor ${JSON.stringify(next)}`);
+    seen.add(next);
+    cursor = next;
+  }
+  throw new Error(`tools/list did not end after ${MAX_LIST_PAGES} pages`);
 }
 
 /** The outcome of comparing one replayed response with the jarred response. */
@@ -586,8 +611,7 @@ async function listToolsOf(factory: ClientFactory, timeoutMs: number): Promise<L
     return { ok: false, error: failureText(failure) };
   }
   try {
-    const listing = await session.client.listTools(undefined, { timeout: timeoutMs });
-    return { ok: true, tools: listing.tools.map(toListed) };
+    return { ok: true, tools: await listAllTools(session.client, timeoutMs) };
   } catch (failure) {
     return { ok: false, error: failureText(failure) };
   } finally {

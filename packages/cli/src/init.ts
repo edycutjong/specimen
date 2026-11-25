@@ -10,7 +10,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { createInterface, type Interface } from "node:readline/promises";
 import { Command } from "commander";
-import { replayPolicySchema, type ClientFactory, type ReplayPolicy } from "@specimen/core";
+import { MAX_LIST_PAGES, replayPolicySchema, type ClientFactory, type ReplayPolicy } from "@specimen/core";
 import { findWorkspaceRoot } from "./io/root.js";
 import { CommandSyntaxError, makeStdioClientFactory, splitCommand } from "./replay/client-factory.js";
 
@@ -289,11 +289,22 @@ async function listTestTools(
     return { ok: false, message: describe(error) };
   }
   try {
-    const listing = await session.client.listTools();
-    const tools = listing.tools.map((tool) => ({
-      name: tool.name,
-      readOnly: tool.annotations?.readOnlyHint === true,
-    }));
+    // tools/list is paginated: follow nextCursor (same bound as the replay engine), or replay.json misses later tools.
+    const tools: TestTool[] = [];
+    const seen = new Set<string>();
+    let cursor: string | undefined;
+    for (let page = 0; ; page += 1) {
+      if (page >= MAX_LIST_PAGES) throw new Error(`tools/list did not end after ${MAX_LIST_PAGES} pages`);
+      const listing = await session.client.listTools(cursor === undefined ? undefined : { cursor });
+      for (const tool of listing.tools) {
+        tools.push({ name: tool.name, readOnly: tool.annotations?.readOnlyHint === true });
+      }
+      const next = listing.nextCursor;
+      if (next === undefined) break;
+      if (seen.has(next)) throw new Error(`tools/list repeated the cursor ${JSON.stringify(next)}`);
+      seen.add(next);
+      cursor = next;
+    }
     return { ok: true, tools };
   } catch (error) {
     return { ok: false, message: describe(error) };
