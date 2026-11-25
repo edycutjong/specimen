@@ -154,16 +154,20 @@
   overflow-wrap: anywhere;
 }
 
-/* The flag as a red strip. CRACKED is the dim strip with ink letters. */
+/* The flag is the toe-tag strip: Atkinson Hyperlegible Next 700 caps at 15 px, in a 22 px band. */
 .jar-drawer__flag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
   margin: 8px 0 0;
-  padding: 4px 10px;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 16px;
+  padding: 0 10px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
   line-height: 1;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
   color: var(--muted);
 }
 

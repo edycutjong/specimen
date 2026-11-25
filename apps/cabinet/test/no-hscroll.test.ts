@@ -273,11 +273,11 @@ describe("Cabinet layout does not scroll sideways at 375 px or 320 px (task 10.2
     expect(grid.length).toBeGreaterThan(0);
   });
 
-  it("the jar grid is three cells in a row below 600 px, 140 px cells from 600 px and 180 px cells from 1280 px (Requirement 7.7)", () => {
+  it("the jar grid is two cells in a row below 600 px, 140 px cells from 600 px and 180 px cells from 1280 px (Requirement 7.7)", () => {
     const columnsAt = (width: number): string | undefined =>
       declaredAt(rules, "ol.shelf-grid", "grid-template-columns", width)?.replace(/\s+/g, "");
-    expect(columnsAt(375)).toBe("repeat(3,minmax(0,1fr))");
-    expect(columnsAt(320)).toBe("repeat(3,minmax(0,1fr))");
+    expect(columnsAt(375)).toBe("repeat(2,minmax(0,1fr))");
+    expect(columnsAt(320)).toBe("repeat(2,minmax(0,1fr))");
     expect(columnsAt(700)).toBe("repeat(auto-fill,minmax(140px,1fr))");
     expect(columnsAt(1440)).toBe("repeat(auto-fill,minmax(180px,1fr))");
   });

@@ -6,6 +6,7 @@
 
 .counts-pair-group {
   min-width: 0;
+  container: counts / inline-size;
 }
 
 .counts-pair {
@@ -177,5 +178,33 @@
 
   .counts-pair {
     padding-left: 32px;
+  }
+}
+
+/*
+ * A CountsPair narrower than 900 px stacks its two values. The connector moves under them, with a rule above it
+ * in place of the left divider. The viewport rule below 720 px still hides the connector on a phone, where the lede
+ * carries the comparison.
+ */
+@container counts (max-width: 899px) {
+  .counts-pair {
+    flex-direction: column;
+  }
+
+  .counts-pair__side {
+    flex: 0 0 auto;
+  }
+
+  .counts-pair__side--replay {
+    padding-left: 0;
+  }
+
+  .counts-pair__connector {
+    order: 1;
+    flex: 0 0 auto;
+    margin-top: 12px;
+    padding: 10px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
   }
 }

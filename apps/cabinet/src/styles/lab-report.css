@@ -136,16 +136,21 @@
   overflow-wrap: anywhere;
 }
 
+/* Each line is a two-column grid: the label in an 8 ch column, then the value on one line (no wrap). */
 .lab-report__value {
-  display: block;
+  display: grid;
+  grid-template-columns: 8ch max-content;
+  min-width: 0;
 }
 
 .lab-report__value-label {
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .lab-report__value-text {
   color: var(--ink);
+  white-space: nowrap;
 }
 
 /* Column headings: the data face, 14 px, uppercase. Each heading stays on one line. */

@@ -64,9 +64,11 @@
   overflow-wrap: anywhere;
 }
 
-/* The compact counts line is for the phone plate only, so the desktop plate shows the full line. */
+/* The compact counts line is for the phone plate only, so the desktop plate shows the full line. Its counts are flex items. */
 .verdict-plate__compact {
   display: none;
+  flex-wrap: wrap;
+  gap: 2px 14px;
   margin: 0;
   font-family: var(--font-data);
   font-weight: 500;
@@ -184,12 +186,9 @@
     display: none;
   }
 
+  /* Compact facts on a phone: flex items with a gap, so no literal separator sits at a line start (design pass, item 11). */
   .verdict-plate__compact {
-    display: block;
-  }
-
-  .verdict-plate__compact::before {
-    content: "· ";
+    display: flex;
   }
 }
 

@@ -57,13 +57,13 @@
   font-size: 14px;
 }
 
-/* The jar grid. Below 600 px three cells sit in a row and the rest wrap. */
+/* The jar grid. Below 600 px two cells sit in a row, so each tag keeps its desktop text sizes (see Jar.css). */
 ol.shelf-grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   min-width: 0;
 }

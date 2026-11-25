@@ -221,27 +221,30 @@ export function App(): ReactElement {
       <CabinetFrame lit={lit}>
         <main className="cabinet-main">
           <div className="cabinet-wall">
-            <div className="cabinet-wall__text">
-              <CountsPair
-                counts={viewModel.counts}
-                replayed={viewModel.replayed}
-                result={result}
-                jarCount={order.length}
-                revealed={revealed}
-                countUp={!reducedMotion}
-              />
-              <div className="cabinet-ledger">
-                <VerdictPlate
-                  plate={viewModel.plate}
+            <span aria-hidden="true" className="storm-window__wash" />
+            <div className="cabinet-wall__grid">
+              <div className="cabinet-wall__text">
+                <CountsPair
+                  counts={viewModel.counts}
+                  replayed={viewModel.replayed}
+                  result={result}
+                  jarCount={order.length}
                   revealed={revealed}
-                  revealIntervalMs={REVEAL_INTERVAL_MS}
-                  part="ledger"
+                  countUp={!reducedMotion}
                 />
-                <VersionNotes version={version} verdict={viewModel.plate.verdict} />
+                <div className="cabinet-ledger">
+                  <VerdictPlate
+                    plate={viewModel.plate}
+                    revealed={revealed}
+                    revealIntervalMs={REVEAL_INTERVAL_MS}
+                    part="ledger"
+                  />
+                  <VersionNotes version={version} verdict={viewModel.plate.verdict} />
+                </div>
+                <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
               </div>
-              <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
+              <StormWindow className="cabinet-wall__window" lit={lit} />
             </div>
-            <StormWindow className="cabinet-wall__window" lit={lit} />
           </div>
 
           {viewModel.racks.map((rack) => (

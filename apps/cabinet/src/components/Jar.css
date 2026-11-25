@@ -177,6 +177,26 @@
   background: var(--label-ink);
 }
 
+/*
+ * Below 600 px a cell is about half the wall wide, so the tag is narrower than on the desktop. The barcode is
+ * decorative and is dropped there, and a tool name breaks only after its underscore, so no word is split.
+ */
+@media (max-width: 599px) {
+  .jar__barcode {
+    display: none;
+  }
+
+  .jar__tag {
+    width: 82cqw;
+    padding-left: 14px;
+    padding-right: 4px;
+  }
+
+  .jar__tool {
+    overflow-wrap: normal;
+  }
+}
+
 /* The flag strip runs the full width of the tag along its bottom edge: 22 px tall, the word in the body face. */
 .jar__flag {
   position: absolute;

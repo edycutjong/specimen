@@ -59,8 +59,8 @@
 .cabinet-frame__rivet--br { bottom: -10px; right: -10px; }
 
 /*
- * The lightning wash, used below 1280 px in place of the storm window. It shows only while the lightning is
- * lit (`cabinet-frame--lit`, design pass, item 2). The colour is --storm, so the rule names the window.
+ * The lightning wash, shown while the storm window is hidden. It shows only while the lightning is lit
+ * (`cabinet-frame--lit`, design pass, item 2). The colour is --storm, so the rule names the window.
  */
 .storm-window__wash {
   display: block;
@@ -80,8 +80,19 @@
   opacity: 1;
 }
 
-/* The wall: the verdict text, then the shelves. From 1280 px the barred window sits in a right column. */
+/*
+ * The wall is a size container. The window column depends on the wall's own width, not the viewport, so an open
+ * JarDrawer that narrows the wall also hides the window. The grid sits one level down, because a container
+ * cannot style its own layout through a query on itself.
+ */
 .cabinet-wall {
+  container: wall / inline-size;
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.cabinet-wall__grid {
   display: block;
   min-width: 0;
 }
@@ -105,9 +116,18 @@
   margin: auto 0 0;
 }
 
-/* Below 1280 px the window is hidden. The lightning wash stands in for it. */
+/* Below a wall of 1180 px the window is hidden. The lightning wash stands in for it. */
 .cabinet-wall__window {
   display: none;
+}
+
+/* The wall's wrappers stop boxing below 600 px, so their children take the page-column order in cabinet.css. */
+@media (max-width: 599px) {
+  .cabinet-wall,
+  .cabinet-wall__grid,
+  .cabinet-wall__text {
+    display: contents;
+  }
 }
 
 /* The one ledger row: the ledger lines, the version heading and the "What changed" disclosure. */
@@ -125,9 +145,12 @@
   margin: 0;
 }
 
-/* 1280 px and up: the text column is the wall minus a 260 px window column and a 20 px gutter. */
-@media (min-width: 1280px) {
-  .cabinet-wall {
+/*
+ * A wall 1180 px wide or more: the text column is the wall minus a 260 px window column and a 20 px gutter.
+ * The wall is 1208 px at a 1280 px viewport with the JarDrawer closed, so the closed desktop layout keeps its window.
+ */
+@container wall (min-width: 1180px) {
+  .cabinet-wall__grid {
     display: grid;
     grid-template-columns: minmax(0, calc(100% - 280px)) 260px;
     column-gap: 20px;
@@ -244,6 +267,18 @@
 @media (min-width: 600px) {
   .cabinet-frame__suture {
     display: block;
+  }
+}
+
+/* Below 600 px the side insets shrink, so a two-column jar cell is wide enough for the toe-tag strip (design pass, item 11). */
+@media (max-width: 599px) {
+  .cabinet-frame {
+    padding: 6px;
+  }
+
+  .cabinet-frame__iron {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }
 

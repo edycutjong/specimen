@@ -135,11 +135,6 @@ summary {
  * flow as items of the page column and take the order below.
  */
 @media (max-width: 599px) {
-  .cabinet-wall,
-  .cabinet-wall__text {
-    display: contents;
-  }
-
   .cabinet-main {
     display: flex;
     flex-direction: column;

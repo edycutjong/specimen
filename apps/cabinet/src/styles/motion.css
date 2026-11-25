@@ -185,6 +185,21 @@
 }
 
 /*
+ * Below 600 px the stamp is 22 px and sits inside the top of its cell, so it never covers the rack plate above the
+ * shelf. The cell is about half the wall wide, so the padding and the letter spacing are cut to fit it.
+ */
+@media (max-width: 599px) {
+  .its-moving-stamp {
+    top: 6px;
+    right: 4px;
+    padding: 2px 2px;
+    border-width: 2px;
+    font-size: 22px;
+    letter-spacing: 0;
+  }
+}
+
+/*
  * Reduced_Motion (Requirement 2.13): no CSS animation or transition runs. The `no-motion` class
  * is set by `useReducedMotion`, and the media query covers the first paint before script runs.
  */

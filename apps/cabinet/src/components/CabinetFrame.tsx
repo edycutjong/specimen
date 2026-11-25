@@ -6,8 +6,8 @@
  * wall at the bottom with the stamp on the left and the organs on the right. The barred storm window is
  * not part of the frame. The App places it in the wall grid beside the verdict text (see `cabinet-wall`).
  *
- * Below 1280 px there is no window, so the lightning flash falls back to a wash over the iron. The
- * frame is decorative apart from its text. It takes children, which the page places on the wall, and it
+ * The lightning wash sits in the wall (see `cabinet-wall` in App), and it shows whenever the window
+ * is hidden. The frame is decorative apart from its text. It takes children, which the page places on the wall, and it
  * derives nothing from the replay.
  */
 import { Fragment, useId, type ReactElement, type ReactNode } from "react";
@@ -51,9 +51,6 @@ export function CabinetFrame({ children, lit = false }: CabinetFrameProps): Reac
         {RIVETS.map((corner) => (
           <span key={corner} aria-hidden="true" className={`cabinet-frame__rivet cabinet-frame__rivet--${corner}`} />
         ))}
-
-        {/* The lightning wash. It shows only below 1280 px, where the storm window is hidden. */}
-        <span aria-hidden="true" className="storm-window__wash" />
 
         <div className="cabinet-frame__content">{children}</div>
       </div>

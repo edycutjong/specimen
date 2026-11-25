@@ -48,11 +48,11 @@ export function timingLine(plate: VerdictPlateViewModel, revealIntervalMs: numbe
 }
 
 /**
- * The counts line without its preserved figure, for the one-row plate on a phone (design pass, item
- * 11): "4 rattled · 1 cracked". The full line stays in the DOM for screen readers.
+ * The counts line without its preserved figure, split into its facts for the one-row plate on a phone
+ * (design pass, item 11): ["4 rattled", "1 cracked"]. The full line stays in the DOM for screen readers.
  */
-export function compactCountsLine(countsLine: string): string {
-  return countsLine.replace(/^\d+ preserved · /, "");
+export function compactCountsParts(countsLine: string): string[] {
+  return countsLine.replace(/^\d+ preserved · /, "").split(" · ");
 }
 
 /** The verdict word, the version and the counts line: the plaque half. */
@@ -68,7 +68,9 @@ function PlaqueLines({ plate }: { plate: VerdictPlateViewModel }) {
       <p className="verdict-plate__version">{plate.version}</p>
       <p className="verdict-plate__counts">{plate.countsLine}</p>
       <p className="verdict-plate__compact" aria-hidden="true">
-        {compactCountsLine(plate.countsLine)}
+        {compactCountsParts(plate.countsLine).map((fact, index) => (
+          <span key={index}>{fact}</span>
+        ))}
       </p>
     </>
   );
