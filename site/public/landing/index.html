@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPECIMEN JAR — the jars remember what your MCP server used to say</title>
-<meta name="description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
+<meta name="description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 no longer matched; a schema diff saw 2 changes.">
 <meta name="author" content="edycutjong">
 <meta name="theme-color" content="#10150F">
 <meta name="color-scheme" content="dark">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SPECIMEN JAR">
 <meta property="og:title" content="SPECIMEN JAR — the jars remember what your server used to say">
-<meta property="og:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
+<meta property="og:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 no longer matched; a schema diff saw 2 changes.">
 <meta property="og:url" content="https://specimen.edycu.dev/landing/">
 <meta property="og:image" content="https://specimen.edycu.dev/static/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="An iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SPECIMEN JAR — the jars remember what your server used to say">
-<meta name="twitter:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
+<meta name="twitter:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 no longer matched; a schema diff saw 2 changes.">
 <meta name="twitter:image" content="https://specimen.edycu.dev/static/img/og.png">
 <link rel="preload" href="/static/fonts/grenze-gotisch-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/static/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -601,7 +601,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="hero__copy">
 <div class="plate anim"><span class="stampline">Kiroween 2026 · Frankenstein</span><span class="code"><span class="dot" aria-hidden="true"></span>Rack A · Rack B · 10 jars</span></div>
 <h1 id="h1" class="anim">The jars remember what your server <span class="hl">used to say.</span></h1>
-<div class="ledes anim"><p class="lede lede--a">Kiro hooks seal each call your agent makes to a hooked MCP server in a jar, byte for byte.</p> <p class="lede lede--b">Swap in v2 and replay: <b class="r">5 of 10 jars</b> came back different, while a diff of the tool schemas flagged only <b>one renamed tool</b>.</p></div>
+<div class="ledes anim"><p class="lede lede--a">Kiro hooks seal each call your agent makes to a hooked MCP server in a jar, byte for byte.</p> <p class="lede lede--b">Swap in v2 and replay: <b class="r">5 of 10 jars</b> no longer matched, while a diff of the tool schemas saw <b>2 changes</b>, one renamed tool.</p></div>
 <div class="ctas anim"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--lock is-private" aria-disabled="true" title="The repository is private until the Devpost submission, then public" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source · opens at submission</span></div>
 <div class="proof anim"><span>In a clone, after <code>npm ci</code>:</span><span class="cmd"><code>npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"</code><button class="copy" type="button">copy</button></span></div>
 </div>
@@ -760,16 +760,16 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 </div></section>
 
 <section class="receipts" aria-label="Receipts"><div class="wrap">
-<div class="receipt"><p class="receipt__n r"><span data-to="5">5</span><small>of 10</small></p><p>recorded calls came back different under v2</p><span class="path" data-gh="evidence/replay/racks-vs-v2.txt">evidence/replay/racks-vs-v2.txt</span></div>
+<div class="receipt"><p class="receipt__n r"><span data-to="5">5</span><small>of 10</small></p><p>recorded calls no longer matched under v2</p><span class="path" data-gh="evidence/replay/racks-vs-v2.txt">evidence/replay/racks-vs-v2.txt</span></div>
 <div class="receipt"><p class="receipt__n"><span data-to="2">2</span></p><p>changes an input-schema diff of the same server saw: one renamed tool</p><span class="path" data-gh="evidence/bench/detect.md">evidence/bench/detect.md</span></div>
-<div class="receipt"><p class="receipt__n g"><span data-to="10">10</span><small>of 10</small></p><p>preserved under v2.1, after Kiro fixed the three filed specs (3 jars gained a field)</p><span class="path" data-gh="evidence/replay/racks-vs-v2.1-ship.txt">evidence/replay/racks-vs-v2.1-ship.txt</span></div>
+<div class="receipt"><p class="receipt__n g"><span data-to="10">10</span><small>of 10</small></p><p>preserved under v2.1, after Kiro's fixes (3 jars gained a field)</p><span class="path" data-gh="evidence/replay/racks-vs-v2.1-ship.txt">evidence/replay/racks-vs-v2.1-ship.txt</span></div>
 <div class="receipt"><p class="receipt__n"><span data-to="1082">1,082</span></p><p>tests passing in 121 files, vitest + fast-check</p><span class="path" data-gh="evidence/tests.txt">evidence/tests.txt</span></div>
 </div></section>
 
 <section class="sec" id="demo" aria-labelledby="h-demo"><div class="wrap">
 <p class="eyebrow">C1 · The demo</p>
 <h2 id="h-demo">Same jars, two windows.</h2>
-<p class="sub">The command a developer runs before merging; the cabinet a judge opens. Same jars, same <code>@specimen/core</code>.</p>
+<p class="sub">What a developer runs before merging; what a judge opens. Same jars, same <code>@specimen/core</code>.</p>
 <div class="pair">
 <div><div class="term"><div class="term__bar"><i></i><i></i><i></i><span>specimen · real output, three separate runs</span><button class="replay" type="button">replay</button></div><pre data-term><span class="line c">npx specimen replay --server &quot;npx tsx servers/hollow-inn/src/main.ts v2&quot;</span><span class="line h">HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room</span><span class="line x">SPC-0002 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0010 · search_rooms · rattled · /rooms, /rooms/r-08, /rooms/r-09 · -</span><span class="line x">SPC-0006 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0007 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0009 · cancel_booking · cracked · - · tool not in tools/list</span><span class="line n"># 5 preserved lines omitted</span><span class="line h">not filed · SPC-0002, SPC-0010, SPC-0006, SPC-0007, SPC-0009</span><span class="line c">npx specimen file SPC-0002</span><span class="line s">filed .kiro/specs/quote-total-total-cents/bugfix.md · PASS SPC-0002, SPC-0006, SPC-0007</span><span class="line n"># the other two red tools are filed the same way; Kiro's Bug Fix workflow writes servers/hollow-inn/src/v2_1.ts</span><span class="line c">npx specimen replay --server &quot;npx tsx servers/hollow-inn/src/main.ts v2.1&quot;</span><span class="line s">SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room</span><span class="line">SPC-0002 · quote · preserved · - · +1 field</span><span class="line n"># 9 more lines: every jar preserved; SPC-0006 and SPC-0007 also +1 field</span></pre></div>
 <p class="cap">Pasted from <span class="path" data-gh="evidence/replay/racks-vs-v2.txt">evidence/replay/racks-vs-v2.txt</span>, <span class="path" data-gh="evidence/slice/01-specimen-file.txt">evidence/slice/01-specimen-file.txt</span>, <span class="path" data-gh="evidence/replay/racks-vs-v2.1-ship.txt">evidence/replay/racks-vs-v2.1-ship.txt</span>; <code>#</code> lines are ours.</p></div>
@@ -781,7 +781,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec loop-sec" id="loop" aria-labelledby="h-loop"><div class="wrap">
 <p class="eyebrow">C2 · The loop</p>
 <h2 id="h-loop">A red jar becomes <span class="hl">its own bug report.</span></h2>
-<p class="sub"><code>specimen file</code> hands the captured call to a Kiro curator agent: the CLI writes the repro and the diff, Kiro the prose, and <code>check-spec</code> confirms it names the jarred value.</p>
+<p class="sub"><code>specimen file</code> hands the captured call to Kiro's curator agent: the CLI writes the repro and diff, Kiro the prose; <code>check-spec</code> confirms it names the jarred value.</p>
 <div class="loop">
 <div class="station station--tag"><p class="station__k">1 · Rattled under v2</p><div class="bigtag" aria-label="Toe-tag: SPC-0002, quote, ABNORMAL"><b>SPC-0002 · A2</b><span>quote</span><i>ABNORMAL</i></div></div>
 <div class="suture" aria-hidden="true"><svg viewBox="0 0 40 24" width="40" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q20 14.5 36 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="28.8" y1="4.5" x2="31.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="28.8" cy="4.5" r="1.3"/><circle cx="31.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="36.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
@@ -807,7 +807,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <h2 id="h-how">Five parts, <span class="hl--g">stitched into one loop.</span></h2>
 <div class="bento">
 <article class="organ organ--1"><svg class="organ__ico" viewBox="0 0 48 48" fill="none" stroke="#ECE6D3" stroke-width="2.2" aria-hidden="true"><rect x="13" y="6" width="22" height="6" rx="1.5"/><path d="M8 9h5M35 9h5"/><path d="M15 12c-4 1-5 4-5 7v19c0 3 2 5 5 5h18c3 0 5-2 5-5V19c0-3-1-6-5-7"/><path d="M14 24h20" stroke="#A8E35F"/></svg>
-<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on each call to the hooked server and seal a jar: request and response text, byte for byte, redacted on write. No proxy. The CLI's p50, measured at 82b5126: 465 ms before a call, 474 ms after (Kiro's own hook launch not included).</p>
+<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on each call to the hooked server and seal a jar, redacted on write. No proxy. The CLI's p50, measured at 82b5126: 465 ms before a call, 474 ms after (Kiro's hook launch excluded).</p>
 <pre><b>"trigger"</b>: "PostToolUse",
 <b>"matcher"</b>: "@hollowinn",
 <b>"command"</b>: "npx --no-install specimen hook post --server hollowinn"</pre></article>
@@ -832,14 +832,14 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="ledger__row ledger__row--bad"><b>v2</b><ul><li class="x">rooms offered: 5 (r-01 … r-05)</li><li class="x">charge for r-04, 2 nights: THREW TypeError: Cannot read properties of undefined (reading 'toFixed')</li><li class="x">cancel it: THREW Error: MCP error -32602: Tool cancel_booking not found</li></ul></div>
 <div class="ledger__row ledger__row--ok"><b>v2.1</b><ul><li>every line matches v1: 9 rooms, USD 425.00, cancelled</li></ul></div>
 </div>
-<div class="agent"><p class="station__k">The Kiro agent itself</p><p class="agent__n">$425.00</p><p>Its own answer did not change under v2: v2's tool description names <code>total_cents</code>, the likely reason (no ablation was run).</p><p>The Kiro agent, with the new description loaded, coped in both v2 runs (one per rack, n = 1 each). A client that reads <code>total</code> did not.</p><span class="path" data-gh="evidence/consequence-v2/consumer.md">evidence/consequence-v2/consumer.md</span></div>
+<div class="agent"><p class="station__k">The Kiro agent itself</p><p class="agent__n">$425.00</p><p>Rack A's answer under v2, the same as under v1; rack B's ($98.00) did not change either (n = 1 run per rack). v2's tool description names <code>total_cents</code>, the likely reason (no ablation was run). A client that reads <code>total</code> did not cope.</p><span class="path" data-gh="evidence/consequence-v2/consumer.md">evidence/consequence-v2/consumer.md</span></div>
 </div>
 </div></section>
 
 <section class="sec" id="kiro" aria-labelledby="h-kiro"><div class="wrap">
 <p class="eyebrow">C5 · Kiro</p>
 <h2 id="h-kiro">Stitched together <span class="hl--g">by Kiro.</span></h2>
-<p class="sub">Kiro is the builder: <b>95.5 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came from Kiro sessions (38,512 of 40,333, by commit prefix; one mixed commit counted as ours). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
+<p class="sub">Kiro is the builder: <b>95.4 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came in <code>kiro:</code> commits, Kiro session output (38,477 of 40,333; our lines inside three mixed commits counted as ours). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits where Kiro reported them; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
 <div class="kiro">
 <ul class="inv">
 <li><b>49</b><div><strong>numbered Kiro prompts</strong><span class="path" data-gh="prompts/README.md">prompts/README.md</span></div></li>
@@ -858,7 +858,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <h2 id="h-honest">What it does <span class="hl">not</span> prove.</h2>
 <p class="sub">From the README, as written there.</p>
 <ul class="labels">
-<li class="label"><blockquote>The three breaks in hollow-inn v2 are <em>author-made on purpose</em> (<code>servers/hollow-inn/CHANGES.md</code>); the demo server is ours. The field shelf is the only run against a server we did not write: it found no break, and it found a limit of our own jar format (text only).</blockquote><cite>README · Engineering rigor</cite></li>
+<li class="label"><blockquote>The three breaks in hollow-inn v2 are <em>author-made on purpose</em> (<code>servers/hollow-inn/CHANGES.md</code>); the demo server is ours. The field shelf is the only run against a server we did not write: it found no rattled or cracked jar (verdict HOLD: 3 preserved, 2 unsealed), and it found a limit of our own jar format (text only).</blockquote><cite>README · Engineering rigor</cite></li>
 <li class="label"><blockquote>Ten jars from two racks, five of six hollow-inn tools. &quot;SHIP&quot; means <em>replay clean on the recorded set</em>, nothing more.</blockquote><cite>README · Honest limits, 2</cite></li>
 <li class="label"><blockquote><em>Everything ran on the Kiro CLI, headless.</em> … No outside user has run it yet.</blockquote><cite>README · Honest limits, 3 and 6</cite></li>
 </ul>
@@ -867,10 +867,9 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec" id="faq" aria-labelledby="h-faq"><div class="wrap">
 <h2 id="h-faq">Questions a judge would ask.</h2>
 <div class="faq">
-<details><summary>Is the replay on this page real, or a recording?</summary><div class="ans">Real: the cabinet's own replay code (<code>apps/cabinet/src/browser-replay.ts</code>) runs in your browser against hollow-inn v1, v2 and v2.1 over an in-memory MCP transport. If it cannot load, the shelf shows the committed CLI replay, labelled RECORDED.</div></details>
-<details><summary>Are the v2 breaks real?</summary><div class="ans">Real changes, made by us on purpose (<code>servers/hollow-inn/CHANGES.md</code>): <code>total</code> became <code>total_cents</code>, the <code>search_rooms</code> default limit fell from 20 to 5, <code>cancel_booking</code> was renamed. Our one run against a server we did not write (<code>server-memory</code> 1.0.0 → 2.2.1) found no break.</div></details>
+<details><summary>Are the v2 breaks real?</summary><div class="ans">Real changes, made by us on purpose (<code>servers/hollow-inn/CHANGES.md</code>): <code>total</code> became <code>total_cents</code>, the <code>search_rooms</code> default limit fell from 20 to 5, <code>cancel_booking</code> was renamed. Our one run against a server we did not write (<code>server-memory</code> 1.0.0 → 2.2.1) found no rattled or cracked jar (verdict HOLD: 2 of 5 unsealed).</div></details>
 <details><summary>Did Kiro really write the fix?</summary><div class="ans">Kiro's curator filed the three bugfix specs; Kiro's Bug Fix workflow wrote each design and task list and executed them into <code>servers/hollow-inn/src/v2_1.ts</code>, headless on the Kiro CLI, no IDE approval step. For two fixes the final acceptance ran outside Kiro: turn 43 stopped at its last task, turn 45 hit our timeout (<code>prompts/README.md</code>).</div></details>
-<details><summary>Why not just diff the schema?</summary><div class="ans">An input-schema diff of <code>tools/list</code> saw 2 changes for v2: <code>cancel_booking</code> removed, <code>booking_cancel</code> added. It compares tools and input schemas, not descriptions or responses, so the <code>quote</code> and <code>search_rooms</code> changes pass it.</div></details>
+<details><summary>Why not just diff the schema?</summary><div class="ans">It saw 2 changes for v2 (<code>cancel_booking</code> removed, <code>booking_cancel</code> added): it compares tools and input schemas, not responses, so the <code>quote</code> and <code>search_rooms</code> changes pass it.</div></details>
 <details><summary>Is this the first record/replay tool for MCP?</summary><div class="ans">No. <code>mcp-recorder</code>, AgentVCR and mcpsnoop exist. What differs here is capture <em>inside</em> the agent through Kiro hooks (no proxy) and the closed loop into a Kiro bugfix spec.</div></details>
 </div>
 </div></section>
@@ -1146,12 +1145,16 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       await sleep(Math.max(0, 650 - (performance.now() - t0)));
       await apply(ver, res, meta);
       busy = false;
+      // once: if nobody has thrown the switch 6 s after the first replay, throw it to v2.1 (a real replay too)
+      if (first && !reduce) setTimeout(() => { if (!touched && !busy && seen) run("v2.1"); }, 6000);
       if (queued && queued !== ver) { const q = queued; queued = null; run(q); } else queued = null;
     }
 
-    segs.forEach((b) => b.addEventListener("click", () => { picked = null; run(b.dataset.ver); }));
+    let touched = false, seen = false;
+    segs.forEach((b) => b.addEventListener("click", () => { touched = true; picked = null; run(b.dataset.ver); }));
+    if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => { seen = e.isIntersecting; }).observe(room);
     jars.forEach((el) => $(".jar__btn", el).addEventListener("click", () => {
-      picked = el.dataset.acc; const j = last && last.jars.find((x) => x.id === picked); if (j) notebook(j, lastVer);
+      touched = true; picked = el.dataset.acc; const j = last && last.jars.find((x) => x.id === picked); if (j) notebook(j, lastVer);
     }));
     addEventListener("resize", () => { if (stamp.classList.contains("is-on") && last) placeStamp(last.jars.find((j) => st(j) === "rattled"), last.counts.preserved === last.jars.length); });
 
