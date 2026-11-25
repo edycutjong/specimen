@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build -w apps/cabinet",
+  "buildCommand": "npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts",
   "outputDirectory": "apps/cabinet/dist",
   "framework": null
 }

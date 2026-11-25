@@ -7,6 +7,8 @@
  *
  * Assumptions:
  * - `framework: null` tells Vercel to use the build command and output directory as given.
+ * - The build command builds the Cabinet, then adds the landing page and the deck (`site/`, not part of the Cabinet)
+ *   to the Cabinet's output directory (claude-direct, P4 2026-11-26).
  * - "No Pro-only feature" is checked by the allow-list of top-level keys below. A new key fails the test
  *   until someone reviews it against the Vercel plan limits.
  */
@@ -22,7 +24,7 @@ const ALLOWED_KEYS = ["$schema", "buildCommand", "outputDirectory", "framework"]
 
 const VercelConfig = z.object({
   $schema: z.string().optional(),
-  buildCommand: z.literal("npm run build -w apps/cabinet"),
+  buildCommand: z.literal("npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts"),
   outputDirectory: z.literal("apps/cabinet/dist"),
   framework: z.null(),
 });
@@ -42,7 +44,7 @@ describe("vercel.json (Requirements 17.4, 17.5)", () => {
     if (!parsed.success) {
       throw new Error(`vercel.json does not match the expected shape: ${parsed.error.message}`);
     }
-    expect(parsed.data.buildCommand).toBe("npm run build -w apps/cabinet");
+    expect(parsed.data.buildCommand).toBe("npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts");
     expect(parsed.data.outputDirectory).toBe("apps/cabinet/dist");
     expect(parsed.data.framework).toBeNull();
   });
