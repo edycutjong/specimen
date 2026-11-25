@@ -12,7 +12,11 @@ const DIRS = ["packages", "apps", "servers"];
 // Commits whose prefix does not match the in-scope lines, as disclosed in prompts/README.md: 82b5126 is labelled `kiro:`
 // for the Power (turn 49, outside this scope), but its lines in apps/ are our cabinet change that hides the GitHub
 // links until the public flip. Counted as claude-direct here.
-const RELABEL = { "82b5126": { kind: "claude-direct:", why: "prompts/README.md: only power/specimen/ and prompts/turn-49.md in it are Kiro output" } };
+const RELABEL = {
+  "82b5126": { kind: "claude-direct:", why: "prompts/README.md: only power/specimen/ and prompts/turn-49.md in it are Kiro output" },
+  "8c7c634": { kind: "claude-direct:", paths: ["apps/"], why: "its subject says the cabinet test edits in it are claude-direct" },
+  "a1fb952": { kind: "claude-direct:", paths: ["apps/"], why: "its cabinet test edits (counts pinned to the new replay) are ours" },
+};
 const log = execFileSync("git", ["log", "--no-merges", "--format=%x00%h%x09%s", "--numstat", "--", ...DIRS], {
   encoding: "utf8",
   maxBuffer: 64 * 1024 * 1024,
@@ -23,13 +27,14 @@ for (const block of log.split("\0")) {
   if (!block.trim()) continue;
   const [head, ...files] = block.trim().split("\n");
   const [sha, subject = ""] = head.split("\t");
-  const kind = RELABEL[sha]?.kind ?? (subject.startsWith("kiro:") ? "kiro:" : subject.startsWith("claude-direct") ? "claude-direct:" : "other");
-  const r = (rows[kind] ??= { src: 0, test: 0, commits: 0 });
-  r.commits += 1;
+  const rel = RELABEL[sha];
+  const kind = rel && !rel.paths ? rel.kind : subject.startsWith("kiro:") ? "kiro:" : subject.startsWith("claude-direct") ? "claude-direct:" : "other";
+  (rows[kind] ??= { src: 0, test: 0, commits: 0 }).commits += 1;
   for (const line of files) {
     const [added, , file] = line.split("\t");
     if (!file || added === "-") continue; // binary
-    r[isTest(file) ? "test" : "src"] += Number(added);
+    const k = rel && rel.paths && rel.paths.some((p) => file.startsWith(p)) ? rel.kind : kind;
+    (rows[k] ??= { src: 0, test: 0, commits: 0 })[isTest(file) ? "test" : "src"] += Number(added);
   }
 }
 const kinds = ["kiro:", "claude-direct:", "other"].filter((k) => rows[k]);
@@ -55,7 +60,7 @@ const out = [
   ``,
   `Source lines only: \`kiro:\` ${pct(rows["kiro:"].src, srcTotal)} % (${fmt(rows["kiro:"].src)} of ${fmt(srcTotal)}).`,
   ``,
-  ...Object.entries(RELABEL).map(([sha, r]) => `Relabelled: \`${sha}\` counted as \`${r.kind}\` (${r.why}).`),
+  ...Object.entries(RELABEL).map(([sha, r]) => `Relabelled: \`${sha}\`${r.paths ? ` (lines in ${r.paths.join(", ")})` : ""} counted as \`${r.kind}\` (${r.why}).`),
   ``,
 ].join("\n");
 process.stdout.write(out);
