@@ -82,7 +82,7 @@ Kiro is the builder, and every prompt that built this repository is in [`prompts
 - **Bug Fix specs** — three, one per v2 break, filed by the curator from the CLI's repro block; Kiro wrote the design and tasks and executed them
   into `servers/hollow-inn/src/v2_1.ts`.
 - **What Kiro did not write** — the hollow-inn demo server v1 and v2 (the planted breaks are ours), test harnesses and glue
-  (commits starting `claude-direct:`: glue, fixes found while reviewing Kiro's output, the eval and probe scripts, the readiness script, the docs). The bugfix workflow ran headless: no IDE approval step was taken. Three Kiro execution turns (45, 46, 47)
+  (commits starting `claude-direct:`: glue, fixes found while reviewing Kiro's output, the eval and probe scripts, the readiness script, the docs, and the landing page and deck in `site/`). The bugfix workflow ran headless: no IDE approval step was taken. Three Kiro execution turns (45, 46, 47)
   were cut by our own timeout; the remaining acceptance steps were run by us, outside Kiro, and are labelled so in `prompts/README.md`.
   Credits, friction and the measured rate: [`docs/DX-REPORT.md`](docs/DX-REPORT.md).
 
