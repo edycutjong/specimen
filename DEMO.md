@@ -18,6 +18,7 @@ npm run seed:check  # the hollow-inn fixture still holds the properties the demo
 
 ```sh
 (cd jars && shasum -a 256 -c MANIFEST.sha256)
+# expected: racks.json: OK · sess_2e9b7313-….jsonl: OK · sess_854a0f71-….jsonl: OK
 ```
 
 ## 2. Replay the jars
@@ -58,7 +59,7 @@ npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"
 
 The CLI wrote each spec's repro block and diff table, Kiro's `specimen-curator` agent wrote the prose, Kiro's Bug Fix workflow wrote the design and tasks, and Kiro
 executed them into `servers/hollow-inn/src/v2_1.ts` — `quote` first (`evidence/slice/`), then `search_rooms` and `cancel_booking`
-(`.kiro/specs/*/`, prompts 42–45; the last execution turn was cut during its final acceptance task, which the autopilot ran itself — see `prompts/README.md`).
+(`.kiro/specs/*/`, prompts 42–45; the last execution turn was cut during its final acceptance task, which Claude Code (outside Kiro) ran itself — see `prompts/README.md`).
 Every v2 break now replays preserved on v2.1: `evidence/replay/racks-vs-v2.1-ship.txt` is `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
 exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not filed` (`racks-vs-v2.1.txt`); after filing and before the fixes it read
 `HOLD · covered` with exit 3 (`racks-vs-v2.1-after-filing-all.txt`). `specimen replay` also writes a new file under `replays/` each run.
@@ -79,7 +80,7 @@ npx tsx scripts/check_submission_readiness.ts --allow-pending-video
 ```
 
 `specimen init` writes the capture and firewall hooks, `.specimen/replay.json` (replay allow-list pre-filled from `readOnlyHint`) and the ignore rules; a second run
-changes nothing. A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
+changes nothing (the stop and turn hook files only when a test server is given). A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
 that hook calls `specimen hook stop` (section 7).
 The readiness script checks `.kiro/` and `prompts/` are tracked, no unfinished-text markers, every spec folder complete, every bugfix spec passes `check-spec`, no third-party host in the built
 cabinet and no kitchen file tracked; the demo video URL is the one field allowed to stay `PENDING` until it is uploaded.
@@ -88,7 +89,7 @@ cabinet and no kitchen file tracked; the demo video URL is the one field allowed
 
 ```sh
 scripts/stop-gate-eval.sh                  # E1–E3 through the real hooks in a scratch copy → evidence/stop-gate/eval.md (no Kiro call)
-TRUST_SHELL=1 scripts/stop-gate-live.sh    # one live headless Kiro session in a scratch copy, gate ON (costs ≈ 3 Kiro credits: the agent files specs)
+TRUST_SHELL=1 scripts/stop-gate-live.sh    # one live headless Kiro session in a scratch copy, gate ON (the agent files specs through the curator, so it costs a few Kiro credits)
 GATE=off TRUST_SHELL=1 scripts/stop-gate-live.sh evidence/stop-gate/live-control-off.md   # the same prompt with no gate
 ```
 

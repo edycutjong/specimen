@@ -54,7 +54,7 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 40 | cabinet first-screen regression fix after turn-39: one-line tagline at 1440, CountsPair grid, shelf padding (model claude-haiku-5.5) | 1.34 |
 | 41 | wrote `specimen init` (hooks, mcp.json merge, replay.json allow list from `tools/list`, .gitignore, engine check) + 32 tests | 0.91 |
 | 42 | Bug Fix workflow for the `search_rooms` default-limit spec: `design.md` + `tasks.md` | 4.91 |
-| 43 | executed that spec's tasks: `v2_1.ts` default limit back to 20 + tests + CHANGES.md; stopped at the final acceptance task (see ledger) | 1.02 |
+| 43 | executed that spec's tasks: `v2_1.ts` default limit back to 20 + tests + CHANGES.md; stopped at the final acceptance task (see this table) | 1.02 |
 | 44 | Bug Fix workflow for the `cancel_booking` spec: `design.md` + `tasks.md` | 5.01 |
 | 45 | executed that spec's tasks 1–3 (`cancel_booking` registered again in v2.1, `booking_cancel` unlisted); cut by a timeout during the final acceptance task 4 — the replay and test run for 4.1–4.3 were done by the autopilot, so tasks 4–5 stay unchecked in `tasks.md` | 1.12 |
 | 46 | cabinet UX fixes from the live axe + hover/focus gate (accession contrast, accessible name starts with the visible label, hover/press on summaries and the footer link, favicon); cut by a wall-clock timeout inside item 5 | 2.51 |
@@ -62,3 +62,7 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 48 | the Agent Stop gate: `specimen hook prompt` (turn snapshot), `specimen hook stop --server` (replay + block while a red jar is unfiled, 3-block cap, fail open), the pure `decideStop` in `packages/core`, 33 new tests, and `specimen init` now writes the turn hook and a 30 s timeout on the stop hook; the autopilot re-ran tests/typecheck and ran the E1–E3 evals through the real hooks (`scripts/stop-gate-eval.sh`) | 3.30 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
+
+## Scripted sessions that are not numbered turns
+
+Headless sessions started by scripts in `scripts/`, with the credits Kiro reported for them (`scripts/kiro-credits.mjs`): `stop-gate-live.sh` runs (a fixed one-line prompt in the script; the agent then starts curator sessions through `specimen file`) — 7.51 credits for the first three probes, 3.27 for the final four (gate ON with and without shell trust, gate OFF, a turn that edits nothing); the RACK A / RACK B recording and consequence runs are rows 4–7 and the table above.

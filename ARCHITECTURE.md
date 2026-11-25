@@ -26,19 +26,18 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 
 | Path | Role |
 |---|---|
-| `packages/core` (3,900 lines) | Pure logic: no `node:` import anywhere in `packages/core/src`, so the same code bundles for the browser. `jar.ts` (zod jar schema), `pairing.ts` (pre/post pairing), `scan.ts` (strict RFC 8259 scanner so redaction edits raw value spans instead of re-serialising), `redact.ts`, `replay.ts` (the loop), `normalize.ts`, `diff.ts` (RFC 6901 paths, keyed arrays, rename and unit detector), `verdict.ts` (SHIP/HOLD), `stop-gate.ts` (the pure `decideStop`), `firewall.ts`, `spec-check.ts` + `reference.ts` + `bugfix-spec.ts` (bugfix spec validity and the jarred reference), `policy.ts` (`.specimen/replay.json`, volatile policy) |
+| `packages/core` (about 4,000 lines) | Pure logic: no `node:` import anywhere in `packages/core/src`, so the same code bundles for the browser. `jar.ts` (zod jar schema), `pairing.ts` (pre/post pairing), `scan.ts` (strict RFC 8259 scanner so redaction edits raw value spans instead of re-serialising), `redact.ts`, `replay.ts` (the loop), `normalize.ts`, `diff.ts` (RFC 6901 paths, keyed arrays, rename and unit detector), `verdict.ts` (SHIP/HOLD), `stop-gate.ts` (the pure `decideStop`), `firewall.ts`, `spec-check.ts` + `reference.ts` + `bugfix-spec.ts` (bugfix spec validity and the jarred reference), `policy.ts` (`.specimen/replay.json`, volatile policy) |
 | `packages/cli` | The `specimen` command: `hook pre|post|firewall|prompt|stop` (stdin JSON in, jar line / turn snapshot / block decision out, fail-open on bad input), `replay`, `check-spec`, `file`, `init`, `manifest` |
 | `servers/hollow-inn` | The demo MCP server (six tools: `search_rooms`, `get_room`, `quote`, `book`, `list_bookings`, `cancel_booking`). `v1.ts` baseline, `v2.ts` three author-made breaks (`CHANGES.md`), `v2_1.ts` the Kiro-written fix. Money is integer cents, written as a two-decimal literal by `money.ts` |
 | `apps/cabinet` | Vite + React. `browser-replay.ts` runs the real `replay()` and `verdict()` against the real hollow-inn modules over `InMemoryTransport` in the browser; jars, policy files and the committed bugfix specs are imported at build time; it writes nothing and requests no third-party host. Components: shelf of jars, ServerSwitch (v1 / v2 / v2.1), ReplayButton, CountsPair, VerdictPlate, LabReportTable, JarDrawer, SpecViewer, SpoiledTray, GuideStrip |
 | `spikes/` | Day-1 spike harnesses (S1 browser bundle). Evidence, not product code |
-| `scripts/` | `bench.ts detect`, `seed-check.ts`, `record-sessions.sh`, `consequence-run.sh`, `kiro-credits.mjs` |
+| `scripts/` | `bench.ts detect`, `seed-check.ts`, `record-sessions.sh`, `consequence-run.sh`, `consequence-extract.mjs`, `kiro-credits.mjs`, `stop-gate-eval.sh`, `stop-gate-live.sh`, `check_submission_readiness.ts` |
 
 ## Contracts that matter
 
-- **Verdict.** `SHIP` needs at least one compared jar, none skipped, and none red. Otherwise `HOLD`. `verdict()` also returns `red`,
-  `filed` and `covered`. Exit codes of `specimen replay`: 0 SHIP · 1 HOLD with a red jar that has no passing filed spec · 3 HOLD with every red
-  jar filed · 2 usage or operational error.
-- **Jars are evidence.** The firewall hook blocks an agent write to `jars/`; the manifest hook runs `specimen manifest check` (SHA-256 of every jar against `MANIFEST.sha256`) before and after each Kiro task.
+- **Verdict.** `SHIP` needs at least one compared jar, no rattled, cracked, unsealed or skipped jar, and no spoiled line. Otherwise `HOLD`. `verdict()` also returns `red`, `filed` and `covered`.
+  Exit codes of `specimen replay`: 0 SHIP · 1 any HOLD that is not covered · 3 HOLD with at least one red jar, every red jar filed in a passing spec, and no unsealed, skipped or spoiled entry · 2 usage or operational error.
+- **Jars are evidence.** The firewall hook blocks a write to `jars/` made through Kiro's `write` tool (probed with `fs_write`, `evidence/firewall-probe.md`; shell writes are outside its matcher); the manifest hook runs `specimen manifest check` (SHA-256 of every jar against `MANIFEST.sha256`) before and after each Kiro task.
 - **Replay safety.** The server under test comes only from `--server`; tools replayed are the ones allowed in `.specimen/replay.json`
   (pre-filled from `readOnlyHint` by `specimen init`); responses are redacted before they are written; a volatile-fields policy keeps ids and timestamps from
   counting as changes.
@@ -58,4 +57,4 @@ Static output (`apps/cabinet/dist`) on Vercel, `vercel.json` builds `npm run bui
 
 ## Not built
 
-The Kiro Power, a gate A/B beyond one ON and one OFF run, and any IDE measurement of the Stop gate are not in this repository.
+Not in this repository: the Kiro Power, hook-overhead and replay-latency benchmarks (`bench hook|replay`), a Playwright end-to-end test of the judge path, a larger field shelf, `specimen seal` / `cabinet`, a gate A/B beyond single runs, and any IDE measurement of the Stop gate.

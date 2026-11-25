@@ -14,10 +14,10 @@ Run 2026-11-25 20:58 UTC+7 (13:58Z) by a Puppeteer + axe-core script against the
 
 **About the axe result.** The ink on a toe-tag measures 10.24:1 (`#1E1912` on `#D9C49A`), and the accession label is the topmost element at its own points
 (`document.elementsFromPoint`), yet axe samples the dark jar art behind the rotated, overlapping tag. Four changes to the tag's rotation, pointer events and compositing left the axe
-count unchanged, so we treat it as an axe false positive. We do not claim "0 axe violations". A real-browser re-check is on the human list. `label-content-name-mismatch` was a real finding in the
+count unchanged, so we treat it as an axe false positive. We do not claim "0 axe violations". A re-check with the axe browser extension in a real browser has not been done. `label-content-name-mismatch` was a real finding in the
 first run (the accessible name did not start with the visible label) and was fixed by Kiro in turns 46–47.
 
-**What the first run found and what changed** (`prompts/turn-46.md`, `turn-47.md`): hover feedback was missing on three disclosures and the footer link; the favicon returned 404; the first jar sat at y = 624 on a 375 px phone. All three were fixed
+**What the first run found and what changed** (`prompts/turn-46.md`, `turn-47.md`): hover feedback was missing on two disclosures ("Details" and "Show the two hook files") and the footer link (the version-notes disclosure already had it; the first run read it as dead only because the closed Details fold has no box); the favicon returned 404; the first jar sat at y = 624 on a 375 px phone. All three were fixed
 (first jar 453 px). The `Details` fold is closed by default, so the gate opens it before it measures the version-notes disclosure.
 
-The harness is a short Puppeteer + axe-core script kept outside this repository; the raw result above is what it printed.
+The numbers are the recorded output of a Puppeteer + axe-core script that is not part of this repository (a recorded run, not a reproducible test); the mechanism described for the axe result is our reading of it.

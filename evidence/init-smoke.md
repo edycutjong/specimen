@@ -35,4 +35,4 @@ next: restart the Kiro session, run your agent against hollowinn, then: specimen
 }
 ```
 
-Second run with the same arguments: 7 `kept …` lines, no file changed (also asserted by `packages/cli/test/init.test.ts`, 32 tests). The stop-gate hook file it wrote calls `specimen hook stop`, which is the Should-tier K5 command (see DX-REPORT for its status).
+Second run with the same arguments: 7 `kept …` lines, no file changed (also asserted by `packages/cli/test/init.test.ts`, 33 tests now). This run predates turn 48: `specimen hook stop` was not built yet, and `init` now also writes `.kiro/hooks/specimen-jar-turn.json` (see DX-REPORT, Experiment 4).

@@ -60,10 +60,10 @@ Bug Fix workflow) run headless from `kiro-cli`, and what does each phase cost?
     the first attempt failed `shall_continue` and `unchanged_jar`, and one retry with the failures quoted passed
     ([`evidence/slice/01-specimen-file.md`](../evidence/slice/01-specimen-file.md)).
 
-## Experiment 3 — closing the loop for the other two breaks, and `specimen init` (day 3, 2026-11-25)
+## Experiment 3 — closing the loop for the other two breaks, and `specimen init` (2026-11-25, evening)
 **Question:** once the curator, the Bug Fix workflow and the checker exist, what does it cost to file and fix the second and third break, and
 where does headless Kiro stop on its own?
-**Measured** (credits from each session's `usage_summary`; prompts [37–47 in `prompts/`](../prompts/README.md)):
+**Measured** (credits from each session's `usage_summary`; prompts [41–47 in `prompts/`](../prompts/README.md)):
 
 | Step | Mode / model | Credits |
 |---|---|---|
@@ -77,11 +77,11 @@ where does headless Kiro stop on its own?
 ## Findings, day 3
 11. A Bug Fix spec is much cheaper than a feature spec: design + tasks 4.9–6.3 credits, execution about 1 credit on claude-haiku-5.5, against 27–53 credits to execute a whole feature spec (finding 7). The fix itself is small
     because the filed spec holds a repro block, the diff and the jarred reference.
-12. Headless Kiro stops by itself when a task's acceptance criterion touches code outside the task. Turn 43 stopped at its last task to ask whether four cabinet tests that pin the old
+12. Headless Kiro stops by itself when a task's acceptance criterion touches code outside the task. Turn 43 stopped at its last task to ask whether the cabinet tests that pin the old
     counts should be updated; we updated them ourselves (`claude-direct:`) because `--no-interactive` cannot answer.
-13. We cut two execution turns with our own `timeout` (turn 45 inside its final acceptance task, turns 46 and 47 near their final measurement). Kiro's work up to the cut was kept and the remaining acceptance steps
-    were run by us and labelled so in `prompts/README.md` and the ledger. The tasks that were not completed stay unchecked in `tasks.md` — we never edited them. Next time: run the turn in the background with no timeout.
-14. `specimen file` tolerates a transient Kiro failure (`exit 22`, model registry) with a plain retry; the failed attempt is not billed.
+13. We cut three execution turns with our own `timeout` (turn 45 inside its final acceptance task, turn 46 inside its item 5, turn 47 at its final measurement). Kiro's work up to the cut was kept and the remaining acceptance steps
+    were run by us and labelled so in `prompts/README.md`. The tasks that were not completed stay unchecked in `tasks.md` — we never edited them. Next time: run the turn in the background with no timeout.
+14. One `specimen file` attempt exited 22 (Kiro's model registry was unavailable) and wrote no spec; running it again worked, and the failed attempt showed no credits in Kiro's `usage_summary`. `specimen file` does not retry by itself.
 15. **axe-core reports `color-contrast` (serious) on the jars' toe-tag text that we could not fix because the measured contrast is fine.** Ink `#1E1912` on tag `#D9C49A` is 10.24:1 and
     `document.elementsFromPoint` returns the accession label first at its own points, but axe samples the dark jar art underneath the rotated, overlapping SVG + HTML tag. Four changes left axe unchanged
     (rotation removed from the tag, rotation removed from the overlay, `pointer-events:auto`, filter/blend/opacity/animation neutralised). We treat it as a false positive and do **not** claim "axe 0 violations";
@@ -89,15 +89,15 @@ where does headless Kiro stop on its own?
 16. The interaction gate (`hover` byte-diff of the element screenshot, focus-ring check, link status, 375 and 320 px scroll width) first reported the summary in the version notes as dead on hover; the cause was that
     the notes sit inside the closed "Details" fold, whose children have no real box until it is opened. After opening the fold the same element receives the pointer and its hover changes.
 
-## Experiment 4 — the Stop gate, built by Kiro and tried live (day 3, 2026-11-25)
+## Experiment 4 — the Stop gate, built by Kiro and tried live (2026-11-25, night)
 **Question:** does a `Stop` hook that replays the jars send a real Kiro agent back, and what does the agent do with the reason?
 **Built:** turn 48 (claude-haiku-5.5, 3.30 credits): `specimen hook prompt`, `specimen hook stop`, the pure `decideStop`, 33 tests. Evals E1–E3 and the live probes are scripts in `scripts/` (`stop-gate-eval.sh`, `stop-gate-live.sh`).
-**Measured:** `evidence/stop-gate/` — 4 live headless sessions after the fixes below (gate ON with shell, ON without shell, ON on a turn that edits nothing, OFF), ≈ 3.3 credits, almost all of it the curator sessions the agent started.
+**Measured:** `evidence/stop-gate/` — 4 live headless sessions after the fixes below (gate ON with shell, ON without shell, ON on a turn that edits nothing, OFF), a few credits (see `prompts/README.md`, "Scripted sessions"), almost all of it the curator sessions the agent started.
 
 ## Findings, day 3 (continued)
 17. The gate works on the CLI as S2 predicted: the hook's JSON on STDOUT with exit 0 sent the agent back once; it read the reason and chose the second option in it (file the specs), not the first (keep the contract).
-    Without shell trust the same agent said it could not run `specimen file` and told us what to run; with it, it replayed v2 itself, filed five jars into three specs, retried one that failed `check-spec`, and left `servers/` alone.
-18. **The gate also fired inside the curator's own sessions** (first live run: ≈10 curator sessions each blocked once, about 40 % of the credits of that run). The hook runs for every headless session in the workspace. `specimen file` now starts the curator with `SPECIMEN_GATE=off`, the hook honours it, and the re-run shows one gate file instead of ten.
-19. **A trigger id we got wrong.** Our prompt called the turn-snapshot trigger `PromptSubmit`; Kiro wrote exactly that and every test passed, because the tests copied the same name. The documented id is `UserPromptSubmit` (34 mentions in the Kiro hooks docs, none of `PromptSubmit`). The repository's own hook-schema test listed the right id and failed once `specimen init` wrote the repo's hook files, which is how it was caught. Fixed; the live no-edit run now shows the snapshot hook writing `.specimen/turn.json` and the gate staying silent.
-20. Gate cost per stop: 1.2–2 s wall for ten jars (`evidence/stop-gate/eval.md`), against a 30 s hook timeout; a turn that changes nothing under the watched paths costs 0.3 s.
+    Without shell trust the same agent said it could not run `specimen file` and told us what to run; with it, it replayed v2 itself, filed the five red jars into three specs and left the server's behaviour alone (the only change under `servers/` is the requested `// gate probe` line).
+18. **The gate also fired inside the curator's own sessions** (first live run: about ten curator sessions, each blocked once). The hook runs for every headless session in the workspace. `specimen file` now starts the curator with `SPECIMEN_GATE=off`, the hook honours it, and the re-run shows one gate file instead of ten.
+19. **A trigger id we got wrong.** Our prompt called the turn-snapshot trigger `PromptSubmit`; Kiro wrote exactly that and every test passed, because the tests copied the same name. The documented id is `UserPromptSubmit` (17 mentions across six pages of the Kiro hooks docs, none of bare `PromptSubmit`). The repository's own hook-schema test lists the right id and failed when we ran the suite after `specimen init` wrote the repo's hook files, which is how it was caught. Fixed; the live no-edit run now shows the snapshot hook writing `.specimen/turn.json` and the gate staying silent.
+20. Gate cost per stop: 2.3–2.8 s wall for ten jars per replaying stop (`evidence/stop-gate/eval.md`), against a 30 s hook timeout; a turn that changes nothing under the watched paths costs 0.4 s.
 21. `specimen init` in our own repository wanted to add `jars/` and `replays/` to `.gitignore` (its default for a user repo); we removed those two lines because this repo commits its racks, and never ran init with `--force`.

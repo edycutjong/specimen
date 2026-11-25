@@ -56,10 +56,10 @@ with the new descriptions loaded adapted, in one run per task.
 `search_rooms` and `cancel_booking`, then `specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"`.
 
 **Result (committed outputs):**
-- Before filing, v2 read `HOLD` with SPC-0010 and SPC-0009 `not filed`; after filing all five red jars it read `HOLD · covered`, exit 3 — `evidence/replay/racks-vs-v2-after-filing-all.txt`.
+- Before any filing, v2 read `HOLD` with all five red jars `not filed` (`evidence/replay/racks-vs-v2.txt`); with only the `quote` spec filed, SPC-0010 and SPC-0009 stayed `not filed` (`racks-vs-v2-after-filing.txt`); after all five red jars were filed it read `HOLD · covered`, exit 3 (`racks-vs-v2-after-filing-all.txt`).
 - After the fixes, v2.1 reads `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`, exit 0 — `evidence/replay/racks-vs-v2.1-ship.txt`;
   `scripts/bench.ts detect` agrees (`evidence/bench/detect.md`: v2.1 SHIP, 10 preserved).
-- `specimen init` on a scratch workspace with the real hollow-inn v2.1 as the test instance: exit 0, six files written (four hook files, `.specimen/replay.json`, `.gitignore`), second run changes nothing — `evidence/init-smoke.md`.
+- `specimen init` on a scratch workspace with the real hollow-inn v2.1 as the test instance: exit 0, six files written (four hook files, `.specimen/replay.json`, `.gitignore`), second run changes nothing — `evidence/init-smoke.md`. That run predates the turn-snapshot hook; the current `init` writes seven files (five hook files).
 
 **Caveat:** hollow-inn's three breaks are author-made, so this shows the loop closes, not how often real server changes are caught. The one public server we replayed (`server-memory` 1.0.0 → 2.2.1) was a null result (`evidence/field/server-memory.md`).
 
@@ -69,7 +69,7 @@ with the new descriptions loaded adapted, in one run per task.
 
 **Run:** `scripts/stop-gate-live.sh`, scratch copy of this repo with no bugfix spec filed and the server under test at v2; prompt: add a comment line to `servers/hollow-inn/src/v1.ts`, say DONE, and "if a hook sends you back with a reason, say what you will do about it, then do it". Arms: gate ON with shell trust, gate ON without, gate OFF (shell trust), and a gate-ON prompt that edits nothing.
 
-**Result:** ON (shell): the agent said DONE, was sent back once, replayed v2, filed the five red jars into three bugfix specs (one needed a retry after a `check-spec` FAIL) and did not touch the server — `evidence/stop-gate/live-shell.md`. ON (no shell): sent back once, could not run `specimen file`, said so — `live.md`.
+**Result:** ON (shell): the agent said DONE, was sent back once, replayed v2, filed the five red jars into three bugfix specs and left the server's behaviour alone (the only change under `servers/` is the requested comment line) — `evidence/stop-gate/live-shell.md`. ON (no shell): sent back once, could not run `specimen file`, said so — `live.md`.
 OFF: DONE, and nothing else — `live-control-off.md`. No-edit turn: READY, never blocked — `live-no-edit.md`.
 
 **Caveat:** one run per arm, one prompt, a model (claude-haiku-5.5) chosen for credit cost; the prompt itself told the agent what to do if a hook sent it back, which makes the difference larger than an unprompted agent would show. This is a demonstration that the gate changes the turn, not a measured rate.

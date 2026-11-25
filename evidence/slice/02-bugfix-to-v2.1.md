@@ -14,5 +14,5 @@ default limit) still rattled and SPC-0009 (`cancel_booking`) still cracked — v
 
 Review (by the build agent, not a human; no IDE approval): the IDE approval steps of the Bug Fix workflow were not taken
 (headless path, proven by spike S4b) — the prompts' "reviewed and approved" wording was an instruction to the headless
-agent, not a human gate. The design, tasks and code were read and re-tested outside Kiro (`npm test`: 76 files, 680 tests; `npm run typecheck`: exit 0 — `evidence/tests.txt`).
+agent, not a human gate. The design, tasks and code were read and re-tested outside Kiro (`npm test`: 76 files, 680 tests; `npm run typecheck`: exit 0 — counts at that commit; `evidence/tests.txt` has been refreshed since).
 `servers/hollow-inn/src/v1.ts`, `v2.ts` and `jars/` are unchanged by these steps (`git log --oneline -- servers/hollow-inn/src/v1.ts servers/hollow-inn/src/v2.ts jars/` shows no commit after `7926c62`).
