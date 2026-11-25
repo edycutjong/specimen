@@ -22,7 +22,7 @@
 
 ---
 
-**For anyone who maintains an MCP server that agents call.** Change the server and its own tests stay green, while code that reads the old response breaks. SPECIMEN JAR seals the calls a Kiro agent really made (Kiro hooks, inside the agent), replays them against the new server, and files each call that no longer matches as a Kiro bugfix spec.
+**For anyone who maintains an MCP server that agents call.** Change the server, update its tests with it, and they stay green, while code that reads the old response breaks. SPECIMEN JAR seals the calls a Kiro agent really made (Kiro hooks, inside the agent), replays them against the new server, and files each break as a Kiro bugfix spec, with the captured calls as its repro.
 
 **What is shown** (Kiroween 2026, Frankenstein category): our demo server's v2, with breaks we planted, turns 5 of the 10 jars recorded from real Kiro sessions red while an input-schema diff sees 2 changes; three bugfix specs are filed for the red jars, Kiro designs the fixes and executes them (we ran the final acceptance of two), and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load; capturing your own calls takes `specimen init` and the Kiro hooks in your own repository.
 
