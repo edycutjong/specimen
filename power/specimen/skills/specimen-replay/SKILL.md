@@ -13,7 +13,7 @@ Run these steps in the project that owns the MCP server.
 2. Set up the project with `npx specimen init --server-key <key>`, where `<key>` is letters and digits only.
    - `--mcp-command "<cmd>"` adds an `mcp.json` entry, only when the key has none.
    - `--test-server "<cmd>"` starts a disposable instance of the server, never production. It also installs the stop gate (step 6).
-   - `--allow <tool>` and `--yes` set the replay allow list. Read-only tools are always allowed.
+   - `--allow <tool>` names tools that replay may call. With `--test-server`, init also lists the server's tools and allows those annotated read-only; `--yes` then allows every listed tool. Without `--test-server`, only the `--allow` names are written.
    - `--commit-jars` commits `jars/`. Without it, `jars/` goes into `.gitignore`.
    - `--force` rewrites hook files and `.specimen/replay.json`. Without it, existing files are kept.
    - Without a terminal, `--server-key` is required.
