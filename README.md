@@ -53,6 +53,12 @@ the v2 server while 5 of the 10 recorded calls come back different.
 
 ## 🏗️ Architecture & Tech Stack
 
+<p align="center">
+  <img src="docs/architecture.png" width="100%" alt="specimen architecture, as built. A Kiro agent session (kiro-cli, agent engine v3) calls the hollow-inn MCP server. Kiro's PreToolUse and PostToolUse hooks run specimen hook, which appends one line per call to jars/ (10 jars in 2 session files, response_text byte for byte, MANIFEST.sha256). specimen replay replays the jars against a fresh server per recorded session: v2 HOLD, 4 rattled, 1 cracked; v2.1 SHIP, 10 jars compared. A red jar is filed with specimen file (run by hand, or by the agent the Stop gate blocked): the Kiro curator agent writes .kiro/specs/name/bugfix.md; once check-spec passes, a separate headless prompt runs Kiro's Bug Fix workflow, which wrote hollow-inn v2.1. On Stop, the hook replays and can block the agent's turn with a reason. The judge's browser runs the same replay and verdict code in the cabinet at specimen.edycu.dev, a static Vercel page with the jars and hollow-inn v1, v2 and v2.1 built in.">
+</p>
+
+The loop in one figure, drawn from the code as built: Kiro's hooks jar each call, `specimen replay` runs the jars against the next server version, a red jar is filed as a Kiro bugfix spec, and Kiro's Bug Fix workflow fixes the server. Contracts and file names: [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
 | Part | What | Tech |
 |---|---|---|
 | `packages/core` | jar format, pairing, redaction, replay, diff, verdict — shared by the hook, the CLI and the browser cabinet | TypeScript, zod |

@@ -3,6 +3,8 @@
 Regenerated from the code on 2026-11-25 (file names below are the files in this repository). One TypeScript codebase; the
 same `@specimen/core` runs in the Kiro hook, the `specimen` CLI, the demo MCP server's replay and the browser cabinet.
 
+![specimen architecture, as built: the jar → replay → file → fix loop between Kiro, specimen and the hollow-inn MCP server](docs/architecture.png)
+
 ```
 Kiro agent ──MCP call──▶ hollow-inn (stdio)
      │   PreToolUse / PostToolUse hooks (.kiro/hooks/specimen-jar-{pre,post}.json)
