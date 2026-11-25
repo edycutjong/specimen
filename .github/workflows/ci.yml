@@ -20,8 +20,11 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
-      - name: Build the cabinet
-        run: npm run build -w apps/cabinet
+      # the exact Vercel build (vercel.json buildCommand): the cabinet, then the landing, the deck and /static/replay.js
+      - name: Build the site (cabinet + landing + deck)
+        run: npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts
+      - name: The deployed files exist
+        run: for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do test -s "apps/cabinet/dist/$f" || { echo "missing apps/cabinet/dist/$f"; exit 1; }; done
   audit:
     runs-on: ubuntu-latest
     steps:
@@ -41,5 +44,8 @@ jobs:
           fetch-depth: 0
       - name: gitleaks (full history)
         run: |
-          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz | tar -xz gitleaks
+          # pinned to the release's published SHA-256 (gitleaks_8.24.2_checksums.txt), checked before anything runs
+          curl -sSfL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz
+          echo "fa0500f6b7e41d28791ebc680f5dd9899cd42b58629218a5f041efa899151a8e  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
           ./gitleaks detect --source . --log-opts="--all" --redact
