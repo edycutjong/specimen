@@ -4,31 +4,43 @@
  * from the Token_File.
  */
 
+/* The version note sits in the ledger row: the heading, the v2.1 lead and the disclosure in one line. */
 .version-notes {
-  margin: 16px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin: 0;
   min-width: 0;
+  max-width: 100%;
   font-family: var(--font-body);
   font-size: 16px;
   color: var(--ink);
 }
 
+/* A sentence, so the body face, bold, at 17 px (not the display face). */
 .version-notes__heading {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 22px;
-  line-height: 1.2;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
 .version-notes__lead {
-  margin: 6px 0 0;
+  flex: 1 1 100%;
+  margin: 0;
   color: var(--tag);
 }
 
+/* A closed disclosure stays on the ledger line. An open one takes its own full line under the row. */
 .version-notes__details {
-  margin-top: 10px;
   min-width: 0;
+}
+
+.version-notes__details[open] {
+  flex: 1 1 100%;
 }
 
 .version-notes__summary {

@@ -28,7 +28,7 @@
   background-attachment: local;
 }
 
-/* Fixed layout: Path 30 %, Replayed 22 %, Flag 18 %, Reference 30 %. Headings never break mid-word. */
+/* Fixed layout: PATH 42 %, FLAG 20 %, VALUES 38 %. The paper is narrow (420 px drawer), so the columns are fixed. */
 .lab-report__table {
   width: 100%;
   table-layout: fixed;
@@ -39,19 +39,15 @@
 }
 
 .lab-report__table thead th:nth-child(1) {
-  width: 30%;
+  width: 42%;
 }
 
 .lab-report__table thead th:nth-child(2) {
-  width: 22%;
+  width: 20%;
 }
 
 .lab-report__table thead th:nth-child(3) {
-  width: 18%;
-}
-
-.lab-report__table thead th:nth-child(4) {
-  width: 30%;
+  width: 38%;
 }
 
 .lab-report__table th,
@@ -60,7 +56,33 @@
   line-height: 28px;
   text-align: left;
   vertical-align: top;
+  overflow-wrap: normal;
+}
+
+/* A path breaks only after a "/" (the <wbr> points), never inside a name. */
+.lab-report__path {
+  min-width: 0;
+  word-break: normal;
+}
+
+/* The values cell stacks the replayed and the jarred line, in the data face at 14 px. */
+.lab-report__values {
+  min-width: 0;
+  font-family: var(--font-data);
+  font-size: 14px;
   overflow-wrap: anywhere;
+}
+
+.lab-report__value {
+  display: block;
+}
+
+.lab-report__value-label {
+  color: var(--muted);
+}
+
+.lab-report__value-text {
+  color: var(--ink);
 }
 
 /* Column headings: the data face, 14 px, uppercase. Each heading stays on one line. */
@@ -80,7 +102,7 @@
   color: var(--tag);
 }
 
-/* Flag words are in the display face, Grenze Gotisch 900 at 16 px in --after (Requirement 11.11). */
+/* Flag words are in the display face, Grenze Gotisch 900 at 16 px in --after (Requirement 11.11). The cell never breaks, so REMOVED stays on one line. */
 .lab-report__flag {
   font-family: var(--font-display);
   font-weight: 900;

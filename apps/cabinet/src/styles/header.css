@@ -51,15 +51,16 @@
   min-width: 0;
 }
 
-/* The wordmark is 26 px in two lines below 600 px, so it keeps room for the plate beside it. */
+/* The wordmark is one line at 30 px below 600 px. Below 600 px the plate has its own row (see the media query). */
 .cabinet-wordmark {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 26px;
+  font-size: 30px;
   line-height: 1;
   letter-spacing: 0.01em;
   overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .cabinet-wordmark__specimen {
@@ -100,9 +101,31 @@
   transition: padding-right 180ms ease-out;
 }
 
-@media (min-width: 600px) {
-  .cabinet-wordmark {
-    font-size: 30px;
+/* Below 600 px the rows stack: the wordmark, the plate at full width, then the version and the replay side by side. */
+@media (max-width: 599px) {
+  .cabinet-header__top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cabinet-plate-slot {
+    width: 100%;
+  }
+
+  .cabinet-plate-slot > .verdict-plate--plaque,
+  .cabinet-plate-slot > .verdict-error {
+    display: flex;
+    width: 100%;
+  }
+
+  .cabinet-controls {
+    flex-wrap: nowrap;
+  }
+
+  .cabinet-controls > .server-switch,
+  .cabinet-controls > .replay-button {
+    min-width: 0;
   }
 }
 

@@ -130,10 +130,13 @@
   overflow-wrap: anywhere;
 }
 
-/* The heading takes focus on open, so its focus ring is always visible. */
-.jar-drawer__heading:focus {
-  outline: 3px solid var(--before);
-  outline-offset: 3px;
+/*
+ * The heading takes focus on open, and it is not a control, so it draws no ring. The 3 px ring stays on the
+ * real controls (the tabs, the Close button and the panel).
+ */
+.jar-drawer__heading:focus,
+.jar-drawer__heading:focus-visible {
+  outline: none;
 }
 
 .jar-drawer__tool {

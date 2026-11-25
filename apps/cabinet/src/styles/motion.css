@@ -184,13 +184,15 @@
 @media (prefers-reduced-motion: reduce) {
   .jar-art__bubble,
   .storm-window__flash,
-  .storm-window__bolt {
+  .storm-window__bolt,
+  .storm-window__wash {
     display: none;
   }
 }
 
 .no-motion .jar-art__bubble,
 .no-motion .storm-window__flash,
-.no-motion .storm-window__bolt {
+.no-motion .storm-window__bolt,
+.no-motion .storm-window__wash {
   display: none;
 }

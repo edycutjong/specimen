@@ -9,6 +9,7 @@
  * A changed row is struck through and set in red ink, and the printed flag word repeats that
  * cue (Requirement 11.12). A compatible addition is neither struck nor red (Requirement 11.8).
  */
+import { Fragment, type ReactElement } from "react";
 import { referenceOf, type Change, type ChangeKind, type ReferenceElement, type ResultEntry } from "@specimen/core";
 import "../styles/lab-report.css";
 
@@ -27,10 +28,10 @@ export type LabReportChangeRow = {
   type: "change";
   /** The RFC 6901 path, or "(whole body)" for the empty pointer. */
   path: string;
-  /** The replayed value as JSON text, or "absent" when the replayed side has no value. */
+  /** The replayed value as JSON text, or "—" when the replayed side has no value (a removed field). */
   replayed: string;
   flag: FlagWord;
-  /** The jarred literal, a key, "—", or "not jarred" for an added field. */
+  /** The jarred literal or a key, or "—" when the jarred side has no value (an added field). */
   reference: string;
 };
 
@@ -67,7 +68,7 @@ function lastToken(path: string): string {
 
 /** The jarred text shown for one change. Literals are copied, never re-rendered from a number. */
 function referenceCell(change: Change, elements: readonly ReferenceElement[] | null): string {
-  if (change.kind === "added") return "not jarred";
+  if (change.kind === "added") return NO_VALUE;
   if (elements === null) return "unavailable";
   for (const element of elements) {
     if (element.kind === "path-literal" && element.path === change.path) return element.literal;
@@ -81,11 +82,14 @@ function referenceCell(change: Change, elements: readonly ReferenceElement[] | n
   return "—";
 }
 
+/** The mark for a side of a change that has no value: a removed field has no replayed value, and an added one no jarred value. */
+const NO_VALUE = "—";
+
 function changeRow(change: Change, elements: readonly ReferenceElement[] | null): LabReportChangeRow {
   return {
     type: "change",
     path: displayPath(change.path),
-    replayed: change.now === undefined ? "absent" : JSON.stringify(change.now),
+    replayed: change.now === undefined ? NO_VALUE : JSON.stringify(change.now),
     flag: FLAG_WORDS[change.kind],
     reference: referenceCell(change, elements),
   };
@@ -133,13 +137,57 @@ export type LabReportTableProps = {
   entry: ResultEntry;
 };
 
+/**
+ * A JSON pointer with a line break after each "/", so a long path wraps only at a slash and never inside a
+ * name. The text content stays the same path.
+ */
+function PathText({ path }: { path: string }): ReactElement {
+  const pieces = path.split("/");
+  return (
+    <>
+      {pieces.map((piece, index) => (
+        <Fragment key={index}>
+          {index > 0 ? (
+            <>
+              /<wbr />
+            </>
+          ) : null}
+          {piece}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+/** One side of the values cell: the label in --muted, then the value in --ink. */
+function ValueLine({ label, value, changed }: { label: string; value: string; changed: boolean }): ReactElement {
+  return (
+    <span className="lab-report__value">
+      <span className="lab-report__value-label">{label}</span>{" "}
+      <span className="lab-report__value-text">{changed ? <s>{value}</s> : value}</span>
+    </span>
+  );
+}
+
 function ChangeCells({ row, changed }: { row: LabReportChangeRow; changed: boolean }) {
   return (
     <>
-      <td>{changed ? <s className="lab-report__data">{row.path}</s> : <span className="lab-report__data">{row.path}</span>}</td>
-      <td>{changed ? <s className="lab-report__data">{row.replayed}</s> : <span className="lab-report__data">{row.replayed}</span>}</td>
+      <td className="lab-report__path">
+        {changed ? (
+          <s className="lab-report__data">
+            <PathText path={row.path} />
+          </s>
+        ) : (
+          <span className="lab-report__data">
+            <PathText path={row.path} />
+          </span>
+        )}
+      </td>
       <td className="lab-report__flag">{row.flag}</td>
-      <td className="lab-report__data">{row.reference}</td>
+      <td className="lab-report__values">
+        <ValueLine label="replayed" value={row.replayed} changed={changed && row.replayed !== NO_VALUE} />
+        <ValueLine label="jarred" value={row.reference} changed={false} />
+      </td>
     </>
   );
 }
@@ -153,16 +201,15 @@ export function LabReportTable({ entry }: LabReportTableProps) {
           <thead>
             <tr>
               <th scope="col">Path</th>
-              <th scope="col">Replayed</th>
               <th scope="col">Flag</th>
-              <th scope="col">Reference (jarred)</th>
+              <th scope="col">Values</th>
             </tr>
           </thead>
           <tbody>
             {report.rows.map((row, index) =>
               row.type === "note" ? (
                 <tr key={index} className="lab-report__note">
-                  <td colSpan={4}>{row.text}</td>
+                  <td colSpan={3}>{row.text}</td>
                 </tr>
               ) : (
                 <tr key={index} className="lab-report__row lab-report__row--changed">
@@ -174,7 +221,7 @@ export function LabReportTable({ entry }: LabReportTableProps) {
           {report.compatibleRows.length > 0 ? (
             <tbody className="lab-report__compatible">
               <tr>
-                <th scope="rowgroup" colSpan={4}>
+                <th scope="rowgroup" colSpan={3}>
                   compatible additions
                 </th>
               </tr>

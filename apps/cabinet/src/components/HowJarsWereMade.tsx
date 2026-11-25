@@ -41,14 +41,16 @@ export function HowJarsWereMade() {
         and the post hook runs after it.
       </p>
 
-      {HOOK_FILES.map((hook) => (
-        <figure key={hook.name} className="how-made__hook">
-          <figcaption>{hook.path}</figcaption>
-          <pre data-hook={hook.name}>
-            <code>{hook.text}</code>
-          </pre>
-        </figure>
-      ))}
+      <div className="how-made__hooks">
+        {HOOK_FILES.map((hook) => (
+          <figure key={hook.name} className="how-made__hook">
+            <figcaption>{hook.path}</figcaption>
+            <pre data-hook={hook.name}>
+              <code>{hook.text}</code>
+            </pre>
+          </figure>
+        ))}
+      </div>
 
       <p>
         The hook configuration and the rest of the Kiro setup are in{" "}

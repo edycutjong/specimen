@@ -201,12 +201,13 @@ ol.shelf-grid {
   min-width: 0;
 }
 
+/* A section heading, so the body face, bold (the display face stays on the rack titles). */
 .spoiled-tray__title {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 28px;
-  line-height: 1.1;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
 }
 
 .spoiled-tray__list {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } 
 import { getBugfixSpecs, runReplay, type CabinetReplayResult, type HollowInnVersion } from "./browser-replay.js";
 import { buildViewModel, revealOrder, type JarViewModel } from "./cabinet-model.js";
 import { RACK_META } from "./rack-meta.js";
-import { CabinetFrame } from "./components/CabinetFrame.js";
+import { CabinetFrame, FrameSuture } from "./components/CabinetFrame.js";
 import { CountsPair } from "./components/CountsPair.js";
 import { GuideStrip } from "./components/GuideStrip.js";
 import { HowJarsWereMade } from "./components/HowJarsWereMade.js";
@@ -14,6 +14,7 @@ import { ShelfRow } from "./components/ShelfRow.js";
 import { SpoiledTray } from "./components/SpoiledTray.js";
 import { VerdictPlate } from "./components/VerdictPlate.js";
 import { VersionNotes } from "./components/VersionNotes.js";
+import { StormWindow } from "./jar-art.js";
 import { REVEAL_INTERVAL_MS, useReducedMotion, useReveal } from "./reveal.js";
 import "./styles/motion.css";
 import "./styles/header.css";
@@ -184,15 +185,22 @@ export function App(): ReactElement {
 
       <CabinetFrame>
         <main className="cabinet-main">
-          <CountsPair counts={viewModel.counts} replayed={viewModel.replayed} />
-          <VerdictPlate
-            plate={viewModel.plate}
-            revealed={revealed}
-            revealIntervalMs={REVEAL_INTERVAL_MS}
-            part="ledger"
-          />
-          <VersionNotes version={version} />
-          <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
+          <div className="cabinet-wall">
+            <div className="cabinet-wall__text">
+              <CountsPair counts={viewModel.counts} replayed={viewModel.replayed} />
+              <div className="cabinet-ledger">
+                <VerdictPlate
+                  plate={viewModel.plate}
+                  revealed={revealed}
+                  revealIntervalMs={REVEAL_INTERVAL_MS}
+                  part="ledger"
+                />
+                <VersionNotes version={version} />
+              </div>
+              <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
+            </div>
+            <StormWindow className="cabinet-wall__window" />
+          </div>
 
           {viewModel.racks.map((rack) => (
             <div key={rack.code} className="rack-slot">
@@ -207,20 +215,21 @@ export function App(): ReactElement {
             </div>
           ))}
 
-        <Legend skippedToolsPresent={viewModel.skippedToolsPresent} />
-        <SpoiledTray spoiled={viewModel.spoiled} />
-        <HowJarsWereMade />
+          <FrameSuture />
+          <Legend skippedToolsPresent={viewModel.skippedToolsPresent} />
+          <SpoiledTray spoiled={viewModel.spoiled} />
+          <HowJarsWereMade />
 
-        <div id={DRAWER_ID}>
-          <JarDrawer
-            jar={openJar}
-            version={version}
-            result={result}
-            specs={BUGFIX_SPECS}
-            onClose={() => setOpenKey(null)}
-          />
-        </div>
-      </main>
+          <div id={DRAWER_ID}>
+            <JarDrawer
+              jar={openJar}
+              version={version}
+              result={result}
+              specs={BUGFIX_SPECS}
+              onClose={() => setOpenKey(null)}
+            />
+          </div>
+        </main>
       </CabinetFrame>
     </>
   );

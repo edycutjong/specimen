@@ -1,20 +1,20 @@
 /**
  * The cabinet wall (Requirements 14.1 to 14.3): a green-black stone wall with an inline SVG grain,
- * a riveted iron frame, the stamp and the four organs MCP, HOOKS, REPLAY and SPEC joined by sutures,
- * and the barred storm window behind the first shelf.
+ * a riveted iron frame, and the stamp and the four organs MCP, HOOKS, REPLAY and SPEC joined by sutures.
  *
- * The wall is one composition. The stamp sits top-left with the organ row under it. The storm window
- * is positioned at the right side of the wall, behind the content, so the first shelf stands in front
- * of its lower part. The page header is not part of the wall. The App renders it above the frame.
+ * The wall is one composition. The page places its content on the iron, and `FrameSuture` closes the
+ * wall at the bottom with the stamp on the left and the organs on the right. The barred storm window is
+ * not part of the frame. The App places it in the wall grid beside the verdict text (see `cabinet-wall`).
  *
- * The frame is decorative apart from its text. It takes children, which the page places on the wall,
- * and it derives nothing from the replay.
+ * Below 1280 px there is no window, so the lightning flash falls back to a wash over the iron. The
+ * frame is decorative apart from its text. It takes children, which the page places on the wall, and it
+ * derives nothing from the replay.
  */
 import { Fragment, useId, type ReactElement, type ReactNode } from "react";
-import { StormWindow, Suture } from "../jar-art.js";
+import { Suture } from "../jar-art.js";
 import "../styles/frame.css";
 
-/** The stamp across the top of the frame (Requirement 14.2). */
+/** The stamp across the bottom of the wall (Requirement 14.2). */
 export const FRAME_STAMP = "KIROWEEN 2026 · FRANKENSTEIN";
 
 /** The four organs in the order they are joined (Requirement 14.3). */
@@ -49,25 +49,31 @@ export function CabinetFrame({ children }: CabinetFrameProps): ReactElement {
           <span key={corner} aria-hidden="true" className={`cabinet-frame__rivet cabinet-frame__rivet--${corner}`} />
         ))}
 
-        <div className="cabinet-frame__top">
-          <p className="cabinet-frame__stamp">{FRAME_STAMP}</p>
-          <div className="cabinet-frame__organs" role="group" aria-label="Organs">
-            {ORGANS.map((organ, index) => (
-              <Fragment key={organ}>
-                {index > 0 ? <Suture w={48} className="cabinet-frame__suture" /> : null}
-                <span className="cabinet-frame__organ">
-                  <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--left" />
-                  <span>{organ}</span>
-                  <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--right" />
-                </span>
-              </Fragment>
-            ))}
-          </div>
-        </div>
-
-        <StormWindow className="cabinet-frame__window" />
+        {/* The lightning wash. It shows only below 1280 px, where the storm window is hidden. */}
+        <span aria-hidden="true" className="storm-window__wash" />
 
         <div className="cabinet-frame__content">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/** The bottom row of the wall: the stamp on the left, the four organs joined by sutures on the right. */
+export function FrameSuture(): ReactElement {
+  return (
+    <div className="cabinet-frame__suture-row">
+      <p className="cabinet-frame__stamp">{FRAME_STAMP}</p>
+      <div className="cabinet-frame__organs" role="group" aria-label="Organs">
+        {ORGANS.map((organ, index) => (
+          <Fragment key={organ}>
+            {index > 0 ? <Suture w={48} className="cabinet-frame__suture" /> : null}
+            <span className="cabinet-frame__organ">
+              <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--left" />
+              <span>{organ}</span>
+              <span aria-hidden="true" className="cabinet-frame__bolt cabinet-frame__bolt--right" />
+            </span>
+          </Fragment>
+        ))}
       </div>
     </div>
   );

@@ -59,19 +59,21 @@
 }
 
 /*
- * The toe-tag. It is 89 % of the art width, about 150 px at the 168 px art, and hangs over the lower
- * front of the glass. The left edge is chamfered, so the notch sits where the string meets the tag.
+ * The toe-tag. It is 74 % of the art width, 124 px at the 168 px art. Its top edge sits at 64 % of the jar
+ * height, so the fluid and the floating specimen show above it. The tag hangs from the string's end
+ * (the eyelet). The tag, its flag strip and the rotation all stay above the shelf lip. The left edge is
+ * chamfered, so the notch sits where the string meets the tag.
  */
 .jar__tag {
   position: absolute;
   left: 4.5%;
-  top: 56%;
-  width: 89cqw;
+  top: 64%;
+  width: 74cqw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 6px 12px 22px 22px;
+  gap: 1px;
+  padding: 4px 8px 6px 20px;
   background: var(--tag);
   color: var(--label-ink);
   clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
@@ -80,9 +82,9 @@
   overflow: visible;
 }
 
-/* A flagged tag keeps its bottom band for the strip. The barcode sits above the strip, never under text. */
+/* A flagged tag keeps its bottom band for the 16 px flag strip, and the text stops above it. */
 .jar__tag--flagged {
-  padding-bottom: 40px;
+  padding-bottom: 16px;
 }
 
 /* The dark eyelet dot at the notch, where the string is fixed. */
@@ -100,7 +102,7 @@
   font-family: var(--font-data);
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
@@ -108,24 +110,20 @@
   font-family: var(--font-data);
   font-size: 16px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.05;
   overflow-wrap: anywhere;
   word-break: normal;
 }
 
-/* A decorative barcode in the bottom band of the tag, 12 px tall, below the text. */
+/* A decorative barcode on the accession line, at the right of the tag, 10 px tall. It stays clear of the text. */
 .jar__barcode {
   position: absolute;
-  right: 12px;
-  bottom: 6px;
+  right: 6px;
+  top: 7px;
   display: flex;
   align-items: stretch;
   gap: 1px;
-  height: 12px;
-}
-
-.jar__tag--flagged .jar__barcode {
-  bottom: 22px;
+  height: 10px;
 }
 
 .jar__barcode > span {
@@ -140,7 +138,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 18px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;

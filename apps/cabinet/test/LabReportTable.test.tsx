@@ -41,11 +41,13 @@ describe("LabReportTable (Requirement 11, 16.4)", () => {
 
     const table = screen.getByRole("table", { name: /field-by-field diff/i });
     const header = within(table).getAllByRole("columnheader").map((th) => th.textContent);
-    expect(header).toEqual(["Path", "Replayed", "Flag", "Reference (jarred)"]);
+    expect(header).toEqual(["Path", "Flag", "Values"]);
 
-    // The reference column shows the jarred literal, not the parsed number 425.
+    // The values cell shows the jarred literal on its own line, not the parsed number 425.
     const literal = within(table).getByText("425.00");
-    expect(literal.tagName).toBe("TD");
+    expect(literal.tagName).toBe("SPAN");
+    expect(literal.closest("td")?.className).toBe("lab-report__values");
+    expect(literal.parentElement?.textContent).toBe("jarred 425.00");
     expect(within(table).queryByText("425")).toBeNull();
 
     expect(screen.getByText("suspected rename from /total ×100").tagName).toBe("TD");
