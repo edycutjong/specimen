@@ -164,6 +164,23 @@ describe("Stop gate: control flow with a fake replay", () => {
     expect(out.join("")).toBe("");
   });
 
+  it("does nothing at all when SPECIMEN_GATE=off (the curator that `specimen file` starts)", async () => {
+    const root = gitWorkspace();
+    expect(await runPrompt(async () => JSON.stringify({ session_id: SESSION, cwd: root }))).toBe(0);
+    appendFileSync(join(root, "servers", "demo.txt"), "edited in the turn\n");
+    const fake = fakeReplay(1);
+    const { ports, out } = portsFor(root, fake.replay, noProbe);
+    vi.stubEnv("SPECIMEN_GATE", "off");
+    try {
+      expect(await runStop(V2, ports)).toBe(0);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    expect(fake.calls).toEqual([]);
+    expect(out.join("")).toBe("");
+    expect(existsSync(join(root, ".specimen", `gate-${SESSION}.json`))).toBe(false);
+  });
+
   it("replays when a watched file changed after the snapshot", async () => {
     const root = gitWorkspace();
     await runPrompt(async () => JSON.stringify({ session_id: SESSION, cwd: root }));

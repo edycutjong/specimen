@@ -87,7 +87,7 @@ export const spawnKiro: KiroRunner = (call) =>
       clearTimeout(timer);
       resolvePromise(run);
     };
-    const child = spawn(call.command, call.args, { cwd: call.cwd, stdio: ["ignore", "ignore", "pipe"] });
+    const child = spawn(call.command, call.args, { cwd: call.cwd, stdio: ["ignore", "ignore", "pipe"], env: { ...process.env, SPECIMEN_GATE: "off" } });
     const timer = setTimeout(() => {
       child.kill("SIGKILL");
       settle({ exitCode: null, stderr, timedOut: true });

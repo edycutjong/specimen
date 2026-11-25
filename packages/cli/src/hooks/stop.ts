@@ -131,6 +131,9 @@ function gatePath(root: string, sessionId: string): string {
  * decision. `server` is the `--server` command that starts the disposable test instance.
  */
 export async function runStop(server: string, ports: StopPorts = nodeStopPorts): Promise<number> {
+  // `specimen file` starts the curator with SPECIMEN_GATE=off: the gate is for the agent that edits the server, and
+  // it must not send the curator's own turn back (measured in evidence/stop-gate/live-shell.md before this switch).
+  if (process.env.SPECIMEN_GATE === "off") return 0;
   let root = findWorkspaceRoot(process.cwd());
   let sessionId: string | undefined;
   try {
