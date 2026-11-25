@@ -64,6 +64,18 @@ export const JAR_FILES: JarFile[] = Object.values(racksJson).map((file) => {
   return { file, text };
 });
 
+// The reverse check: a jar file committed under jars/ but missing from racks.json would be left out
+// of the cabinet's replay without a word, so the page would show fewer jars than the repository holds.
+{
+  const listed = new Set<string>(Object.values(racksJson));
+  const unlisted = Object.keys(RAW_JARS)
+    .map((path) => path.slice("../../../jars/".length))
+    .filter((file) => !listed.has(file));
+  if (unlisted.length > 0) {
+    throw new Error(`jars/ holds ${unlisted.join(", ")}, which jars/racks.json does not list`);
+  }
+}
+
 // Every committed Bugfix_Spec as raw text, keyed by its repository path.
 const RAW_SPECS = import.meta.glob("../../../.kiro/specs/*/bugfix.md", {
   query: "?raw",
