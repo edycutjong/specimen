@@ -5,255 +5,230 @@
 
  RUN  v3.2.7 /Users/edycu/Hackathon/devpost/devpost-kiroween/specimen/build
 
- ✓ apps/cabinet/test/ServerSwitch.test.tsx (7 tests) 200ms
- ✓ apps/cabinet/test/reserved-reveal.test.tsx (3 tests) 270ms
- ✓ apps/cabinet/test/Jar.test.tsx (20 tests) 573ms
- ✓ apps/cabinet/test/JarDrawer.test.tsx (9 tests) 681ms
- ✓ apps/cabinet/test/ShelfRow.test.tsx (13 tests) 815ms
- ✓ apps/cabinet/test/SpecViewer.test.tsx (12 tests) 228ms
- ✓ apps/cabinet/test/GuideStrip.test.tsx (13 tests) 169ms
- ✓ apps/cabinet/test/VersionNotes.test.tsx (4 tests) 134ms
- ✓ apps/cabinet/test/VerdictPlate.test.tsx (8 tests) 228ms
- ✓ apps/cabinet/test/LabReportTable.test.tsx (5 tests) 221ms
- ✓ apps/cabinet/test/HowJarsWereMade.test.tsx (6 tests) 117ms
- ✓ apps/cabinet/test/CountsPair.test.tsx (11 tests) 105ms
- ✓ apps/cabinet/test/network-guard.test.ts (2 tests) 3918ms
-   ✓ network guard > a full replay and its Reveal make no fetch, XMLHttpRequest, WebSocket or EventSource call  3914ms
- ✓ apps/cabinet/test/motion.test.tsx (10 tests) 6119ms
-   ✓ Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5) > applies the no-motion class to html while the query matches, and removes it when it stops  372ms
-   ✓ Reveal order and interval (Requirement 2.3) > reveals one jar at a time in revealOrder, 250 ms apart, after the 620 ms cold-open lightning  326ms
-   ✓ Cold-open bound (design, 4.5 s) > adds no hidden wait to a real-time cold open: render to the stamp and the verdict stays inside the bound plus the jsdom allowance  4326ms
- ✓ apps/cabinet/test/build-scan.test.ts (7 tests) 6237ms
-   ✓ Cabinet production build and Dist scan (task 10.1) > JavaScript names only github.com, the own site host, the Namespace_Hosts and the named exceptions (Requirements 16.7, 17.2)  1107ms
- ✓ packages/cli/test/manifest-bin.test.ts (10 tests) 8913ms
-   ✓ specimen manifest write then system checksum > makes the system checksum fail after one byte changes, and manifest check exit 2  517ms
-   ✓ specimen manifest check exit codes > exits 0 with no output when nothing differs  530ms
-   ✓ specimen manifest check exit codes > exits 2 and lists MISSING, CHANGED and UNLISTED paths on STDERR  506ms
-   ✓ specimen manifest check exit codes > exits 1 with a diagnostic when the Manifest is malformed  769ms
-   ✓ specimen manifest check exit codes > exits 1 with a diagnostic when jars itself is a symbolic link  1388ms
-   ✓ specimen manifest check with a missing Manifest > exits 2 and lists every file as UNLISTED when jars holds files  719ms
-   ✓ specimen manifest check with a missing Manifest > exits 0 when jars holds no file and no Manifest exists  711ms
-   ✓ specimen manifest check with a missing Manifest > exits 0 when jars does not exist  693ms
-   ✓ symbolic links under jars > are listed as UNLISTED by manifest check and left out of the written Manifest  2813ms
- ✓ apps/cabinet/test/no-hscroll.test.ts (5 tests) 4959ms
- ✓ apps/cabinet/test/App.test.tsx (4 tests) 15013ms
-   ✓ App > selects v2 on page load and shows its replayed result without a click  4835ms
-   ✓ App > switching version clears the jars and hides the figures  4938ms
-   ✓ App > shows a thrown replay as the plate message, marks every jar not replayed, and focuses Retry  4940ms
- ✓ packages/cli/test/firewall-hook.test.ts (7 tests) 4538ms
-   ✓ specimen hook firewall (child process) > blocks a write to a file under jars/ with exit 2 and the fixed message on STDERR  566ms
-   ✓ specimen hook firewall (child process) > blocks a '..' path that resolves into jars/  660ms
-   ✓ specimen hook firewall (child process) > blocks a symbolic link whose target is under jars/  712ms
-   ✓ specimen hook firewall (child process) > allows a write outside jars/ with exit 0 and nothing on STDOUT or STDERR  561ms
-   ✓ specimen hook firewall (child process) > exits 0 on invalid STDIN and writes nothing to STDOUT  642ms
-   ✓ specimen hook firewall (child process) > exits 0 when the payload is valid JSON but not an object  755ms
-   ✓ specimen hook firewall (child process) > exits 0 on an unknown argument with no output  636ms
- ✓ packages/cli/test/check-spec.test.ts (8 tests) 6310ms
-   ✓ specimen check-spec (real bin) > prints PASS and exits 0 for a spec that the Spec_Checker accepts  666ms
-   ✓ specimen check-spec (real bin) > prints one FAIL line per failure and exits 1 when the Repro_Block is missing  642ms
-   ✓ specimen check-spec (real bin) > selects the replay file with the greatest ISO suffix when --replay is absent  675ms
-   ✓ specimen check-spec (real bin) > exits 2 with a diagnostic on STDERR when no file in replays/ matches the pattern  683ms
-   ✓ specimen check-spec (real bin) > exits 2 when --jar names an id that the Replay_Result does not hold  636ms
-   ✓ specimen check-spec (real bin) > exits 2 when --jar is missing  768ms
-   ✓ specimen check-spec (real bin) > exits 2 when the Replay_Result fails its schema  645ms
-   ✓ specimen check-spec (real bin) > leaves the Bugfix_Spec and the replays/ directory unchanged and writes no file  1595ms
- ✓ packages/core/test/accession.property.test.ts (7 tests) 6159ms
-   ✓ Property 11: Accession ids > ids for sequential n are unique and strictly increasing, across the width boundary  6032ms
- ✓ packages/cli/test/firewall.test.ts (7 tests) 5105ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a case variant of jars/ (Jars/a.jsonl)  716ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a case variant of jars/ (JARS/a.jsonl)  670ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a case variant of jars/ (jArS/MANIFEST.sha256)  778ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a new file created through a directory symbolic link into jars/  740ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a target held in a nested string field of tool_input  774ms
-   ✓ specimen hook firewall, additional cases (child process) > blocks a write to jars/MANIFEST.sha256  734ms
-   ✓ specimen hook firewall, additional cases (child process) > allows a sibling directory whose name only starts with jars  688ms
- ✓ packages/cli/test/hook-capture.test.ts (3 tests) 3425ms
-   ✓ specimen hook pre and post (child processes) > records a pre and post pair as one Jar_Line and clears the pending entry  1743ms
-   ✓ specimen hook pre and post (child processes) > records an unpaired post with t0 equal to t1 and duration 0  808ms
-   ✓ specimen hook pre and post (child processes) > records nothing for an invalid session id and logs the refusal  874ms
- ✓ packages/cli/test/e2e-v2.test.ts (5 tests) 4993ms
- ✓ packages/cli/test/round06.test.ts (4 tests) 3575ms
-   ✓ accession ids with a stale counter > takes the id after the highest one in jars/, not after the counter  3571ms
- ✓ packages/cli/test/lock.test.ts (6 tests) 2245ms
-   ✓ withLock > a fresh held lock times out after 2 s, runs nothing and leaves the lock alone  2058ms
- ✓ packages/cli/test/e2e-quote.test.ts (2 tests) 3401ms
-   ✓ hollow-inn quote through specimen hooks (end to end) > keeps 425.00 and 212.50 byte-identical in the recorded response_text  1689ms
- ✓ packages/cli/test/e2e-v1.test.ts (1 test) 2529ms
-   ✓ specimen replay against hollow-inn v1 > ships every recorded jar as preserved, exits 0, and leaves the repository jars/ byte-identical  2529ms
- ✓ packages/core/test/jar.property.test.ts (4 tests) 2337ms
-   ✓ Jar_Line round trip and single-line form (Property 1) > serialises every valid Jar_Line to exactly one newline-terminated line with no raw control characters  2021ms
- ✓ packages/cli/test/e2e-s3.test.ts (1 test) 1759ms
-   ✓ S3 measured payload shapes through the capture hooks (end to end) > writes exactly one valid Jar_Line and clears the pending entry  1758ms
- ✓ packages/cli/test/replay-load.test.ts (25 tests) 1817ms
-   ✓ makeStdioClientFactory > starts a real server, lists its tools, and closes it  1794ms
- ✓ packages/cli/test/turn-snapshot.test.ts (6 tests) 1469ms
-   ✓ hook prompt > prints nothing and writes the snapshot with the head and the watch hash  330ms
-   ✓ watch hash > changes when a watched file changes and not when an unwatched file changes  458ms
- ✓ packages/core/test/replay.redact.test.ts (13 tests) 2256ms
-   ✓ Property 11: Redacted-at-capture jars compare the re-redacted replayed text > a Hashed_Jar is preserved exactly when the replayed text hashes to the jarred value  407ms
-   ✓ Property 11: Redacted-at-capture jars compare the re-redacted replayed text > a text_redacted jar never rattles over a secret value that differs between the runs  354ms
-   ✓ Property 17: Written Replay_Results carry no unredacted secret and round-trip through their schema > no secret appears in the serialised result, and the result parses back equal  343ms
-   ✓ Property 18: schema_diff is computed from two tool lists and never influences state or verdict > a baseline never changes the jar results or the Verdict  767ms
- ✓ packages/cli/test/replay.test.ts (12 tests) 26439ms
-   ✓ specimen replay: exit codes and report > exits 0 with SHIP, the exact first line and one line per recorded jar  917ms
-   ✓ specimen replay: exit codes and report > exits 1 with HOLD for hollow-inn v2, and lists the unfiled red jars  904ms
-   ✓ specimen replay: exit codes and report > exits 3 when one Bugfix_Spec files every red jar, and leaves the spec unchanged  3924ms
-   ✓ specimen replay: exit codes and report > --json writes only the Replay_Result to STDOUT  2121ms
-   ✓ specimen replay: exit codes and report > writes an empty quarantine items list when no jar is unsealed, replacing older content  2149ms
-   ✓ specimen replay: exit codes and report > takes the server command only from --server, ignoring .kiro/settings/mcp.json  2086ms
-   ✓ specimen replay: usage errors and baseline > exits 2 for an unterminated quote in --server, and writes no Replay_Result  629ms
-   ✓ specimen replay: usage errors and baseline > exits 2 when --server is missing  737ms
-   ✓ specimen replay: usage errors and baseline > exits 2 for an invalid .specimen/redact.json, naming the file  687ms
-   ✓ specimen replay: usage errors and baseline > exits 2 when the --baseline command cannot start, and writes no Replay_Result  2737ms
-   ✓ specimen replay: usage errors and baseline > a working --baseline changes no jar state and not the verdict  5652ms
-   ✓ specimen replay: usage errors and baseline > never writes a secret that the server prints to STDERR to STDOUT, STDERR or any file  3897ms
- ✓ packages/core/test/diff.property.test.ts (3 tests) 1374ms
-   ✓ diff property tests > Property 7: Structural diff is identity-preserving, deterministic, and locates every field-level difference  373ms
-   ✓ diff property tests > Property 26: Deeply nested bodies are bounded, not stack-overflowing  760ms
- ✓ apps/cabinet/test/properties/p4-accessible-name.test.ts (2 tests) 1120ms
-   ✓ jar accessible name (Property 4) > names the accession, the tool and the state of every replayed jar  927ms
- ✓ packages/core/test/replay.states.test.ts (12 tests) 854ms
-   ✓ Property 4: replayed text and parsed response are derived consistently from a tools/call result > concatenates text items, uses an empty string with none, and parses only a JSON_Response  380ms
- ✓ packages/core/test/loader.test.ts (14 tests) 600ms
- ✓ servers/hollow-inn/test/v2_1.test.ts (36 tests) 931ms
- ✓ packages/cli/test/hook-silence.property.test.ts (2 tests) 841ms
-   ✓ Property 19: capture hooks are silent and exit 0 > exits 0 and writes nothing to STDOUT or STDERR for arbitrary STDIN bytes and argument lists  838ms
- ✓ packages/core/test/manifest.property.test.ts (7 tests) 409ms
- ✓ packages/core/test/jar-reader.property.test.ts (2 tests) 296ms
- ✓ apps/cabinet/test/properties/p7-filed-ids.test.ts (4 tests) 107ms
- ✓ packages/core/test/verdict.test.ts (10 tests) 203ms
- ✓ apps/cabinet/test/properties/p6-reveal-order.test.ts (3 tests) 339ms
- ✓ packages/core/test/seq.property.test.ts (3 tests) 133ms
- ✓ packages/core/test/jar-mapping.property.test.ts (3 tests) 264ms
- ✓ packages/core/test/spec-check.test.ts (26 tests) 219ms
- ✓ packages/core/test/canonical.property.test.ts (8 tests) 168ms
- ✓ apps/cabinet/test/properties/p1-plate-counts.test.ts (1 test) 260ms
- ✓ packages/cli/test/spec-files.test.ts (8 tests) 156ms
+ ✓ apps/cabinet/test/ServerSwitch.test.tsx (7 tests) 199ms
+ ✓ apps/cabinet/test/SpecViewer.test.tsx (12 tests) 274ms
+ ✓ apps/cabinet/test/Jar.test.tsx (20 tests) 712ms
+ ✓ apps/cabinet/test/JarDrawer.test.tsx (9 tests) 762ms
+ ✓ apps/cabinet/test/ShelfRow.test.tsx (13 tests) 1144ms
+   ✓ ShelfRow jar order (Requirement 7.5) > lists the jars in seq order across the shelves, not in accession order  358ms
+ ✓ apps/cabinet/test/VerdictPlate.test.tsx (8 tests) 348ms
+ ✓ apps/cabinet/test/LabReportTable.test.tsx (5 tests) 208ms
+ ✓ apps/cabinet/test/GuideStrip.test.tsx (13 tests) 170ms
+ ✓ apps/cabinet/test/reserved-reveal.test.tsx (3 tests) 268ms
+ ✓ apps/cabinet/test/VersionNotes.test.tsx (4 tests) 151ms
+ ✓ apps/cabinet/test/HowJarsWereMade.test.tsx (6 tests) 136ms
+ ✓ apps/cabinet/test/CountsPair.test.tsx (11 tests) 107ms
+ ✓ apps/cabinet/test/network-guard.test.ts (2 tests) 4181ms
+   ✓ network guard > a full replay and its Reveal make no fetch, XMLHttpRequest, WebSocket or EventSource call  4179ms
+ ✓ apps/cabinet/test/motion.test.tsx (10 tests) 6575ms
+   ✓ Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5) > applies the no-motion class to html while the query matches, and removes it when it stops  413ms
+   ✓ Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5) > sets the Reveal interval to 0 under Reduced_Motion, so every jar and the stamp show at once  323ms
+   ✓ Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5) > honours a live change: a Reveal in progress completes at once when Reduced_Motion turns on  417ms
+   ✓ Cold-open bound (design, 4.5 s) > adds no hidden wait to a real-time cold open: render to the stamp and the verdict stays inside the bound plus the jsdom allowance  4272ms
+ ✓ apps/cabinet/test/build-scan.test.ts (7 tests) 2425ms
+   ✓ Cabinet production build and Dist scan (task 10.1) > JavaScript names only github.com, the own site host, the Namespace_Hosts and the named exceptions (Requirements 16.7, 17.2)  434ms
+ ✓ packages/cli/test/manifest-bin.test.ts (10 tests) 5485ms
+   ✓ specimen manifest write then system checksum > makes the system checksum fail after one byte changes, and manifest check exit 2  519ms
+   ✓ specimen manifest check exit codes > exits 0 with no output when nothing differs  524ms
+   ✓ specimen manifest check exit codes > exits 2 and lists MISSING, CHANGED and UNLISTED paths on STDERR  614ms
+   ✓ specimen manifest check exit codes > exits 1 with a diagnostic when the Manifest is malformed  626ms
+   ✓ specimen manifest check exit codes > exits 1 with a diagnostic when jars itself is a symbolic link  634ms
+   ✓ specimen manifest check with a missing Manifest > exits 2 and lists every file as UNLISTED when jars holds files  312ms
+   ✓ specimen manifest check with a missing Manifest > exits 0 when jars holds no file and no Manifest exists  314ms
+   ✓ specimen manifest check with a missing Manifest > exits 0 when jars does not exist  322ms
+   ✓ symbolic links under jars > are listed as UNLISTED by manifest check and left out of the written Manifest  1350ms
+ ✓ packages/core/test/accession.property.test.ts (7 tests) 2153ms
+   ✓ Property 11: Accession ids > ids for sequential n are unique and strictly increasing, across the width boundary  2095ms
+ ✓ packages/cli/test/check-spec.test.ts (8 tests) 3006ms
+   ✓ specimen check-spec (real bin) > prints PASS and exits 0 for a spec that the Spec_Checker accepts  353ms
+   ✓ specimen check-spec (real bin) > selects the replay file with the greatest ISO suffix when --replay is absent  335ms
+   ✓ specimen check-spec (real bin) > exits 2 with a diagnostic on STDERR when no file in replays/ matches the pattern  377ms
+   ✓ specimen check-spec (real bin) > exits 2 when --jar names an id that the Replay_Result does not hold  301ms
+   ✓ specimen check-spec (real bin) > exits 2 when --jar is missing  307ms
+   ✓ specimen check-spec (real bin) > exits 2 when the Replay_Result fails its schema  343ms
+   ✓ specimen check-spec (real bin) > leaves the Bugfix_Spec and the replays/ directory unchanged and writes no file  699ms
+ ✓ apps/cabinet/test/no-hscroll.test.ts (5 tests) 2041ms
+ ✓ packages/cli/test/firewall.test.ts (7 tests) 2160ms
+   ✓ specimen hook firewall, additional cases (child process) > blocks a case variant of jars/ (Jars/a.jsonl)  452ms
+   ✓ specimen hook firewall, additional cases (child process) > blocks a case variant of jars/ (JARS/a.jsonl)  303ms
+ ✓ packages/cli/test/firewall-hook.test.ts (7 tests) 1948ms
+ ✓ packages/cli/test/e2e-v2.test.ts (5 tests) 1738ms
+ ✓ packages/cli/test/hook-capture.test.ts (3 tests) 1082ms
+   ✓ specimen hook pre and post (child processes) > records a pre and post pair as one Jar_Line and clears the pending entry  574ms
+ ✓ packages/cli/test/round06.test.ts (4 tests) 1067ms
+   ✓ accession ids with a stale counter > takes the id after the highest one in jars/, not after the counter  1063ms
+ ✓ packages/cli/test/lock.test.ts (6 tests) 2211ms
+   ✓ withLock > a fresh held lock times out after 2 s, runs nothing and leaves the lock alone  2015ms
+ ✓ apps/cabinet/test/App.test.tsx (4 tests) 14332ms
+   ✓ App > shows the one-sentence pitch in the header and keeps the lede closed in the Details fold (design pass, item 1)  302ms
+   ✓ App > selects v2 on page load and shows its replayed result without a click  4999ms
+   ✓ App > switching version clears the jars and hides the figures  4525ms
+   ✓ App > shows a thrown replay as the plate message, marks every jar not replayed, and focuses Retry  4501ms
+ ✓ packages/cli/test/e2e-quote.test.ts (2 tests) 1162ms
+   ✓ hollow-inn quote through specimen hooks (end to end) > keeps 425.00 and 212.50 byte-identical in the recorded response_text  595ms
+ ✓ packages/cli/test/e2e-v1.test.ts (1 test) 1025ms
+   ✓ specimen replay against hollow-inn v1 > ships every recorded jar as preserved, exits 0, and leaves the repository jars/ byte-identical  1024ms
+ ✓ packages/core/test/jar.property.test.ts (4 tests) 600ms
+   ✓ Jar_Line round trip and single-line form (Property 1) > serialises every valid Jar_Line to exactly one newline-terminated line with no raw control characters  540ms
+ ✓ packages/cli/test/replay.test.ts (12 tests) 13025ms
+   ✓ specimen replay: exit codes and report > exits 0 with SHIP, the exact first line and one line per recorded jar  918ms
+   ✓ specimen replay: exit codes and report > exits 1 with HOLD for hollow-inn v2, and lists the unfiled red jars  960ms
+   ✓ specimen replay: exit codes and report > exits 3 when one Bugfix_Spec files every red jar, and leaves the spec unchanged  2264ms
+   ✓ specimen replay: exit codes and report > --json writes only the Replay_Result to STDOUT  1121ms
+   ✓ specimen replay: exit codes and report > writes an empty quarantine items list when no jar is unsealed, replacing older content  1063ms
+   ✓ specimen replay: exit codes and report > takes the server command only from --server, ignoring .kiro/settings/mcp.json  1190ms
+   ✓ specimen replay: usage errors and baseline > exits 2 for an unterminated quote in --server, and writes no Replay_Result  355ms
+   ✓ specimen replay: usage errors and baseline > exits 2 when the --baseline command cannot start, and writes no Replay_Result  997ms
+   ✓ specimen replay: usage errors and baseline > a working --baseline changes no jar state and not the verdict  2108ms
+   ✓ specimen replay: usage errors and baseline > never writes a secret that the server prints to STDERR to STDOUT, STDERR or any file  1485ms
+ ✓ packages/cli/test/turn-snapshot.test.ts (6 tests) 924ms
+ ✓ packages/cli/test/e2e-s3.test.ts (1 test) 763ms
+   ✓ S3 measured payload shapes through the capture hooks (end to end) > writes exactly one valid Jar_Line and clears the pending entry  763ms
+ ✓ packages/core/test/replay.redact.test.ts (13 tests) 416ms
+ ✓ packages/cli/test/replay-load.test.ts (25 tests) 731ms
+   ✓ makeStdioClientFactory > starts a real server, lists its tools, and closes it  698ms
+ ✓ packages/cli/test/hook-silence.property.test.ts (2 tests) 358ms
+   ✓ Property 19: capture hooks are silent and exit 0 > exits 0 and writes nothing to STDOUT or STDERR for arbitrary STDIN bytes and argument lists  355ms
+ ✓ packages/core/test/replay.states.test.ts (12 tests) 262ms
+ ✓ packages/core/test/diff.property.test.ts (3 tests) 386ms
+ ✓ packages/core/test/loader.test.ts (14 tests) 211ms
+ ✓ servers/hollow-inn/test/v2_1.test.ts (36 tests) 336ms
+ ✓ packages/core/test/redact-response.property.test.ts (1 test) 92ms
+ ✓ packages/core/test/manifest.property.test.ts (7 tests) 167ms
+ ✓ apps/cabinet/test/properties/p4-accessible-name.test.ts (2 tests) 372ms
+ ✓ packages/core/test/jar-reader.property.test.ts (2 tests) 90ms
+ ✓ apps/cabinet/test/properties/p1-plate-counts.test.ts (1 test) 82ms
+ ✓ packages/core/test/spec-check.test.ts (26 tests) 111ms
+ ✓ apps/cabinet/test/properties/p6-reveal-order.test.ts (3 tests) 99ms
+ ✓ packages/cli/test/init.test.ts (33 tests) 87ms
+ ✓ packages/core/test/seq.property.test.ts (3 tests) 76ms
+ ✓ packages/core/test/redact-idempotence.property.test.ts (4 tests) 54ms
+ ✓ packages/core/test/canonical.property.test.ts (8 tests) 90ms
+ ✓ apps/cabinet/test/properties/p2-counts-pair.test.ts (2 tests) 52ms
+ ✓ packages/core/test/jar-mapping.property.test.ts (3 tests) 63ms
+ ✓ packages/cli/test/spec-files.test.ts (8 tests) 80ms
 stdout | apps/cabinet/test/browser-replay.test.ts > browser-replay against the committed evidence > v1 gives SHIP with 10 preserved jars and matches racks-vs-v1.txt (1.7)
 browser-replay v1 · SHIP · preserved 10 · rattled 0 · cracked 0 · skipped 0 · unsealed 0 · filed none
 
+ ✓ packages/core/test/fifo.property.test.ts (3 tests) 55ms
 stdout | apps/cabinet/test/browser-replay.test.ts > browser-replay against the committed evidence > v2 with the committed specs gives HOLD, 5 preserved, 4 rattled, 1 cracked, and files all five red jars (1.8, 5.6)
 browser-replay v2 · HOLD · preserved 5 · rattled 4 · cracked 1 · skipped 0 · unsealed 0 · filed SPC-0002, SPC-0006, SPC-0007, SPC-0009, SPC-0010
 
 stdout | apps/cabinet/test/browser-replay.test.ts > browser-replay against the committed evidence > v2.1 gives SHIP with all 10 preserved and matches racks-vs-v2.1-ship.txt (1.9, 5.8)
 browser-replay v2.1 · SHIP · preserved 10 · rattled 0 · cracked 0 · skipped 0 · unsealed 0 · filed none
 
- ✓ apps/cabinet/test/browser-replay.test.ts (4 tests) 135ms
- ✓ packages/core/test/redact-response.property.test.ts (1 test) 240ms
- ✓ packages/core/test/redact-input.property.test.ts (2 tests) 86ms
- ✓ packages/cli/test/file.test.ts (23 tests) 165ms
- ✓ packages/core/test/redact-idempotence.property.test.ts (4 tests) 241ms
- ✓ packages/core/test/server-resolve.property.test.ts (8 tests) 89ms
- ✓ packages/core/test/fifo.property.test.ts (3 tests) 180ms
- ✓ packages/core/test/normalize.test.ts (10 tests) 142ms
- ✓ packages/core/test/redact-text.property.test.ts (1 test) 94ms
- ✓ apps/cabinet/test/cabinet-model.test.ts (10 tests) 190ms
- ✓ packages/core/test/bugfix-spec.test.ts (10 tests) 94ms
- ✓ packages/core/test/replay.uncovered.test.ts (10 tests) 53ms
- ✓ packages/core/test/replay.pagination.test.ts (4 tests) 63ms
- ✓ apps/cabinet/test/properties/p2-counts-pair.test.ts (2 tests) 158ms
- ✓ servers/hollow-inn/test/v1.test.ts (8 tests) 94ms
- ✓ packages/core/test/stop-gate.test.ts (10 tests) 66ms
- ✓ packages/cli/test/init.test.ts (33 tests) 188ms
- ✓ packages/core/test/reference.test.ts (9 tests) 120ms
- ✓ packages/core/test/firewall.property.test.ts (3 tests) 92ms
- ✓ packages/core/test/boundary.test.ts (13 tests) 167ms
- ✓ packages/core/test/sha256.property.test.ts (4 tests) 67ms
- ✓ packages/cli/test/replay-write.test.ts (15 tests) 63ms
- ✓ packages/core/test/diff.fixtures.test.ts (14 tests) 123ms
- ✓ packages/cli/test/manifest.test.ts (15 tests) 70ms
- ✓ packages/core/test/redact-config.property.test.ts (5 tests) 95ms
- ✓ packages/cli/test/state.test.ts (11 tests) 31ms
- ✓ servers/hollow-inn/test/v2.test.ts (5 tests) 109ms
- ✓ packages/core/test/scan.test.ts (32 tests) 5ms
- ✓ apps/cabinet/test/properties/p5-jar-tilt.test.ts (3 tests) 62ms
- ✓ packages/core/test/select-replay.test.ts (5 tests) 106ms
- ✓ packages/core/test/replay.smoke.test.ts (1 test) 23ms
- ✓ packages/core/test/session-id.property.test.ts (4 tests) 40ms
- ✓ packages/cli/test/diagnostics.property.test.ts (2 tests) 34562ms
-   ✓ Property 20: diagnostics never quote input > writes no generated input marker to the Hook_Log, and every line has the fixed format  34559ms
- ✓ spikes/s1-browser/test/s1.test.ts (2 tests) 74ms
- ✓ packages/core/test/accession.test.ts (12 tests) 16ms
- ✓ packages/core/test/covered.test.ts (3 tests) 54ms
- ✓ apps/cabinet/test/properties/p3-pluralisation.test.ts (3 tests) 24ms
- ✓ apps/cabinet/test/render-markdown.test.ts (15 tests) 86ms
- ✓ apps/cabinet/test/css-coverage.test.ts (4 tests) 8ms
- ✓ packages/cli/test/io.test.ts (11 tests) 18ms
+ ✓ apps/cabinet/test/browser-replay.test.ts (4 tests) 64ms
+ ✓ servers/hollow-inn/test/v1.test.ts (8 tests) 39ms
+ ✓ packages/core/test/reference.test.ts (9 tests) 35ms
+ ✓ packages/core/test/firewall.property.test.ts (3 tests) 25ms
+ ✓ apps/cabinet/test/cabinet-model.test.ts (10 tests) 70ms
+ ✓ packages/core/test/server-resolve.property.test.ts (8 tests) 32ms
+ ✓ packages/core/test/redact-text.property.test.ts (1 test) 36ms
+ ✓ packages/core/test/bugfix-spec.test.ts (10 tests) 31ms
+ ✓ apps/cabinet/test/properties/p7-filed-ids.test.ts (4 tests) 38ms
+ ✓ packages/cli/test/replay-write.test.ts (15 tests) 46ms
+ ✓ packages/core/test/select-replay.test.ts (5 tests) 23ms
+ ✓ packages/cli/test/manifest.test.ts (15 tests) 48ms
+ ✓ packages/core/test/verdict.test.ts (10 tests) 62ms
+ ✓ packages/core/test/redact-config.property.test.ts (5 tests) 32ms
+ ✓ packages/core/test/replay.pagination.test.ts (4 tests) 27ms
+ ✓ servers/hollow-inn/test/v2.test.ts (5 tests) 29ms
+ ✓ packages/cli/test/file.test.ts (23 tests) 56ms
+ ✓ packages/cli/test/state.test.ts (11 tests) 39ms
+ ✓ packages/core/test/diff.fixtures.test.ts (14 tests) 29ms
+ ✓ packages/core/test/replay.uncovered.test.ts (10 tests) 35ms
+ ✓ packages/core/test/normalize.test.ts (10 tests) 48ms
+ ✓ packages/core/test/sha256.property.test.ts (4 tests) 32ms
  ✓ packages/core/test/jar.test.ts (24 tests) 10ms
- ✓ apps/cabinet/test/vercel-config.test.ts (4 tests) 38ms
- ✓ packages/core/test/pairing.test.ts (17 tests) 8ms
+ ✓ packages/core/test/scan.test.ts (32 tests) 7ms
  ✓ apps/cabinet/test/tokens.test.ts (31 tests) 8ms
- ✓ packages/cli/test/wiring.test.ts (8 tests) 10ms
- ✓ packages/core/test/replay-result.test.ts (11 tests) 14ms
- ✓ packages/cli/test/stop-hook.test.ts (18 tests) 36039ms
-   ✓ Stop gate: real hollow-inn replays > E1: v1 against its own jars allows the stop  2284ms
-   ✓ Stop gate: real hollow-inn replays > never blocks for jars cracked by an operational failure, and lists them in unresolved.md (a2a round 06)  3813ms
-   ✓ Stop gate: real hollow-inn replays > E2: v2 with no filed spec blocks once and names every red jar  3785ms
-   ✓ Stop gate: real hollow-inn replays > E3: v2 with a passing spec for one red jar lists only the unfiled jars  3682ms
-   ✓ Stop gate: real hollow-inn replays > E3c: an empty jar set allows the stop  3205ms
-   ✓ Stop gate: real hollow-inn replays > E3d: every jar skipped allows the stop  3328ms
-   ✓ Stop gate: real hollow-inn replays > E3e: a quarantined orphan and a spoiled line among preserved jars allows the stop  5563ms
-   ✓ Stop gate: real hollow-inn replays > the block after MAX_BLOCKS allows the stop and records the unresolved jars  4643ms
-   ✓ Stop gate: real hollow-inn replays > never touches the repository .specimen or replays folders  4823ms
- ✓ packages/core/test/firewall.test.ts (29 tests) 6ms
- ✓ apps/cabinet/test/accession-contrast.test.ts (4 tests) 6ms
- ✓ packages/core/test/sha256.test.ts (4 tests) 24ms
- ✓ packages/core/test/redact.test.ts (24 tests) 75ms
- ✓ packages/core/test/redact-keys.test.ts (30 tests) 31ms
- ✓ packages/core/test/payload.test.ts (13 tests) 6ms
- ✓ packages/core/test/index.test.ts (1 test) 15ms
- ✓ apps/cabinet/test/phone-layout.test.ts (3 tests) 2ms
- ✓ spikes/kiro/test/s5-check.test.ts (3 tests) 3ms
- ✓ apps/cabinet/test/hover-feedback.test.ts (5 tests) 7ms
- ✓ packages/core/test/redact-examples.test.ts (6 tests) 4ms
- ✓ packages/core/test/policy.test.ts (12 tests) 40ms
- ✓ packages/core/test/manifest.test.ts (23 tests) 4ms
+ ✓ packages/core/test/redact-input.property.test.ts (2 tests) 42ms
+ ✓ packages/cli/test/wiring.test.ts (8 tests) 8ms
+ ✓ packages/core/test/boundary.test.ts (13 tests) 27ms
+ ✓ apps/cabinet/test/render-markdown.test.ts (15 tests) 14ms
+ ✓ packages/core/test/stop-gate.test.ts (10 tests) 27ms
+ ✓ packages/core/test/session-id.property.test.ts (4 tests) 16ms
+ ✓ packages/core/test/replay.smoke.test.ts (1 test) 28ms
+ ✓ apps/cabinet/test/properties/p5-jar-tilt.test.ts (3 tests) 17ms
+ ✓ packages/core/test/accession.test.ts (12 tests) 7ms
+ ✓ spikes/s1-browser/test/s1.test.ts (2 tests) 17ms
+ ✓ packages/cli/test/stop-hook.test.ts (18 tests) 17165ms
+   ✓ Stop gate: real hollow-inn replays > E1: v1 against its own jars allows the stop  1964ms
+   ✓ Stop gate: real hollow-inn replays > never blocks for jars cracked by an operational failure, and lists them in unresolved.md (a2a round 06)  1947ms
+   ✓ Stop gate: real hollow-inn replays > E2: v2 with no filed spec blocks once and names every red jar  1948ms
+   ✓ Stop gate: real hollow-inn replays > E3: v2 with a passing spec for one red jar lists only the unfiled jars  1962ms
+   ✓ Stop gate: real hollow-inn replays > E3c: an empty jar set allows the stop  1207ms
+   ✓ Stop gate: real hollow-inn replays > E3d: every jar skipped allows the stop  1110ms
+   ✓ Stop gate: real hollow-inn replays > E3e: a quarantined orphan and a spoiled line among preserved jars allows the stop  1777ms
+   ✓ Stop gate: real hollow-inn replays > the block after MAX_BLOCKS allows the stop and records the unresolved jars  2274ms
+   ✓ Stop gate: real hollow-inn replays > never touches the repository .specimen or replays folders  2094ms
+ ✓ packages/cli/test/io.test.ts (11 tests) 12ms
+ ✓ apps/cabinet/test/hover-feedback.test.ts (5 tests) 4ms
+ ✓ packages/core/test/firewall.test.ts (29 tests) 7ms
+ ✓ packages/core/test/pairing.test.ts (17 tests) 10ms
+ ✓ packages/core/test/replay-result.test.ts (11 tests) 9ms
+ ✓ packages/core/test/covered.test.ts (3 tests) 11ms
+ ✓ apps/cabinet/test/css-coverage.test.ts (4 tests) 8ms
+ ✓ packages/core/test/redact.test.ts (24 tests) 8ms
+ ✓ apps/cabinet/test/properties/p3-pluralisation.test.ts (3 tests) 12ms
  ✓ packages/core/test/server.test.ts (11 tests) 4ms
- ✓ packages/core/test/json.test.ts (9 tests) 4ms
- ✓ packages/core/test/diff.smoke.test.ts (6 tests) 3ms
+ ✓ packages/core/test/redact-keys.test.ts (34 tests) 5ms
+ ✓ apps/cabinet/test/vercel-config.test.ts (4 tests) 4ms
+ ✓ apps/cabinet/test/accession-contrast.test.ts (4 tests) 6ms
+ ✓ packages/core/test/payload.test.ts (13 tests) 6ms
+ ✓ packages/core/test/redact-examples.test.ts (6 tests) 5ms
+ ✓ packages/core/test/policy.test.ts (12 tests) 5ms
+ ✓ packages/core/test/manifest.test.ts (23 tests) 4ms
+ ✓ apps/cabinet/test/phone-layout.test.ts (3 tests) 2ms
+ ✓ packages/cli/test/smoke.test.ts (1 test) 3ms
+ ✓ spikes/kiro/test/s5-check.test.ts (3 tests) 2ms
+ ✓ packages/core/test/sha256.test.ts (4 tests) 3ms
  ✓ servers/hollow-inn/test/money.test.ts (3 tests) 2ms
- ✓ apps/cabinet/test/reserved-css.test.ts (3 tests) 7ms
+ ✓ packages/core/test/json.test.ts (9 tests) 3ms
+ ✓ apps/cabinet/test/reserved-css.test.ts (3 tests) 2ms
  ✓ apps/cabinet/test/favicon.test.ts (2 tests) 2ms
  ✓ spikes/s1-browser/test/money-literal.test.ts (3 tests) 2ms
- ✓ packages/cli/test/smoke.test.ts (1 test) 3ms
- ✓ packages/cli/test/hooks.test.ts (21 tests) 39333ms
-   ✓ capture hooks: pairing > pairs several posts with several pres first in, first out  1753ms
-   ✓ capture hooks: pairing > records an unpaired post and leaves an unmatched pending entry untouched  531ms
-   ✓ capture hooks: pairing > gives the first call of a session seq 1 in both the pending entry and the Jar_Line  631ms
-   ✓ capture hooks: pairing > keeps seq unique when an orphan pending entry is present  2899ms
-   ✓ capture hooks: counter and jar state > continues the accession counter from the highest id in jars/ when the counter is missing  2118ms
-   ✓ capture hooks: counter and jar state > does not append to a jar that ends in a torn line  1411ms
-   ✓ capture hooks: session id boundary > records nothing for a session id containing a slash  1268ms
-   ✓ capture hooks: session id boundary > records nothing for a session id containing dot-dot  1252ms
-   ✓ capture hooks: session id boundary > records nothing for a session id containing a backslash  1225ms
-   ✓ capture hooks: lock timeout > records nothing and changes no file when pre cannot take the lock  2714ms
-   ✓ capture hooks: lock timeout > records nothing and changes no file when post cannot take the lock  3635ms
-   ✓ capture hooks: input hash > pairs pre and post when the inputs differ only in key order  1721ms
-   ✓ capture hooks: input hash > pairs pre and post when the inputs differ only in a redacted value  1683ms
-   ✓ capture hooks: input hash > does not pair when an unredacted value differs (control for the two cases above)  1789ms
-   ✓ capture hooks: redact config failures > records nothing when the redact config has invalid JSON  2557ms
-   ✓ capture hooks: redact config failures > records nothing when the redact config has an unknown key  2163ms
-   ✓ capture hooks: redact config failures > records nothing when the redact config has a pattern that does not compile  2274ms
-   ✓ capture hooks: redact config failures > records nothing when the redact config has a pattern that matches the empty string  2475ms
-   ✓ capture hooks: silence on bad input (child processes) > writes nothing to STDOUT or STDERR and exits 0 for invalid STDIN  1739ms
-   ✓ capture hooks: silence on bad input (child processes) > writes nothing to STDOUT or STDERR and exits 0 for an unknown argument  944ms
-   ✓ capture hooks: concurrent child processes > gives distinct id and seq values to concurrent pre and post runs  2549ms
- ✓ apps/cabinet/test/a11y-keyboard.test.ts (11 tests) 45164ms
-   ✓ App: Escape and Close (Requirement 10.8) > in the sheet (modal) form > Escape closes the drawer and returns focus to the Jar that opened it  3910ms
-   ✓ App: Escape and Close (Requirement 10.8) > in the sheet (modal) form > the Close control closes the drawer and returns focus to the Jar that opened it  4642ms
-   ✓ App: Escape and Close (Requirement 10.8) > in the right panel (non-modal) form > Escape closes the drawer and returns focus to the Jar that opened it  4772ms
-   ✓ App: Escape and Close (Requirement 10.8) > in the right panel (non-modal) form > the Close control closes the drawer and returns focus to the Jar that opened it  5020ms
-   ✓ App: Escape and Close (Requirement 10.8) > after several Jars are activated in turn, Escape returns focus to the most recently activated one  5802ms
-   ✓ App: modal sheet keeps Tab inside (Requirement 10.10) > is a modal dialog, and every page element outside it is inert  5700ms
-   ✓ App: modal sheet keeps Tab inside (Requirement 10.10) > wraps Tab and Shift+Tab at the edges of the drawer and never hands focus to the page  5067ms
-   ✓ App: non-modal right panel leaves the page operable (Requirement 10.11, 16.11) > is a non-modal region, does not inert the page, and does not trap Tab  5654ms
-   ✓ App: non-modal right panel leaves the page operable (Requirement 10.11, 16.11) > keeps the Jars, the ServerSwitch and the ReplayButton focusable while the drawer is open  4454ms
+ ✓ packages/core/test/diff.smoke.test.ts (6 tests) 3ms
+ ✓ packages/core/test/index.test.ts (1 test) 1ms
+ ✓ packages/cli/test/hooks.test.ts (21 tests) 20503ms
+   ✓ capture hooks: pairing > pairs several posts with several pres first in, first out  1647ms
+   ✓ capture hooks: pairing > records an unpaired post and leaves an unmatched pending entry untouched  605ms
+   ✓ capture hooks: pairing > gives the first call of a session seq 1 in both the pending entry and the Jar_Line  674ms
+   ✓ capture hooks: pairing > keeps seq unique when an orphan pending entry is present  1338ms
+   ✓ capture hooks: counter and jar state > continues the accession counter from the highest id in jars/ when the counter is missing  975ms
+   ✓ capture hooks: counter and jar state > does not append to a jar that ends in a torn line  643ms
+   ✓ capture hooks: session id boundary > records nothing for a session id containing a slash  672ms
+   ✓ capture hooks: session id boundary > records nothing for a session id containing dot-dot  619ms
+   ✓ capture hooks: session id boundary > records nothing for a session id containing a backslash  725ms
+   ✓ capture hooks: lock timeout > records nothing and changes no file when pre cannot take the lock  2373ms
+   ✓ capture hooks: lock timeout > records nothing and changes no file when post cannot take the lock  2573ms
+   ✓ capture hooks: input hash > pairs pre and post when the inputs differ only in key order  744ms
+   ✓ capture hooks: input hash > pairs pre and post when the inputs differ only in a redacted value  799ms
+   ✓ capture hooks: input hash > does not pair when an unredacted value differs (control for the two cases above)  848ms
+   ✓ capture hooks: redact config failures > records nothing when the redact config has invalid JSON  966ms
+   ✓ capture hooks: redact config failures > records nothing when the redact config has an unknown key  1052ms
+   ✓ capture hooks: redact config failures > records nothing when the redact config has a pattern that does not compile  1058ms
+   ✓ capture hooks: redact config failures > records nothing when the redact config has a pattern that matches the empty string  807ms
+   ✓ capture hooks: silence on bad input (child processes) > writes nothing to STDOUT or STDERR and exits 0 for invalid STDIN  428ms
+   ✓ capture hooks: concurrent child processes > gives distinct id and seq values to concurrent pre and post runs  741ms
+ ✓ packages/cli/test/diagnostics.property.test.ts (2 tests) 30488ms
+   ✓ Property 20: diagnostics never quote input > writes no generated input marker to the Hook_Log, and every line has the fixed format  30484ms
+ ✓ apps/cabinet/test/a11y-keyboard.test.ts (11 tests) 33432ms
+   ✓ App: Escape and Close (Requirement 10.8) > in the sheet (modal) form > Escape closes the drawer and returns focus to the Jar that opened it  4233ms
+   ✓ App: Escape and Close (Requirement 10.8) > in the sheet (modal) form > the Close control closes the drawer and returns focus to the Jar that opened it  3758ms
+   ✓ App: Escape and Close (Requirement 10.8) > in the right panel (non-modal) form > Escape closes the drawer and returns focus to the Jar that opened it  3628ms
+   ✓ App: Escape and Close (Requirement 10.8) > in the right panel (non-modal) form > the Close control closes the drawer and returns focus to the Jar that opened it  3541ms
+   ✓ App: Escape and Close (Requirement 10.8) > after several Jars are activated in turn, Escape returns focus to the most recently activated one  3786ms
+   ✓ App: modal sheet keeps Tab inside (Requirement 10.10) > is a modal dialog, and every page element outside it is inert  3553ms
+   ✓ App: modal sheet keeps Tab inside (Requirement 10.10) > wraps Tab and Shift+Tab at the edges of the drawer and never hands focus to the page  3618ms
+   ✓ App: non-modal right panel leaves the page operable (Requirement 10.11, 16.11) > is a non-modal region, does not inert the page, and does not trap Tab  3661ms
+   ✓ App: non-modal right panel leaves the page operable (Requirement 10.11, 16.11) > keeps the Jars, the ServerSwitch and the ReplayButton focusable while the drawer is open  3567ms
 
  Test Files  121 passed (121)
-      Tests  1078 passed (1078)
-   Start at  23:29:00
-   Duration  46.58s (transform 2.20s, setup 0ms, collect 40.31s, tests 294.70s, environment 7.32s, prepare 10.07s)
+      Tests  1082 passed (1082)
+   Start at  23:45:07
+   Duration  34.80s (transform 1.78s, setup 0ms, collect 17.17s, tests 179.49s, environment 8.12s, prepare 5.33s)
 
 
 $ npm run typecheck  # tsc -p tsconfig.json --noEmit
-typecheck exit=0 (2026-11-25 23:29 WIB, run right after the test run above)
+typecheck exit=0 (2026-11-25 23:45 WIB, run right after the test run above)
