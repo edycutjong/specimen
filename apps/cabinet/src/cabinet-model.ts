@@ -7,6 +7,8 @@
  * The rack metadata is imported as a type only, so this module has no build-time `?raw` import.
  */
 import {
+  checkSpec,
+  citesId,
   coverageString,
   filedJarIds,
   type BugfixSpec,
@@ -69,7 +71,10 @@ export type VerdictPlateViewModel = {
   countsLine: string;
   /** coverageString() of @specimen/core, or "" before a replay. */
   coverageLine: string;
-  /** "R red · F filed as Kiro bugfix specs[, all red jars filed]", or "" before a replay. */
+  /**
+   * "R red · F covered by N filed Kiro bugfix spec(s)", or "R red · all red jars covered by N filed …" when
+   * every red jar is filed. "" before a replay.
+   */
   filedLine: string;
   skippedLine?: string;
   quarantinedLine?: string;
@@ -85,6 +90,19 @@ export type CountsPairViewModel = {
   /** B: the baseline tool count. */
   schemaTotal: number;
   addedToolNames: string[];
+  /** The tools the schema diff removed, in diff order. */
+  removedToolNames: string[];
+  /**
+   * The rename, when the schema diff removed exactly one tool and added exactly one. With more than one
+   * removed or added tool the cabinet cannot pair them, so this is null.
+   */
+  renamed: { from: string; to: string } | null;
+  /** Recorded calls (every jar, any state) to a tool the schema diff flagged. */
+  flaggedCallCount: number;
+  /** Red jars that call a tool the schema diff flagged. */
+  flaggedRedCount: number;
+  /** Red jars that call a tool whose inputs did not change (not flagged by the schema diff). */
+  unchangedRedCount: number;
   schemaDiffError?: string;
   /** C: the distinct tools among the Red_Jars. */
   replayToolCount: number;
@@ -257,7 +275,11 @@ function replayedJar(
   });
 }
 
-function plateFor(result: CabinetReplayResult | null, version: HollowInnVersion): VerdictPlateViewModel {
+function plateFor(
+  result: CabinetReplayResult | null,
+  version: HollowInnVersion,
+  bugfixSpecs: readonly BugfixSpec[],
+): VerdictPlateViewModel {
   if (result === null) {
     return {
       verdict: null,
@@ -278,6 +300,11 @@ function plateFor(result: CabinetReplayResult | null, version: HollowInnVersion)
       (entry.reason === ORPHAN_REASON || entry.reason === UNPAIRED_REASON),
   ).length;
   const allFiled = result.red > 0 && result.filed === result.red;
+  const covering = pluralise(
+    coveringSpecCount(bugfixSpecs, result.jars),
+    "filed Kiro bugfix spec",
+    "filed Kiro bugfix specs",
+  );
 
   const plate: VerdictPlateViewModel = {
     verdict: result.verdict,
@@ -287,8 +314,9 @@ function plateFor(result: CabinetReplayResult | null, version: HollowInnVersion)
       (counts.unsealed > 0 ? `, ${counts.unsealed} unsealed` : ""),
     coverageLine: coverageString(result.coverage),
     filedLine:
-      `${result.red} red · ${result.filed} filed as Kiro bugfix specs` +
-      (allFiled ? ", all red jars filed" : ""),
+      result.filed === 0
+        ? `${result.red} red · 0 filed as Kiro bugfix specs`
+        : `${result.red} red · ${allFiled ? "all red jars covered by" : `${result.filed} covered by`} ${covering}`,
     reason: result.reason,
     replayTimeMs: result.replayTimeMs,
     compared: result.coverage.compared,
@@ -299,7 +327,30 @@ function plateFor(result: CabinetReplayResult | null, version: HollowInnVersion)
   return plate;
 }
 
-/** The CountsPair figures (Requirement 6.1 and 6.3). Zero figures when no replay has completed. */
+/**
+ * The number of distinct spec files that cover a red jar of `jars`. A spec covers a jar when it cites the
+ * jar's id and `checkSpec()` passes against `jars`, the same test that `filedJarIds()` applies.
+ */
+export function coveringSpecCount(bugfixSpecs: readonly BugfixSpec[], jars: readonly ResultEntry[]): number {
+  const redIds = jars
+    .filter((entry) => (entry.state === "rattled" || entry.state === "cracked") && entry.id !== null)
+    .map((entry) => entry.id as string);
+  const covering = new Set<string>();
+  for (const spec of bugfixSpecs) {
+    for (const id of redIds) {
+      if (citesId(spec.text, id) && checkSpec(spec.text, id, [...jars]) === "pass") covering.add(spec.name);
+    }
+  }
+  return covering.size;
+}
+
+/**
+ * The CountsPair figures (Requirement 6.1 and 6.3). Zero figures when no replay has completed.
+ *
+ * "Flagged" means a tool the schema diff removed, added or changed the inputs of. A rename is one removed
+ * tool and one added tool. It is named only when the diff has exactly that pair, so a larger change keeps
+ * the separate removed and added lists.
+ */
 function countsFor(
   result: CabinetReplayResult | null,
   schemaDiffError: string | undefined,
@@ -308,20 +359,31 @@ function countsFor(
     schemaChanged: 0,
     schemaTotal: 0,
     addedToolNames: [],
+    removedToolNames: [],
+    renamed: null,
+    flaggedCallCount: 0,
+    flaggedRedCount: 0,
+    unchangedRedCount: 0,
     replayToolCount: 0,
     redJarCount: 0,
   };
   if (result !== null) {
     const diff = result.schema_diff;
-    const redTools = new Set(
-      result.jars
-        .filter((entry) => entry.state === "rattled" || entry.state === "cracked")
-        .map((entry) => entry.tool),
-    );
+    const flagged = new Set<string>([...diff.tools_removed, ...diff.tools_added, ...diff.input_schema_changed]);
+    const redJars = result.jars.filter((entry) => entry.state === "rattled" || entry.state === "cracked");
+    const redTools = new Set(redJars.map((entry) => entry.tool));
+    const flaggedRed = redJars.filter((entry) => flagged.has(entry.tool)).length;
+    const onlyPair = diff.tools_removed.length === 1 && diff.tools_added.length === 1;
+
     counts.schemaChanged = diff.tools_removed.length + diff.input_schema_changed.length;
     counts.schemaTotal =
       result.coverage.tools_listed.length - diff.tools_added.length + diff.tools_removed.length;
     counts.addedToolNames = [...diff.tools_added];
+    counts.removedToolNames = [...diff.tools_removed];
+    counts.renamed = onlyPair ? { from: diff.tools_removed[0] ?? "", to: diff.tools_added[0] ?? "" } : null;
+    counts.flaggedCallCount = result.jars.filter((entry) => flagged.has(entry.tool)).length;
+    counts.flaggedRedCount = flaggedRed;
+    counts.unchangedRedCount = redJars.length - flaggedRed;
     counts.replayToolCount = redTools.size;
     counts.redJarCount = result.red;
   }
@@ -368,7 +430,7 @@ export function buildViewModel(input: BuildViewModelInput): CabinetViewModel {
     version,
     replayed: result !== null,
     racks: rackViews,
-    plate: plateFor(result, version),
+    plate: plateFor(result, version, bugfixSpecs),
     counts: countsFor(result, schemaDiffError),
     guide: [
       { label: "Open a red jar", done: guideFlags.openedRedJar },

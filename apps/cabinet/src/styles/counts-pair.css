@@ -16,6 +16,8 @@
   gap: 0;
   min-width: 0;
   margin: 0;
+  /* The final strip at 1024 px and wider is 176 to 178 px tall, so the strip keeps 180 px from the first paint. */
+  min-height: 180px;
   padding: 16px 24px 16px 64px;
   border: 1px solid var(--rule);
   background-color: var(--glass);
@@ -103,13 +105,15 @@
   font-weight: 700;
   font-size: 34px;
   line-height: 1.1;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
   color: var(--after);
 }
 
 /* The values wait for the Reveal to settle (design pass, item 2). They keep their space while hidden. */
 .counts-pair__value--hidden,
+.counts-pair__added--hidden,
 .counts-pair__connector--hidden {
   visibility: hidden;
 }
@@ -162,22 +166,35 @@
   }
 }
 
-/* Below 600 px the strip shows values only: the labels go, and the lede carries the comparison. */
+/*
+ * Below 600 px the strip is two short labelled lines: "SCHEMA DIFF: 1 of 6 tools changed" and "REPLAY: 3 tools · 5 jars
+ * changed". The rename detail is left to the JarDrawer, and the lede moves to the Details fold (design pass, item 8).
+ */
 @media (max-width: 599px) {
-  .counts-pair__label {
-    display: none;
-  }
-
-  .counts-pair__lede {
-    padding: 0 16px;
+  .counts-pair {
+    min-height: 0;
+    padding: 8px 12px 8px 28px;
   }
 
   .counts-pair::before {
     left: 16px;
   }
 
-  .counts-pair {
-    padding-left: 32px;
+  .counts-pair__added {
+    display: none;
+  }
+
+  .counts-pair__schema .counts-pair__value,
+  .counts-pair__replay .counts-pair__value {
+    font-size: 18px;
+  }
+
+  .counts-pair__side {
+    gap: 0;
+  }
+
+  .counts-pair__lede {
+    padding: 0 16px;
   }
 }
 

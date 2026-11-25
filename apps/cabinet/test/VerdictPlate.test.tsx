@@ -49,8 +49,8 @@ describe("VerdictPlate with real replays", () => {
     expect(screen.getByText("v2")).toBeTruthy();
     expect(screen.getByText("5 preserved · 4 rattled · 1 cracked")).toBeTruthy();
     expect(screen.getByText(coverageString(replays.v2.coverage))).toBeTruthy();
-    expect(screen.getByText("5 red · 3 filed as Kiro bugfix specs")).toBeTruthy();
-    expect(screen.queryByText(/all red jars filed/)).toBeNull();
+    expect(screen.getByText("5 red · 3 covered by 1 filed Kiro bugfix spec")).toBeTruthy();
+    expect(screen.queryByText(/all red jars covered by/)).toBeNull();
     expect(screen.getByText(replays.v2.reason)).toBeTruthy();
     expect(screen.queryByText(/replay clean on the recorded set/)).toBeNull();
   });
@@ -111,16 +111,18 @@ describe("VerdictPlate with real replays", () => {
 });
 
 describe("VerdictPlate reveal state", () => {
-  it("keeps the figures out of the page until the reveal completes, then fills the one status region (2.16, 2.17)", () => {
+  it("keeps the figures hidden until the reveal completes, then shows them in the one status region (2.16, 2.17)", () => {
     const plate = plateOf("v2", replays.v2);
     const { rerender } = render(<VerdictPlate plate={plate} revealed={false} revealIntervalMs={INTERVAL_MS} />);
 
-    expect(screen.queryByText("HOLD")).toBeNull();
-    expect(statusText()).toBe("");
+    // Hidden by visibility (design pass, item 3): the lines keep their space and are not shown.
+    expect(document.querySelector(".verdict-plate__status--pending")).not.toBeNull();
+    expect(statusText()).toContain("5 preserved · 4 rattled · 1 cracked");
 
     rerender(<VerdictPlate plate={plate} revealed revealIntervalMs={INTERVAL_MS} />);
 
     expect(screen.getAllByRole("status")).toHaveLength(1);
+    expect(document.querySelector(".verdict-plate__status--pending")).toBeNull();
     expect(screen.getByText("HOLD")).toBeTruthy();
     expect(statusText()).toContain("5 preserved · 4 rattled · 1 cracked");
   });

@@ -83,7 +83,9 @@ function revealedAccessions(): string[] {
     .map((label) => label.split(" ")[0] ?? "");
 }
 
+/** The verdict word once it is shown. A plate still hidden for the Reveal reports null (design pass, item 3). */
 function verdictWord(): string | null {
+  if (document.querySelector(".verdict-plate__status--pending") !== null) return null;
   return document.querySelector(".verdict-plate__word")?.textContent ?? null;
 }
 

@@ -32,6 +32,9 @@ export const COLD_OPEN_LEAD_MS = LIGHTNING_HOLD_MS + LIGHTNING_FLASH_MS + LIGHTN
 /** The one flash the moment the first red jar flips. */
 export const RED_FLIP_FLASH_MS = 120;
 
+/** The storm at replay start: a --storm overlay over the shelves and a window flash, for this long (design pass, item 10). */
+export const STORM_MS = 120;
+
 /** The replay count counts up over this many ms, after the settle (design pass, item 2). */
 export const COUNT_UP_MS = 400;
 

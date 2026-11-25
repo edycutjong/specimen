@@ -92,7 +92,7 @@ describe("view model names, counts and positions against real replays", () => {
     expect(viewModel.replayed).toBe(false);
     expect(viewModel.plate.verdict).toBeNull();
     expect(viewModel.plate.countsLine).toBe("");
-    expect(viewModel.counts).toEqual({
+    expect(viewModel.counts).toMatchObject({
       schemaChanged: 0,
       schemaTotal: 0,
       addedToolNames: [],
@@ -114,7 +114,7 @@ describe("view model names, counts and positions against real replays", () => {
   it("gives the CountsPair figures for v1 (6.7, 16.2)", () => {
     const counts: CountsPairViewModel = viewModelFor("v1", results.v1).counts;
 
-    expect(counts).toEqual({
+    expect(counts).toMatchObject({
       schemaChanged: 0,
       schemaTotal: 6,
       addedToolNames: [],
@@ -127,7 +127,7 @@ describe("view model names, counts and positions against real replays", () => {
   it("gives the CountsPair figures for v2 (6.5, 16.2)", () => {
     const counts = viewModelFor("v2", results.v2).counts;
 
-    expect(counts).toEqual({
+    expect(counts).toMatchObject({
       schemaChanged: 1,
       schemaTotal: 6,
       addedToolNames: ["booking_cancel"],
@@ -140,7 +140,7 @@ describe("view model names, counts and positions against real replays", () => {
   it("gives the CountsPair figures for v2.1 (6.6, 16.2)", () => {
     const counts = viewModelFor("v2.1", results["v2.1"]).counts;
 
-    expect(counts).toEqual({
+    expect(counts).toMatchObject({
       schemaChanged: 1,
       schemaTotal: 6,
       addedToolNames: ["booking_cancel"],

@@ -14,14 +14,17 @@ export type VersionNotesProps = {
   version: HollowInnVersion;
   /** The plate verdict of the selected Version, or null before its replay. Only the v2.1 lead reads it. */
   verdict?: "SHIP" | "HOLD" | null;
+  /** False keeps the notes in place but hidden (visibility) until the Reveal has ended (design pass, item 4). */
+  revealed?: boolean;
 };
 
-export function VersionNotes({ version, verdict = null }: VersionNotesProps): ReactElement | null {
+export function VersionNotes({ version, verdict = null, revealed = true }: VersionNotesProps): ReactElement | null {
   const note = versionNote(version);
   if (note === null) return null;
   const { title, aside } = splitHeading(note.heading);
+  const className = revealed ? "version-notes" : "version-notes version-notes--pending";
   return (
-    <section className="version-notes" aria-label={`Changes in ${version}`}>
+    <section className={className} aria-label={`Changes in ${version}`}>
       <h3 className="version-notes__heading">{title}</h3>
       {aside !== null ? <p className="version-notes__honesty">({aside})</p> : null}
       {version === "v2.1" ? <p className="version-notes__lead">{v21FixLead(verdict)}</p> : null}

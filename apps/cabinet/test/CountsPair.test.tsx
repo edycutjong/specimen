@@ -3,10 +3,10 @@
  * Requirements 6.1 to 6.10 for the CountsPair, rendered from view models built on real
  * runReplay results for v1, v2 and v2.1.
  */
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { getBugfixSpecs, type CabinetReplayResult } from "../src/browser-replay.js";
-import { CountsPair } from "../src/components/CountsPair.js";
+import { CountsPair, connectorText } from "../src/components/CountsPair.js";
 import { buildViewModel, type CountsPairViewModel } from "../src/cabinet-model.js";
 import { RACK_META } from "../src/rack-meta.js";
 import { loadReplays, singleJarResult, viewModelOf, type Replays } from "./support/replays.js";
@@ -44,22 +44,49 @@ describe("CountsPair with real replays", () => {
     expect(halfText(".counts-pair__schema")).toBe("schema diff: 0 of 6 tools changed");
     expect(halfText(".counts-pair__replay")).toBe("replay: 0 tools · 0 jars changed");
     expect(container.querySelector(".counts-pair__added")).toBeNull();
+    expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
+      "Nothing changed — every recorded call came back the same.",
+    );
   });
 
-  it("shows v2 with the added tool name and the replay impact (6.2, 6.5)", () => {
+  it("shows v2 as a rename with its replay impact (6.2, 6.5, design pass item 1)", () => {
     render(<CountsPair counts={countsOf(replays.v2)} replayed />);
 
-    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
-    expect(screen.getByText("added booking_cancel")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe(
+      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+    );
     expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
   });
 
-  it("shows v2.1 with the added tool name and the remaining replay impact (6.6)", () => {
+  it("reads the v2 connector from the diff and the replay: one renamed tool, 1 call, 5 broken, 4 unchanged", () => {
+    render(<CountsPair counts={countsOf(replays.v2)} replayed />);
+
+    expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
+      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. The replay found 5 broken calls — 4 in tools whose inputs never changed.",
+    );
+  });
+
+  it("reads the v2.1 connector with its own numbers: 1 call used it, 2 broken, 1 in unchanged tools", () => {
     render(<CountsPair counts={countsOf(replays["v2.1"])} replayed />);
 
-    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
-    expect(screen.getByText("added booking_cancel")).toBeTruthy();
+    expect(halfText(".counts-pair__schema")).toBe(
+      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+    );
+    expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
+      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. The replay found 2 broken calls — 1 in tools whose inputs never changed.",
+    );
     expect(halfText(".counts-pair__replay")).toBe("replay: 2 tools · 2 jars changed");
+  });
+
+  it("names removed and added tools separately when the diff does not pair them as one rename", () => {
+    const counts: CountsPairViewModel = {
+      ...countsOf(replays.v2),
+      schemaChanged: 2,
+      renamed: null,
+      removedToolNames: ["cancel_booking", "get_room"],
+      addedToolNames: ["booking_cancel"],
+    };
+    expect(connectorText(counts)).toMatch(/^The schema diff saw 3 changed tools: removed cancel_booking, get_room, added booking_cancel;/);
   });
 
   it("puts the schema half in --muted and the replay half in --after (6, colour rule)", () => {
@@ -69,7 +96,7 @@ describe("CountsPair with real replays", () => {
     const replay = container.querySelector<HTMLElement>(".counts-pair__replay");
     expect(schema?.style.color).toBe("var(--muted)");
     expect(replay?.style.color).toBe("var(--after)");
-    expect(schema?.textContent).toBe("schema diff: 1 of 6 tools changed");
+    expect(schema?.textContent).toBe("schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel");
     expect(replay?.textContent).toBe("replay: 3 tools · 5 jars changed");
   });
 
@@ -78,13 +105,17 @@ describe("CountsPair with real replays", () => {
     render(<CountsPair counts={countsOf(single)} replayed />);
 
     expect(halfText(".counts-pair__replay")).toBe("replay: 1 tool · 1 jar changed");
-    expect(halfText(".counts-pair__schema")).toBe("schema diff: 1 of 6 tools changed");
+    expect(halfText(".counts-pair__schema")).toBe(
+      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+    );
   });
 
   it("shows no figures while the Version has not been replayed (6.8)", () => {
     const { container } = render(<CountsPair counts={countsOf(null)} replayed={false} />);
 
-    expect(container.textContent).toBe("");
+    expect(container.querySelector(".counts-pair__schema .counts-pair__value")?.textContent).toBe("");
+    expect(container.querySelector(".counts-pair__replay .counts-pair__value")?.textContent).toBe("");
+    expect(container.querySelector(".counts-pair__connector")?.textContent).toBe("");
     expect(viewModelOf("v2", null).replayed).toBe(false);
   });
 });
@@ -97,5 +128,28 @@ describe("CountsPair schemaDiffError", () => {
     expect(halfText(".counts-pair__schema")).toBe("schema diff: unavailable — baseline tools/list failed");
     expect(halfText(".counts-pair__schema")).not.toMatch(/of 6 tools changed/);
     expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
+  });
+});
+
+describe("CountsPair reserved space (design pass, item 3)", () => {
+  it("renders the strip before a replay, with its values and connector empty and in place", () => {
+    const { container } = render(<CountsPair counts={countsOf(null)} replayed={false} />);
+
+    expect(container.querySelector(".counts-pair")).not.toBeNull();
+    expect(container.querySelector(".counts-pair__connector")).not.toBeNull();
+  });
+
+  it("hides the schema detail and the connector until the Reveal has ended (design pass, item 4)", () => {
+    const { container, rerender } = render(
+      <CountsPair counts={countsOf(replays.v2)} replayed revealed={false} countUp={false} />,
+    );
+
+    expect(container.querySelector(".counts-pair__added")?.className).toContain("counts-pair__added--hidden");
+    expect(container.querySelector(".counts-pair__connector")?.className).toContain("counts-pair__connector--hidden");
+
+    rerender(<CountsPair counts={countsOf(replays.v2)} replayed revealed countUp={false} />);
+
+    expect(container.querySelector(".counts-pair__added")?.className).not.toContain("--hidden");
+    expect(container.querySelector(".counts-pair__connector")?.className).not.toContain("--hidden");
   });
 });

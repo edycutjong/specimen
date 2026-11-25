@@ -84,10 +84,12 @@ export function Jar({ jar, revealed, expanded, cue = false, drawerId, onActivate
     return () => window.removeEventListener("keydown", onKey, true);
   }, [tipOpen]);
 
+  // The SPEC stub and its band wait for this jar's own reveal, so a filed jar gives nothing away early (design pass, item 4).
+  const filedShown = revealed && jar.filed;
   const tagClass = [
     "jar__tag",
     flagWord === null ? "" : "jar__tag--flagged",
-    jar.filed ? "jar__tag--filed" : "",
+    filedShown ? "jar__tag--filed" : "",
   ]
     .filter((name) => name !== "")
     .join(" ");
@@ -126,7 +128,7 @@ export function Jar({ jar, revealed, expanded, cue = false, drawerId, onActivate
                 <ToolName tool={jar.tool} />
               </span>
               <Barcode accession={jar.accession} />
-              {jar.filed ? (
+              {filedShown ? (
                 <span className="jar__spec" aria-hidden="true">
                   SPEC
                 </span>

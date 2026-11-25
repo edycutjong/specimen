@@ -183,7 +183,8 @@ export function renameCalloutOf(entry: ResultEntry): RenameCallout | null {
   };
 }
 
-function RenameCalloutView({ callout }: { callout: RenameCallout }): ReactElement {
+/** The suspected-rename callout. The drawer shows it above the Bugfix spec, so it is exported on its own. */
+export function RenameCalloutView({ callout }: { callout: RenameCallout }): ReactElement {
   return (
     <section className="lab-report__rename" aria-label="Suspected rename">
       <p className="lab-report__rename-line">
@@ -200,6 +201,8 @@ function RenameCalloutView({ callout }: { callout: RenameCallout }): ReactElemen
 export type LabReportTableProps = {
   /** The Result_Entry of the jar in the selected Replay_Result. */
   entry: ResultEntry;
+  /** False leaves the rename callout out, for a caller that places it elsewhere (the JarDrawer does). */
+  showCallout?: boolean;
 };
 
 /**
@@ -258,9 +261,9 @@ function ChangeCells({ row, changed }: { row: LabReportChangeRow; changed: boole
   );
 }
 
-export function LabReportTable({ entry }: LabReportTableProps) {
+export function LabReportTable({ entry, showCallout = true }: LabReportTableProps) {
   const report = labReportOf(entry);
-  const callout = renameCalloutOf(entry);
+  const callout = showCallout ? renameCalloutOf(entry) : null;
   return (
     <div className="lab-report">
       {callout !== null ? <RenameCalloutView callout={callout} /> : null}
@@ -315,11 +318,10 @@ export function LabReportTable({ entry }: LabReportTableProps) {
         ) : null}
       </div>
 
-      <section className="lab-report__ignored" aria-label="Ignored volatile paths">
-        <p className="lab-report__label">Ignored volatile paths</p>
-        {report.ignored.length === 0 ? (
-          <p className="lab-report__statement">none</p>
-        ) : (
+      {/* With no ignored path the section is left out, so it takes no space (design pass, item 5). */}
+      {report.ignored.length > 0 ? (
+        <section className="lab-report__ignored" aria-label="Ignored volatile paths">
+          <p className="lab-report__label">Ignored volatile paths</p>
           <ul className="lab-report__list">
             {report.ignored.map((path) => (
               <li key={path} className="lab-report__data">
@@ -327,8 +329,8 @@ export function LabReportTable({ entry }: LabReportTableProps) {
               </li>
             ))}
           </ul>
-        )}
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }

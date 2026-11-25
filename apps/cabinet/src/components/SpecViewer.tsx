@@ -63,6 +63,8 @@ export type SpecViewerProps = {
   specs: readonly BugfixSpec[];
   /** The current browser Replay_Result for the selected Version, or null before a replay. */
   result: CabinetReplayResult | null;
+  /** Called when the reader follows the GitHub link to the spec. That counts as reading it (design pass, item 6). */
+  onSourceOpened?: () => void;
 };
 
 function filingStatus(jar: JarViewModel, result: CabinetReplayResult | null, choice: SpecChoice | null): string {
@@ -73,7 +75,7 @@ function filingStatus(jar: JarViewModel, result: CabinetReplayResult | null, cho
   return "not filed";
 }
 
-export function SpecViewer({ jar, specs, result }: SpecViewerProps) {
+export function SpecViewer({ jar, specs, result, onSourceOpened }: SpecViewerProps) {
   const choice = jar.id === null ? null : chooseSpec(jar.id, specs, result?.jars ?? []);
   const showPass = result !== null && jar.isRed && choice?.passes === true;
   const status = filingStatus(jar, result, choice);
@@ -97,7 +99,12 @@ export function SpecViewer({ jar, specs, result }: SpecViewerProps) {
             Filed by the specimen-curator agent through <code>specimen file</code> on {SPEC_FILED_DATE}.
           </p>
           <p className="spec-viewer__link">
-            <a href={`${GITHUB_BLOB_URL}${choice.spec.name}`} target="_blank" rel="noopener noreferrer">
+            <a
+              href={`${GITHUB_BLOB_URL}${choice.spec.name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onSourceOpened?.()}
+            >
               View {choice.spec.name} on GitHub
             </a>
           </p>

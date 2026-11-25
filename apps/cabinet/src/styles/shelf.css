@@ -10,10 +10,27 @@
 .shelf {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
+  gap: 10px;
   margin: 0 0 40px;
-  padding-top: 30px;
+  padding-top: 18px;
   min-width: 0;
+}
+
+/*
+ * From 600 px the shelf has room above its jars for the IT'S MOVING stamp: the top padding is 44 px, so the stamp
+ * sits above the lid of the first jar (design pass, item 7). From 600 px to 1023 px the plate sits above the jars,
+ * so the row gap is wide enough for the stamp to clear the plate.
+ */
+@media (min-width: 600px) {
+  .shelf {
+    padding-top: 44px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .shelf {
+    row-gap: 44px;
+  }
 }
 
 .shelf-plate {
@@ -55,6 +72,14 @@
 
 .shelf-meta .data {
   font-size: 14px;
+}
+
+/* Below 600 px the task text is a little smaller, so the first jars sit near the top of a phone (design pass, item 8). */
+@media (max-width: 599px) {
+  .shelf-task {
+    font-size: 15px;
+    line-height: 1.35;
+  }
 }
 
 /* The jar grid. Below 600 px two cells sit in a row, so each tag keeps its desktop text sizes (see Jar.css). */
@@ -153,6 +178,24 @@ ol.shelf-grid {
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 16px;
+}
+
+/* The SPEC stub in the legend: drawn like the stub on a filed jar, only small (design pass, item 9). */
+.legend__item--spec {
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.legend__spec {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--before);
+  color: var(--label-ink);
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 .legend__mark {

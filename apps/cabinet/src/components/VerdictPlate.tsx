@@ -101,18 +101,21 @@ function LedgerLines({ plate, revealIntervalMs }: { plate: VerdictPlateViewModel
 }
 
 export function VerdictPlate({ plate, revealed, revealIntervalMs, part = "both" }: VerdictPlateProps) {
-  const showResult = revealed && plate.verdict !== null;
+  const hasVerdict = plate.verdict !== null;
   const showPlaque = part !== "ledger";
   const showLedger = part !== "plaque";
   const label = part === "ledger" ? "Verdict details" : "Verdict";
+  // The lines are in the page as soon as a verdict exists, but they stay hidden (visibility, not display) until the
+  // Reveal has ended. So the plate keeps its final size from the first paint (design pass, item 3).
+  const statusClass = revealed ? "verdict-plate__status" : "verdict-plate__status verdict-plate__status--pending";
   return (
     <section className={`verdict-plate verdict-plate--${part}`} aria-label={label}>
       {plate.verdict === null && showPlaque ? (
         <p className="verdict-plate__idle">hollow-inn {plate.version} has not been replayed yet.</p>
       ) : null}
-      <div role="status" className="verdict-plate__status">
-        {showResult && showPlaque ? <PlaqueLines plate={plate} /> : null}
-        {showResult && showLedger ? <LedgerLines plate={plate} revealIntervalMs={revealIntervalMs} /> : null}
+      <div role="status" className={statusClass}>
+        {hasVerdict && showPlaque ? <PlaqueLines plate={plate} /> : null}
+        {hasVerdict && showLedger ? <LedgerLines plate={plate} revealIntervalMs={revealIntervalMs} /> : null}
       </div>
     </section>
   );

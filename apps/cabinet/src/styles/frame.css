@@ -121,12 +121,52 @@
   display: none;
 }
 
+/*
+ * From 600 px the wall keeps 24 px above the first shelf. The IT'S MOVING stamp sits above the first jar, so it
+ * keeps at least 16 px clear of the GuideStrip (design pass, item 7).
+ */
+@media (min-width: 600px) {
+  .cabinet-wall {
+    margin-bottom: 24px;
+  }
+}
+
 /* The wall's wrappers stop boxing below 600 px, so their children take the page-column order in cabinet.css. */
 @media (max-width: 599px) {
   .cabinet-wall,
   .cabinet-wall__grid,
   .cabinet-wall__text {
     display: contents;
+  }
+}
+
+/* The Details block: the lede and the ledger. It is open on a wide page, and a phone folds it behind a summary. */
+.cabinet-details {
+  min-width: 0;
+}
+
+.cabinet-details__summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--rule);
+  background: var(--glass);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cabinet-details__summary:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
+}
+
+/* On a wide page the Details block is always open, so its summary is not shown. */
+@media (min-width: 600px) {
+  .cabinet-details__summary {
+    display: none;
   }
 }
 
@@ -137,6 +177,13 @@
   align-items: center;
   gap: 8px 20px;
   min-width: 0;
+}
+
+/* The ledger's final height at 600 px and wider, reserved from the first paint (design pass, item 3). */
+@media (min-width: 600px) {
+  .cabinet-ledger {
+    min-height: 158px;
+  }
 }
 
 .cabinet-ledger > .verdict-plate--ledger {
@@ -273,12 +320,38 @@
 /* Below 600 px the side insets shrink, so a two-column jar cell is wide enough for the toe-tag strip (design pass, item 11). */
 @media (max-width: 599px) {
   .cabinet-frame {
-    padding: 6px;
+    padding: 4px;
   }
 
   .cabinet-frame__iron {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 8px 6px;
+    border-width: 4px;
+  }
+
+  /* The rivets sit in the narrower iron border, so they stay inside the 4 px frame padding. */
+  .cabinet-frame__rivet {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cabinet-frame__rivet--tl,
+  .cabinet-frame__rivet--bl {
+    left: -4px;
+  }
+
+  .cabinet-frame__rivet--tr,
+  .cabinet-frame__rivet--br {
+    right: -4px;
+  }
+
+  .cabinet-frame__rivet--tl,
+  .cabinet-frame__rivet--tr {
+    top: -4px;
+  }
+
+  .cabinet-frame__rivet--bl,
+  .cabinet-frame__rivet--br {
+    bottom: -4px;
   }
 }
 

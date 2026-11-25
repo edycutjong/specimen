@@ -20,6 +20,10 @@ function versionRadio(name: string): HTMLElement {
 
 async function waitForReplayedV2(): Promise<void> {
   await screen.findByText(V2_COUNTS, undefined, { timeout: 15_000 });
+  // The figures show once the Reveal has ended, and the jars take their states before that.
+  await waitFor(() => expect(document.querySelector(".verdict-plate__status--pending")).toBeNull(), {
+    timeout: 15_000,
+  });
 }
 
 afterEach(() => {
@@ -49,7 +53,9 @@ describe("App", () => {
     expect(versionRadio("v1").getAttribute("aria-checked")).toBe("true");
     await screen.findByText(V1_IDLE);
     expect(screen.queryByText(V2_COUNTS)).toBeNull();
-    expect(screen.queryByText(/schema diff:/)).toBeNull();
+    // The labels stay in the page, but no schema or replay figure is shown (design pass, item 3).
+    expect(document.querySelector(".counts-pair__schema .counts-pair__value")?.textContent).toBe("");
+    expect(document.querySelector(".counts-pair__replay .counts-pair__value")?.textContent).toBe("");
     expect(screen.getAllByRole("button", { name: /— not replayed$/ })).toHaveLength(JAR_COUNT);
   });
 

@@ -33,6 +33,12 @@ export function Legend({ skippedToolsPresent }: LegendProps): ReactElement {
           <span>{entry.word}</span>
         </li>
       ))}
+      <li className="legend__item legend__item--spec">
+        <span className="legend__spec" aria-hidden="true">
+          SPEC
+        </span>
+        <span>SPEC = a filed Kiro bugfix spec covers this jar</span>
+      </li>
     </ul>
   );
 }

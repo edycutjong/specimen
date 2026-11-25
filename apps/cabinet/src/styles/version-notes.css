@@ -5,6 +5,11 @@
  */
 
 /* The version note sits in the ledger row: the heading, the v2.1 lead and the disclosure in one line. */
+/* Kept in place and hidden until the Reveal has ended (design pass, item 4). */
+.version-notes--pending {
+  visibility: hidden;
+}
+
 .version-notes {
   display: flex;
   flex-wrap: wrap;

@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement, type RefObject } from "react";
 import { getBugfixSpecs, runReplay, type CabinetReplayResult, type HollowInnVersion } from "./browser-replay.js";
 import { buildViewModel, revealOrder, type JarViewModel } from "./cabinet-model.js";
 import { RACK_META } from "./rack-meta.js";
 import { CabinetFrame, FrameSuture } from "./components/CabinetFrame.js";
-import { CountsPair } from "./components/CountsPair.js";
+import { CountsPair, ledeText } from "./components/CountsPair.js";
 import { GuideStrip } from "./components/GuideStrip.js";
 import { HowJarsWereMade } from "./components/HowJarsWereMade.js";
 import { JarDrawer } from "./components/JarDrawer.js";
@@ -19,6 +19,7 @@ import {
   COLD_OPEN_LEAD_MS,
   REVEAL_INTERVAL_MS,
   REVEAL_SETTLE_MS,
+  STORM_MS,
   useLightning,
   useReducedMotion,
   useReveal,
@@ -43,6 +44,45 @@ function messageOf(caught: unknown): string {
   return "The replay failed without a message.";
 }
 
+/** The page's 600 px breakpoint. Without matchMedia (a test environment) the wide layout is assumed. */
+const WIDE_QUERY = "(min-width: 600px)";
+
+function useWideViewport(): boolean {
+  const supported = typeof window !== "undefined" && typeof window.matchMedia === "function";
+  const [wide, setWide] = useState<boolean>(() => (supported ? window.matchMedia(WIDE_QUERY).matches : true));
+  useEffect(() => {
+    if (!supported) return undefined;
+    const list = window.matchMedia(WIDE_QUERY);
+    const onChange = (event: MediaQueryListEvent): void => setWide(event.matches);
+    setWide(list.matches);
+    list.addEventListener("change", onChange);
+    return () => list.removeEventListener("change", onChange);
+  }, [supported]);
+  return wide;
+}
+
+/** Writes the header's height to `--cabinet-header-h`, so a right-hand JarDrawer can start below the sticky header. */
+function useHeaderHeightVariable(header: RefObject<HTMLElement | null>): void {
+  useEffect(() => {
+    const node = header.current;
+    if (node === null) return undefined;
+    const root = document.documentElement;
+    const apply = (): void => {
+      root.style.setProperty("--cabinet-header-h", `${Math.ceil(node.getBoundingClientRect().height)}px`);
+    };
+    apply();
+    if (typeof ResizeObserver === "undefined") {
+      return () => root.style.removeProperty("--cabinet-header-h");
+    }
+    const observer = new ResizeObserver(apply);
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--cabinet-header-h");
+    };
+  }, [header]);
+}
+
 export function App(): ReactElement {
   const [version, setVersion] = useState<HollowInnVersion>(PAGE_VERSION);
   const [result, setResult] = useState<CabinetReplayResult | null>(null);
@@ -57,7 +97,12 @@ export function App(): ReactElement {
   // The cue on the first red filed jar plays once per page load (design pass, item 4).
   const [cueOn, setCueOn] = useState(false);
   const [cueSpent, setCueSpent] = useState(false);
+  // The storm at replay start: a --storm overlay over the shelves, and a window flash (design pass, item 10).
+  const [stormOn, setStormOn] = useState(false);
   const reducedMotion = useReducedMotion();
+  const wide = useWideViewport();
+  const headerRef = useRef<HTMLElement | null>(null);
+  useHeaderHeightVariable(headerRef);
 
   // Each replay request takes the next token. A result is applied only while its token is the
   // latest one, so a replay that the user has overtaken (by a Version switch or a newer replay)
@@ -106,6 +151,17 @@ export function App(): ReactElement {
     startReplay(PAGE_VERSION);
     return cancelPending;
   }, [startReplay, cancelPending]);
+
+  // Each replay start lights the storm for STORM_MS. Under Reduced_Motion there is no storm.
+  useEffect(() => {
+    if (!running || reducedMotion) return undefined;
+    setStormOn(true);
+    const id = window.setTimeout(() => setStormOn(false), STORM_MS);
+    return () => {
+      window.clearTimeout(id);
+      setStormOn(false);
+    };
+  }, [running, reducedMotion]);
 
   // Focus moves to Retry when a thrown replay shows its error (Requirement 15.3).
   useEffect(() => {
@@ -175,15 +231,19 @@ export function App(): ReactElement {
     }
     setOpenKey(jar.accession);
     if (jar.isRed) setGuideFlags((flags) => ({ ...flags, openedRedJar: true }));
-    if (jar.filed) setGuideFlags((flags) => ({ ...flags, viewedSpec: true }));
   };
+
+  // The guide step for the spec ticks only when the drawer shows the spec (design pass, item 6).
+  const onSpecViewed = useCallback((): void => {
+    setGuideFlags((flags) => (flags.viewedSpec ? flags : { ...flags, viewedSpec: true }));
+  }, []);
 
   // The VerdictPlate and the GuideStrip pulse wait for the whole Reveal to complete.
   const revealed = reveal.complete;
 
   return (
     <>
-      <header className="cabinet-header">
+      <header ref={headerRef} className="cabinet-header">
         <div className="cabinet-header__top">
           <div className="cabinet-brand">
             <h1 className="cabinet-wordmark">
@@ -220,6 +280,7 @@ export function App(): ReactElement {
 
       <CabinetFrame lit={lit}>
         <main className="cabinet-main">
+          <span aria-hidden="true" className={stormOn ? "lightning-shelves lightning-shelves--lit" : "lightning-shelves"} />
           <div className="cabinet-wall">
             <span aria-hidden="true" className="storm-window__wash" />
             <div className="cabinet-wall__grid">
@@ -227,23 +288,26 @@ export function App(): ReactElement {
                 <CountsPair
                   counts={viewModel.counts}
                   replayed={viewModel.replayed}
-                  result={result}
-                  jarCount={order.length}
                   revealed={revealed}
                   countUp={!reducedMotion}
                 />
-                <div className="cabinet-ledger">
-                  <VerdictPlate
-                    plate={viewModel.plate}
-                    revealed={revealed}
-                    revealIntervalMs={REVEAL_INTERVAL_MS}
-                    part="ledger"
-                  />
-                  <VersionNotes version={version} verdict={viewModel.plate.verdict} />
-                </div>
+                {/* The lede, the ledger lines and the version notes. On a phone they fold behind this one Details (after the shelves). */}
+                <details className="cabinet-details" open={wide}>
+                  <summary className="cabinet-details__summary">Details</summary>
+                  <p className="counts-pair__lede">{ledeText(order.length)}</p>
+                  <div className="cabinet-ledger">
+                    <VerdictPlate
+                      plate={viewModel.plate}
+                      revealed={revealed}
+                      revealIntervalMs={REVEAL_INTERVAL_MS}
+                      part="ledger"
+                    />
+                    <VersionNotes version={version} verdict={viewModel.plate.verdict} revealed={revealed} />
+                  </div>
+                </details>
                 <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
               </div>
-              <StormWindow className="cabinet-wall__window" lit={lit} />
+              <StormWindow className="cabinet-wall__window" lit={lit || stormOn} />
             </div>
           </div>
 
@@ -273,6 +337,7 @@ export function App(): ReactElement {
               result={result}
               specs={BUGFIX_SPECS}
               onClose={() => setOpenKey(null)}
+              onSpecViewed={onSpecViewed}
             />
           </div>
         </main>

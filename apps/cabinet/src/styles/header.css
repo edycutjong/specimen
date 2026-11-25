@@ -103,10 +103,15 @@
 
 /* Below 600 px the rows stack: the wordmark, the plate at full width, then the version and the replay side by side. */
 @media (max-width: 599px) {
+  .cabinet-header {
+    gap: 8px;
+    padding: 8px 12px 10px;
+  }
+
   .cabinet-header__top {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
   }
 
   .cabinet-plate-slot {
@@ -155,10 +160,16 @@
     justify-content: center;
   }
 
+  /* A fixed width, so a plate that grows or shrinks with its figures never moves the controls (design pass, item 3). */
   .cabinet-plate-slot {
     grid-column: 3;
     grid-row: 1;
     justify-self: end;
+    width: 360px;
+  }
+
+  .cabinet-plate-slot > .verdict-plate--plaque {
+    width: 100%;
   }
 
   .cabinet-wordmark {
@@ -172,10 +183,11 @@
 
 /*
  * The plate keeps the height of its final text from the first paint (design pass, item 1), so the Reveal
- * does not move the header. The heights follow the plate's type sizes at each breakpoint.
+ * does not move the header. The heights follow the plate's type sizes at each breakpoint. Its width is
+ * fixed from 1024 px (see the media query above), so the controls stay where they are.
  */
 .cabinet-plate-slot > .verdict-plate--plaque {
-  min-height: 60px;
+  min-height: 66px;
 }
 
 @media (min-width: 600px) {
@@ -184,13 +196,20 @@
   }
 }
 
-/* 1280 px and wider: the wordmark is 44 px, as the design sets it. */
+/* 1024 px to 1279 px: the final plate (verdict word, version, counts, and the ledger in the plaque) is 112 px tall. */
+@media (min-width: 1024px) {
+  .cabinet-plate-slot > .verdict-plate--plaque {
+    min-height: 112px;
+  }
+}
+
+/* 1280 px and wider: the wordmark is 44 px, as the design sets it. The final plate is 120 px tall. */
 @media (min-width: 1280px) {
   .cabinet-wordmark {
     font-size: 44px;
   }
 
   .cabinet-plate-slot > .verdict-plate--plaque {
-    min-height: 104px;
+    min-height: 120px;
   }
 }

@@ -28,7 +28,7 @@
   background-attachment: local;
 }
 
-/* Fixed layout: PATH 42 %, FLAG 20 %, VALUES 38 %. The paper is narrow (420 px drawer), so the columns are fixed. */
+/* Fixed layout: PATH 38 %, FLAG 10ch, VALUES the rest (design pass, item 5). The values wrap, so nothing is cut. */
 .lab-report__table {
   width: 100%;
   table-layout: fixed;
@@ -39,13 +39,10 @@
 }
 
 .lab-report__table thead th:nth-child(1) {
-  width: 42%;
+  width: 38%;
 }
 
-/*
- * The flag column is 10ch wide, so REMOVED fits on one line with room to spare (design pass, item 5). The
- * logical inline-size gives the same width in horizontal text, and it is about 90 px, well under 320 px.
- */
+/* The flag column is 10ch wide, so REMOVED fits on one line (design pass, item 5). */
 .lab-report__table thead th:nth-child(2) {
   inline-size: 10ch;
 }
@@ -136,10 +133,11 @@
   overflow-wrap: anywhere;
 }
 
-/* Each line is a two-column grid: the label in an 8 ch column, then the value on one line (no wrap). */
+/* Each line is a two-column grid: the label in a 9ch column with a 0.75ch gap, then the value, which may wrap (design pass, item 5). */
 .lab-report__value {
   display: grid;
-  grid-template-columns: 8ch max-content;
+  grid-template-columns: 9ch minmax(0, 1fr);
+  column-gap: 0.75ch;
   min-width: 0;
 }
 
@@ -149,8 +147,9 @@
 }
 
 .lab-report__value-text {
+  min-width: 0;
   color: var(--ink);
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 /* Column headings: the data face, 14 px, uppercase. Each heading stays on one line. */
@@ -223,6 +222,64 @@
 /* A compatible addition is neutral ink with no strike-through (Requirement 11.8). */
 .lab-report__row--compatible {
   color: var(--ink);
+}
+
+/*
+ * Below 600 px each change row is a card: the path line, then the flag strip, the replayed line and the jarred
+ * line (design pass, item 5). The table cells become blocks, and the header row is kept for screen readers only.
+ */
+@media (max-width: 599px) {
+  .lab-report__table,
+  .lab-report__table tbody,
+  .lab-report__table tr,
+  .lab-report__table td {
+    display: block;
+    width: 100%;
+  }
+
+  .lab-report__table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .lab-report__table tr.lab-report__row {
+    display: grid;
+    gap: 4px;
+    margin: 0 0 10px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .lab-report__table .lab-report__path,
+  .lab-report__table .lab-report__values {
+    padding: 0;
+  }
+
+  .lab-report__table .lab-report__values {
+    padding-left: 0;
+  }
+
+  /* The flag strip: a band with the printed word, so the flag is never only a colour. */
+  .lab-report__table .lab-report__flag {
+    justify-self: start;
+    padding: 2px 10px;
+    background: var(--after);
+    color: var(--label-ink);
+    line-height: 1.3;
+  }
+
+  .lab-report__row--compatible .lab-report__flag {
+    background: var(--glass);
+    color: var(--ink);
+    border: 1px solid var(--muted);
+  }
+
+  .lab-report__value {
+    display: block;
+  }
 }
 
 /* The rename annotation row (Requirement 11.5). */

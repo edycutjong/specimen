@@ -45,10 +45,13 @@
   z-index: 0;
 }
 
-/* Right panels: 480 px at 1280 px and wider, 420 px from 1024 px to 1279 px. They start below the header. */
+/*
+ * Right panels: 480 px at 1280 px and wider, 420 px from 1024 px to 1279 px. They start at the bottom of the sticky
+ * header, which App measures into --cabinet-header-h, so the panel never covers the plate border (design pass, item 5).
+ */
 .jar-drawer[data-form="panel-wide"],
 .jar-drawer[data-form="panel-narrow"] {
-  top: 104px;
+  top: var(--cabinet-header-h, 104px);
   right: 0;
   bottom: 0;
   border-left: 2px solid var(--tag);

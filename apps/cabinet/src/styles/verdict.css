@@ -165,6 +165,11 @@
   outline-offset: 2px;
 }
 
+/* The lines stay in the page, hidden, until the Reveal has ended. They keep their space (design pass, item 3). */
+.verdict-plate__status--pending {
+  visibility: hidden;
+}
+
 /* Below 600 px the plaque is one row: "HOLD v2 · 4 rattled · 1 cracked" (design pass, item 11). */
 @media (max-width: 599px) {
   .verdict-plate--plaque {
@@ -172,9 +177,17 @@
   }
 
   .verdict-plate--plaque .verdict-plate__status {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: baseline;
     gap: 2px 8px;
+    overflow: hidden;
+  }
+
+  /* The plaque stays one line at 375 px: the compact facts never wrap onto a second row (design pass, item 8). */
+  .verdict-plate__compact {
+    flex-wrap: nowrap;
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .verdict-plate__word,

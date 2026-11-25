@@ -7,6 +7,8 @@
  */
 
 :root {
+  /* The IT'S MOVING stamp's tilt. The stamp keyframes read it, so a breakpoint can change it. */
+  --stamp-tilt: -8deg;
   --rattle-ms: 540ms;
   --flood-ms: 700ms;
   --ink-ms: 320ms;
@@ -122,6 +124,23 @@
 }
 
 /*
+ * The storm at replay start (design pass, item 10): a --storm overlay at 0.15 opacity over the shelf area, lit for
+ * STORM_MS by the `lightning-shelves--lit` class. The window flashes at the same time.
+ */
+.lightning-shelves {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: var(--storm);
+  opacity: 0;
+}
+
+.lightning-shelves--lit {
+  opacity: 0.15;
+}
+
+/*
  * The full-wall lightning (design pass, item 2): a --storm overlay at 0.18 opacity over the whole wall,
  * lit for each flash by the `cabinet-frame--lit` class.
  */
@@ -157,31 +176,43 @@
   position: relative;
 }
 
+/*
+ * From 600 px the stamp is 26 px and sits above the first jar's lid. The top edge is 34 px above the jar's top, so
+ * the bottom edge clears the lid (its top is about 15 px below the jar's top). The shelf's top padding (44 px)
+ * holds the stamp, and the wall's bottom margin keeps it 16 px or more below the GuideStrip.
+ */
 .its-moving-stamp {
   position: absolute;
-  top: -28px;
+  top: -38px;
   right: 2px;
   z-index: 4;
   pointer-events: none;
-  padding: 4px 14px;
-  border: 4px double var(--after);
+  padding: 2px 12px;
+  border: 3px double var(--after);
   border-radius: 2px;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 34px;
+  font-size: 26px;
   line-height: 1.1;
   letter-spacing: 0.06em;
   color: var(--after);
   background: var(--bg);
-  transform: rotate(-8deg);
+  transform: rotate(var(--stamp-tilt));
   white-space: nowrap;
   animation: stamp-slam var(--stamp-ms) ease-in both;
 }
 
 @keyframes stamp-slam {
-  0% { opacity: 0; transform: rotate(-8deg) scale(2.2); }
-  60% { opacity: 1; transform: rotate(-8deg) scale(0.94); }
-  100% { opacity: 1; transform: rotate(-8deg) scale(1); }
+  0% { opacity: 0; transform: rotate(var(--stamp-tilt)) scale(2.2); }
+  60% { opacity: 1; transform: rotate(var(--stamp-tilt)) scale(0.94); }
+  100% { opacity: 1; transform: rotate(var(--stamp-tilt)) scale(1); }
+}
+
+/* A shallower tilt from 600 px, so the rotated corners stay above the lid. */
+@media (min-width: 600px) {
+  :root {
+    --stamp-tilt: -4deg;
+  }
 }
 
 /*
@@ -226,7 +257,8 @@
   .storm-window__flash,
   .storm-window__bolt,
   .storm-window__wash,
-  .lightning-wall {
+  .lightning-wall,
+  .lightning-shelves {
     display: none;
   }
 }
@@ -235,6 +267,7 @@
 .no-motion .storm-window__flash,
 .no-motion .storm-window__bolt,
 .no-motion .storm-window__wash,
-.no-motion .lightning-wall {
+.no-motion .lightning-wall,
+.no-motion .lightning-shelves {
   display: none;
 }

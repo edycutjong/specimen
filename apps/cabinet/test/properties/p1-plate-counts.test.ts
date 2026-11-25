@@ -23,7 +23,7 @@ import {
   verdict,
   type VerdictResult,
 } from "@specimen/core";
-import { buildViewModel, type CabinetViewModel } from "../../src/cabinet-model.js";
+import { buildViewModel, coveringSpecCount, pluralise, type CabinetViewModel } from "../../src/cabinet-model.js";
 import type { CabinetReplayResult, HollowInnVersion } from "../../src/browser-replay.js";
 import type { RackMeta } from "../../src/rack-meta.js";
 
@@ -302,10 +302,17 @@ function assertCountsEqualVerdict(
   expect(plate.countsLine).toBe(expectedCounts);
 
   // Filed counter (Requirement 4.6, 4.7).
+  // The filed counter names the distinct spec files that cover the red jars (design pass, item 2).
   const allFiled = judged.red > 0 && judged.filed === judged.red;
+  const covering = pluralise(
+    coveringSpecCount(scenario.specs, scenario.entries),
+    "filed Kiro bugfix spec",
+    "filed Kiro bugfix specs",
+  );
   expect(plate.filedLine).toBe(
-    `${judged.red} red · ${judged.filed} filed as Kiro bugfix specs` +
-      (allFiled ? ", all red jars filed" : ""),
+    judged.filed === 0
+      ? `${judged.red} red · 0 filed as Kiro bugfix specs`
+      : `${judged.red} red · ${allFiled ? "all red jars covered by" : `${judged.filed} covered by`} ${covering}`,
   );
 
   // Optional lines (Requirements 4.8 to 4.10).

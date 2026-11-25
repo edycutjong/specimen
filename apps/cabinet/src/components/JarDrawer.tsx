@@ -27,7 +27,7 @@ import type { CabinetReplayResult, HollowInnVersion } from "../browser-replay.js
 import type { JarViewModel } from "../cabinet-model.js";
 import { CrackLine, JarArt } from "../jar-art.js";
 import "../styles/jar-drawer.css";
-import { LabReportTable } from "./LabReportTable.js";
+import { LabReportTable, RenameCalloutView, renameCalloutOf } from "./LabReportTable.js";
 import { SpecViewer } from "./SpecViewer.js";
 
 export type DrawerForm = "panel-wide" | "panel-narrow" | "sheet" | "fullscreen";
@@ -95,9 +95,17 @@ export type JarDrawerProps = {
   specs: readonly BugfixSpec[];
   /** Called by Escape and by the Close control. The parent sets `jar` to null. */
   onClose: () => void;
+  /**
+   * Called once the Bugfix spec section of a filed jar is at least half visible, or when its GitHub link is
+   * followed. The guide step for reading the spec ticks on this call, not on opening the drawer (design pass, item 6).
+   */
+  onSpecViewed?: () => void;
 };
 
-export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerProps): ReactElement | null {
+/** The fraction of the Bugfix spec section that must be on screen before the reader counts as having seen it. */
+export const SPEC_VIEW_THRESHOLD = 0.5;
+
+export function JarDrawer({ jar, version, result, specs, onClose, onSpecViewed }: JarDrawerProps): ReactElement | null {
   const form = drawerFormFor(useViewportWidth());
   const modal = isModalForm(form);
   const isOpen = jar !== null;
@@ -105,6 +113,9 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
   const replayed = jar !== null && jar.state !== "not replayed";
 
   const drawerRef = useRef<HTMLElement | null>(null);
+  const specRef = useRef<HTMLElement | null>(null);
+  const specViewedRef = useRef(onSpecViewed);
+  specViewedRef.current = onSpecViewed;
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const originRef = useRef<HTMLElement | null>(null);
   const tabRefs = useRef<Record<TabId, HTMLButtonElement | null>>({ jarred: null, replayed: null });
@@ -201,6 +212,24 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
     };
   }, [isOpen, form]);
 
+  // The spec counts as read once half of its section is on screen. Only a filed jar has a spec to read.
+  const filed = jar?.filed === true;
+  useEffect(() => {
+    const node = specRef.current;
+    if (!isOpen || !filed || node === null || typeof IntersectionObserver === "undefined") return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= SPEC_VIEW_THRESHOLD)) {
+          specViewedRef.current?.();
+          observer.disconnect();
+        }
+      },
+      { threshold: SPEC_VIEW_THRESHOLD },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isOpen, filed, accession]);
+
   // The Replayed tab is disabled once the Jar is not replayed. Focus on it moves to the Jarred tab.
   useEffect(() => {
     if (!replayed && lastFocusedTab.current === "replayed") {
@@ -214,6 +243,7 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
   const activeTab: TabId = replayed ? selected : "jarred";
   const order: TabId[] = replayed ? ["jarred", "replayed"] : ["jarred"];
   const entry = entryFor(jar, result);
+  const callout = entry === null ? null : renameCalloutOf(entry);
   const flagLabel = jar.flagWord ?? jar.state.toUpperCase();
 
   const selectTab = (id: TabId): void => {
@@ -317,16 +347,22 @@ export function JarDrawer({ jar, version, result, specs, onClose }: JarDrawerPro
       </header>
 
       <div className="jar-drawer__body">
-        {replayed && entry !== null ? (
-          <section className="jar-drawer__section" aria-label="Lab report">
-            <h3 className="jar-drawer__subheading">Lab report</h3>
-            <LabReportTable entry={entry} />
+        {replayed && entry !== null && callout !== null ? (
+          <section className="jar-drawer__section" aria-label="Suspected rename">
+            <RenameCalloutView callout={callout} />
           </section>
         ) : null}
 
-        <section className="jar-drawer__section" aria-label="Bugfix spec for this Jar">
-          <SpecViewer jar={jar} specs={specs} result={result} />
+        <section ref={specRef} className="jar-drawer__section" aria-label="Bugfix spec for this Jar">
+          <SpecViewer jar={jar} specs={specs} result={result} onSourceOpened={onSpecViewed} />
         </section>
+
+        {replayed && entry !== null ? (
+          <section className="jar-drawer__section" aria-label="Lab report">
+            <h3 className="jar-drawer__subheading">Lab report</h3>
+            <LabReportTable entry={entry} showCallout={false} />
+          </section>
+        ) : null}
 
         <section className="jar-drawer__section" aria-label="Jarred input">
           <h3 className="jar-drawer__subheading">Jarred input</h3>
