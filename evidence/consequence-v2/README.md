@@ -29,8 +29,9 @@ not run an ablation with the old description, so that is an explanation, not a m
 
 What the run did **not** exercise: v2's default page size drops `r-08`/`r-09` only when `search_rooms` is called without
 `limit`, and in both RACK A runs (v1 and v2) the agent passed `"limit": 50` although the prompt says "search without a
-result limit" — so the room comparison was never put at risk here. (In the recorded RACK A jars the agent did make the
-no-limit call, `SPC-0010`, which is the jar that rattles on `/rooms/r-08`, `/rooms/r-09`.)
+result limit" — so the room comparison was never put at risk here. (The recorded no-limit call `SPC-0010` exists only because a same-session
+follow-up prompt, `prompts/rack-a-followup.md`, told the agent to omit the limit; its first search, `SPC-0001`, also sent
+`limit: 50`. `SPC-0010` is the jar that rattles on `/rooms/r-08`, `/rooms/r-09`.)
 
 ## What it means for SPECIMEN JAR
 
