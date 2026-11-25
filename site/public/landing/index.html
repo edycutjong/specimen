@@ -1006,7 +1006,8 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
     };
     if (wash) wash.addEventListener("animationend", () => { wash.className = "wash"; });
 
-    const engine = () => (engineP ||= import("/static/replay.js").catch(() => null));
+    // a failed import is not cached: the next replay tries again (a2a r07)
+    const engine = () => (engineP ||= import("/static/replay.js").catch(() => { engineP = null; return null; }));
     const raw = (text, key) => { const m = (text || "").match(new RegExp('"' + key + '":(-?[0-9.]+)')); return m ? m[1] : null; };
     const scalar = (v) => (v === null || v === undefined ? null : typeof v === "object" ? (v.name ? { name: v.name } : null) : v);
     const norm = (r) => ({
@@ -1108,7 +1109,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       const live = meta.kind === "live";
       lamp.dataset.kind = meta.kind;
       lamp.innerHTML = live ? `<i aria-hidden="true"></i><b>Live</b><small>replayed in this tab</small>` : `<i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small>`;
-      lamp.title = live ? "Replayed just now in this tab by the cabinet's own replay code (apps/cabinet/src/browser-replay.ts)" : "The committed CLI replay (replays/), shown because the replay module did not load";
+      lamp.title = live ? "Replayed just now in this tab by the cabinet's own replay code (apps/cabinet/src/browser-replay.ts)" : `The committed CLI replay (replays/), shown because ${meta.why === "slow" ? `the replay module had not loaded after ${meta.wait} s` : meta.why === "error" ? "the replay failed in this browser" : "the replay module did not load"}`;
       tickSum.textContent = live
         ? `${r.coverage.tools} of ${r.coverage.listed} tools · ${Math.max(1, Math.round(meta.ms))} ms${meta.req === null ? "" : ` · ${meta.req} request${meta.req === 1 ? "" : "s"}`}`
         : `${r.coverage.tools} of ${r.coverage.listed} tools · CLI run ${r.started_at.replace("T", " ").slice(0, 16)} UTC`;
@@ -1129,8 +1130,11 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       room.classList.remove("is-flash", "is-ship"); void room.offsetWidth; room.classList.add("is-flash");
       storm.strike(); flashPage("storm");
       const t0 = performance.now();
-      const mod = await Promise.race([engine(), new Promise((r) => setTimeout(() => r(null), first ? 4000 : 9000))]);
-      let res = null, meta = { kind: "recorded", ms: 0, req: null };
+      // the fallback says why (a2a r07): too slow to load, failed to load, or failed to run
+      const wait = first ? 4 : 9;
+      let slow = false;
+      const mod = await Promise.race([engine(), new Promise((r) => setTimeout(() => { slow = true; r(null); }, wait * 1000))]);
+      let res = null, meta = { kind: "recorded", ms: 0, req: null, why: mod ? "error" : slow ? "slow" : "failed", wait };
       if (mod && mod.runReplay) {
         let seen = [], po = null;
         try { po = new PerformanceObserver((l) => { seen = seen.concat(l.getEntries()); }); po.observe({ type: "resource" }); } catch { po = null; }
@@ -1167,6 +1171,9 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       const io0 = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io0.disconnect(); setTimeout(() => run("v2", true), reduce ? 0 : 700); } }, { threshold: 0.2 });
       io0.observe(room);
     } else run("v2", true);
+    // start the one download once the page has loaded, so a visitor who scrolls down later meets a ready module
+    // (still after the first paint: the replay code never competes with it)
+    if (document.readyState === "complete") engine(); else addEventListener("load", () => engine(), { once: true });
   }
 
   /* ---------- receipts count up (numbers are already in the markup) ---------- */
