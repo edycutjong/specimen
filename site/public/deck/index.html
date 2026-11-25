@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  SPECIMEN JAR — pitch deck (v1 · 2026-11-26 · from eee1ccd). Kiroween 2026 · Frankenstein.
+  SPECIMEN JAR — pitch deck (v1 · 2026-11-26 · from 105627a). Kiroween 2026 · Frankenstein.
   Keys: ← / → or Space to move · Home / End · Esc: overview grid · P: presenter notes · C: contrast debug.
   Print: Cmd/Ctrl+P → Save as PDF; one 16×9 in page per slide (@page 16in 9in, margin 0), UI hidden.
   Images: /static/img/icon.svg (project icon), /static/img/cabinet-v2-hold.webp and /static/img/cabinet-v21-ship.webp (screenshots
@@ -12,8 +12,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPECIMEN JAR — pitch deck</title>
-<meta name="description" content="Kiro hooks seal every MCP call your agent makes. Replay them against the next server: 5 of 10 came back different where a schema diff saw 2 changes.">
-<meta name="version" content="v1 · 2026-11-26 · from eee1ccd">
+<meta name="description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
+<meta name="version" content="v1 · 2026-11-26 · from 105627a">
 <meta name="theme-color" content="#10150F">
 <meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://specimen.edycu.dev/deck/">
@@ -21,7 +21,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SPECIMEN JAR">
 <meta property="og:title" content="SPECIMEN JAR — pitch deck">
-<meta property="og:description" content="Kiro hooks seal every MCP call your agent makes. Replay them against the next server: 5 of 10 came back different where a schema diff saw 2 changes.">
+<meta property="og:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
 <meta property="og:url" content="https://specimen.edycu.dev/deck/">
 <meta property="og:image" content="https://specimen.edycu.dev/static/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -458,7 +458,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 </div>
 </div>
 <footer class="slide__foot"><span><code>evidence/bench/detect.md</code> · <code>evidence/replay/racks-vs-v2.txt</code> · <code>servers/hollow-inn/CHANGES.md</code> (three author-made breaks)</span><span class="pg">02 / 10</span></footer>
-<aside class="speaker-notes">An input-schema diff only sees tools/list: here it saw cancel_booking removed and booking_cancel added. The quote rename and the search_rooms default live in the responses, so it cannot see them. Replaying the recorded calls found five of ten changed.</aside>
+<aside class="speaker-notes">An input-schema diff only sees tools/list: here it saw cancel_booking removed and booking_cancel added. It does not compare descriptions or responses, where the quote and search_rooms changes show. Replaying the recorded calls found five of ten changed.</aside>
 </section>
 <section class="slide s-jar" data-n="3" aria-roledescription="slide" aria-label="3 of 10: The jar">
 <div class="slide__in">
@@ -476,7 +476,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0002</span><span class="tag__tool">quote</span><span class="tag__flag">ABNORMAL</span></span></div></div>
 <div class="words"><p class="k">The jar</p><h2 class="h">Sealed inside the <span class="hl--g">agent.</span></h2>
-<p class="lede">Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks seal every call as one line: input and response text, byte for byte, redacted on write.</p></div>
+<p class="lede">Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks seal every call to the hooked server as one line: input and response text, byte for byte, redacted on write.</p></div>
 <div class="term" data-exhibit><div class="term__bar"><i></i><i></i><i></i><span>SPC-0002 · one jar line, excerpt (7 of 14 fields)</span></div><pre><span class="dim">{</span> <span class="key">"id"</span>: <span class="val">&quot;SPC-0002&quot;</span>,
   <span class="key">"session_id"</span>: <span class="val">&quot;sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8&quot;</span>,
   <span class="key">"tool"</span>: <span class="val">&quot;quote&quot;</span>,
@@ -484,7 +484,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
   <span class="key">"response_text"</span>: <span class="val">&quot;{\&quot;room_id\&quot;:\&quot;r-04\&quot;,\&quot;nights\&quot;:2,\&quot;nightly\&quot;:212.50,<span class="hot">\&quot;total\&quot;:425.00</span>,\&quot;currency\&quot;:\&quot;USD\&quot;}&quot;</span>,
   <span class="key">"duration_ms"</span>: <span class="val">185</span>,
   <span class="key">"redacted"</span>: <span class="val">[]</span> <span class="dim">}</span></pre></div>
-<div class="stat-row" style="position:absolute;left:420px;bottom:0"><span class="statc">hook p50 <b>465 ms</b> before</span><span class="statc"><b>474 ms</b> after</span></div>
+<div class="stat-row" style="position:absolute;left:420px;bottom:0"><span class="statc">pre-call hook p50 <b>465 ms</b></span><span class="statc">post-call <b>474 ms</b></span></div>
 </div>
 <footer class="slide__foot"><span><code>jars/sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8.jsonl</code> · <code>evidence/bench/hook.md</code> (30 fresh npx processes each, one laptop)</span><span class="pg">03 / 10</span></footer>
 <aside class="speaker-notes">This is the actual line the capture hook wrote for the quote call: the input, and the server's response text byte for byte, including total 425.00 with both decimals. Nothing sits between the agent and the server; the hooks run inside Kiro.</aside>
@@ -523,7 +523,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <div class="slide__in">
 
 <p class="k">The consequence</p>
-<h2 class="h">The client breaks. The agent <span class="hl--g">copes.</span></h2>
+<h2 class="h">One client breaks. One agent run <span class="hl--g">copes.</span></h2>
 <div class="ledger" data-exhibit>
 <div class="lrow ok"><b>v1</b><ul><li>rooms offered: 9 rooms</li><li>charge for r-04, 2 nights: USD 425.00</li><li>cancel it: cancelled</li></ul></div>
 <div class="lrow bad"><b>v2</b><ul><li>rooms offered: 5 rooms (r-01, r-02, r-03, r-04, r-05)</li><li>charge for r-04, 2 nights: THREW TypeError: Cannot read properties of undefined (reading 'toFixed')</li><li>cancel it: THREW Error: MCP error -32602: Tool cancel_booking not found</li></ul></div>
@@ -546,10 +546,10 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <div class="sut" aria-hidden="true"><svg viewBox="0 0 70 24" width="70" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q35 14.5 66 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="66.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
 <div class="stn"><p class="stn__k">Fixed by Kiro</p><p>Bug Fix workflow: design and tasks</p><code data-exhibit>prompts/turn-27.md</code><p>Tasks executed into <code>v2_1.ts</code></p><code data-exhibit>prompts/turn-28.md</code></div>
 <div class="sut" aria-hidden="true"><svg viewBox="0 0 70 24" width="70" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q35 14.5 66 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="66.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
-<div class="stn stn--ship"><p class="stn__k">Replayed</p><p class="big">SHIP v2.1<small>10 of 10 preserved</small></p></div>
+<div class="stn stn--ship"><p class="stn__k">After all three specs</p><p class="big">SHIP v2.1<small>10 of 10 preserved</small></p></div>
 </div>
 </div>
-<footer class="slide__foot"><span>The CLI writes the repro block and the diff; Kiro writes the prose · <code>evidence/slice/02-bugfix-to-v2.1.md</code> · three later Kiro execution turns were cut by our own timeout; we ran the remaining acceptance steps outside Kiro (<code>prompts/README.md</code>)</span><span class="pg">07 / 10</span></footer>
+<footer class="slide__foot"><span>The CLI writes the repro block and the diff; Kiro writes the prose · <code>evidence/slice/02-bugfix-to-v2.1.md</code> · after the quote fix alone v2.1 was still HOLD (SPC-0010, SPC-0009) · for two fixes we ran the final acceptance outside Kiro: turn 43 stopped, turn 45 hit our timeout (<code>prompts/README.md</code>)</span><span class="pg">07 / 10</span></footer>
 <aside class="speaker-notes">specimen file hands the red jar to a Kiro curator agent, which writes a bugfix spec with the captured call as its repro; check-spec verifies it. Kiro's Bug Fix workflow designs the fix and executes it into v2_1.ts. The same loop ran for the other two breaks.</aside>
 </section>
 <section class="slide s-gate" data-n="8" aria-roledescription="slide" aria-label="8 of 10: The gate">
@@ -584,7 +584,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <p class="not">Not Kiro: demo server v1 and v2, harnesses and glue (<code>claude-direct:</code>), docs, the landing, this deck.</p>
 </div>
 <footer class="slide__foot"><span><code>prompts/README.md</code> lists the exceptions and each prompt's measured credits · the curator runs with no blanket trust, writes denied outside <code>.kiro/specs/</code> · the Power was written by Kiro (turn 49) and has not been imported in the Kiro IDE</span><span class="pg">09 / 10</span></footer>
-<aside class="speaker-notes">Kiro is the builder. Feature specs went requirements, Analyze Requirements, design, tasks, and Kiro executed them. Every prompt is in the repo, numbered, with its measured credit cost. What Kiro did not write is listed just as plainly.</aside>
+<aside class="speaker-notes">Kiro is the builder. Feature specs went requirements, Analyze Requirements, design, tasks, and Kiro executed them. Every prompt sent to Kiro is in the repo, with measured credits where Kiro reported them; the exceptions are listed. What Kiro did not write is listed just as plainly.</aside>
 </section>
 <section class="slide s-end" data-n="10" aria-roledescription="slide" aria-label="10 of 10: Try it">
 <div class="slide__in">
@@ -597,13 +597,13 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 </div>
 </div>
 <footer class="slide__foot"><span><code>evidence/tests.txt</code> · field shelf: <code>server-memory</code> 1.0.0 → 2.2.1, HOLD · 3 preserved · 2 unsealed (<code>evidence/field/server-memory.md</code>) · landing: <code>/landing/</code></span><span class="pg">10 / 10</span></footer>
-<aside class="speaker-notes">The cabinet is live at specimen.edycu.dev and replays in your browser. Every number in this deck is in the repo. And here is what it does not prove: SHIP means clean on ten recorded calls, and no outside user has run it yet.</aside>
+<aside class="speaker-notes">The cabinet is live at specimen.edycu.dev and replays in your browser. Every number in this deck is in the repo, public at submission. And here is what it does not prove: SHIP means clean on ten recorded calls, and no outside user has run it yet.</aside>
 </section>
 </div></main>
 <div class="notes-panel" aria-live="polite"></div>
 <nav class="nav" aria-label="Deck">
 <a href="/landing/">← Landing</a><a href="/">Open the cabinet</a><span class="repo-text" data-repo="https://github.com/edycutjong/specimen" data-repo-label="Source on GitHub"></span>
-<span class="sp"></span><span class="ver">v1 · 2026-11-26 · from eee1ccd</span>
+<span class="sp"></span><span class="ver">v1 · 2026-11-26 · from 105627a</span>
 <button type="button" data-go="prev" aria-label="Previous slide">←</button><button type="button" data-go="next" aria-label="Next slide">→</button>
 <span class="count" aria-live="polite">01 / 10</span>
 </nav>
