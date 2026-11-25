@@ -132,7 +132,7 @@ function gatePath(root: string, sessionId: string): string {
  */
 export async function runStop(server: string, ports: StopPorts = nodeStopPorts): Promise<number> {
   // `specimen file` starts the curator with SPECIMEN_GATE=off: the gate is for the agent that edits the server, and
-  // it must not send the curator's own turn back (measured in evidence/stop-gate/live-shell.md before this switch).
+  // it must not send the curator's own turn back (seen in the first live run, before this switch; `evidence/stop-gate/live-shell.md` is the post-switch re-run).
   if (process.env.SPECIMEN_GATE === "off") return 0;
   let root = findWorkspaceRoot(process.cwd());
   let sessionId: string | undefined;

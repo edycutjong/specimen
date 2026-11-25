@@ -7,7 +7,7 @@ Every number below is printed by the command next to it; the outputs are committ
 
 ```sh
 npm ci
-npm test            # vitest: unit, property (fast-check) and end-to-end suites — 1023 tests in 117 files at the last run (evidence/tests.txt)
+npm test            # vitest: unit, property (fast-check) and end-to-end suites — 1025 tests in 117 files at the last run (evidence/tests.txt)
 npm run seed:check  # the hollow-inn fixture still holds the properties the demo depends on
 ```
 

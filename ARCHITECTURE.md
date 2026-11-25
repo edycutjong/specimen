@@ -31,7 +31,7 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 | `servers/hollow-inn` | The demo MCP server (six tools: `search_rooms`, `get_room`, `quote`, `book`, `list_bookings`, `cancel_booking`). `v1.ts` baseline, `v2.ts` three author-made breaks (`CHANGES.md`), `v2_1.ts` the Kiro-written fix. Money is integer cents, written as a two-decimal literal by `money.ts` |
 | `apps/cabinet` | Vite + React. `browser-replay.ts` runs the real `replay()` and `verdict()` against the real hollow-inn modules over `InMemoryTransport` in the browser; jars, policy files and the committed bugfix specs are imported at build time; it writes nothing and requests no third-party host. Components: shelf of jars, ServerSwitch (v1 / v2 / v2.1), ReplayButton, CountsPair, VerdictPlate, LabReportTable, JarDrawer, SpecViewer, SpoiledTray, GuideStrip |
 | `spikes/` | Day-1 spike harnesses (S1 browser bundle). Evidence, not product code |
-| `scripts/` | `bench.ts detect`, `seed-check.ts`, `record-sessions.sh`, `consequence-run.sh`, `consequence-extract.mjs`, `kiro-credits.mjs`, `stop-gate-eval.sh`, `stop-gate-live.sh`, `check_submission_readiness.ts` |
+| `scripts/` | `bench.ts detect|hook|replay`, `seed-check.ts`, `record-sessions.sh`, `consequence-run.sh`, `consequence-extract.mjs`, `kiro-credits.mjs`, `stop-gate-eval.sh`, `stop-gate-live.sh`, `check_submission_readiness.ts` |
 
 ## Contracts that matter
 
@@ -57,4 +57,4 @@ Static output (`apps/cabinet/dist`) on Vercel, `vercel.json` builds `npm run bui
 
 ## Not built
 
-Not in this repository: the Kiro Power, hook-overhead and replay-latency benchmarks (`bench hook|replay`), a Playwright end-to-end test of the judge path, a larger field shelf, `specimen seal` / `cabinet`, a gate A/B beyond single runs, and any IDE measurement of the Stop gate.
+Not in this repository, and why (each is a cut for time against the Must path, not a technical blocker we found): a Playwright end-to-end test of the judge path (the live page was checked by a recorded Puppeteer + axe run instead, `evidence/interaction-qa.md`, and by 253 cabinet component tests); a larger field shelf (the one hour on the shelf found no differing candidate, `evidence/field/`); `specimen seal` / `cabinet`; a gate A/B beyond N = 1 per arm; any IDE measurement of the Stop gate; and an MCP server inside the Power (`power/specimen/` ships one skill).

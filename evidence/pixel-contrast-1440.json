@@ -1,0 +1,32 @@
+{
+ "viewport": "1440x900",
+ "at": "2026-11-25T15:05:15.352Z",
+ "method": "element screenshot @2x; background = median pixel luminance, ink = pixel farthest from it; WCAG ratio",
+ "out": {
+  ".jar__accession": {
+   "nodes": 10,
+   "min": 10.24,
+   "median": 10.24
+  },
+  ".jar__tool": {
+   "nodes": 10,
+   "min": 10.24,
+   "median": 10.74
+  },
+  ".jar__spec": {
+   "nodes": 5,
+   "min": 10.92,
+   "median": 11.49
+  },
+  ".jar__flag": {
+   "nodes": 5,
+   "min": 1.96,
+   "median": 1.96
+  },
+  ".legend__spec": {
+   "nodes": 1,
+   "min": 12.16,
+   "median": 12.16
+  }
+ }
+}

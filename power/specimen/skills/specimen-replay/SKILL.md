@@ -7,7 +7,7 @@ description: Use SPECIMEN JAR on a project that has an MCP server. Records the M
 
 Run these steps in the project that owns the MCP server.
 
-1. Install the CLI. It is not published to npm, so clone the SPECIMEN JAR repository, run `npm ci` in the clone, and run `npx specimen ...` from that clone.
+1. Install the CLI. It is not published to npm, so clone the SPECIMEN JAR repository (https://github.com/edycutjong/specimen, public from the submission), run `npm ci` in the clone, and run `npx specimen ...` from that clone.
    The hooks that `init` writes call `npx --no-install specimen`, so the CLI must also resolve inside the project. Check that before you rely on capture.
 
 2. Set up the project with `npx specimen init --server-key <key>`, where `<key>` is letters and digits only.
@@ -17,7 +17,7 @@ Run these steps in the project that owns the MCP server.
    - `--commit-jars` commits `jars/`. Without it, `jars/` goes into `.gitignore`.
    - `--force` rewrites hook files and `.specimen/replay.json`. Without it, existing files are kept.
    - Without a terminal, `--server-key` is required.
-   Init writes the hook files `.kiro/hooks/specimen-jar-pre.json`, `specimen-jar-post.json` and `specimen-jar-firewall.json`, plus `.specimen/replay.json` and the ignore lines in `.gitignore`.
+   Init writes the hook files `.kiro/hooks/specimen-jar-pre.json`, `specimen-jar-post.json` and `specimen-jar-firewall.json` (and, with `--test-server`, `specimen-jar-stop.json` and `specimen-jar-turn.json`), plus `.specimen/replay.json` and the ignore lines in `.gitignore`.
 
 3. Capture happens on its own. The pre and post hooks write each MCP call the agent makes into `jars/<session>.jsonl`, one JSON line per call.
    Use the agent as usual. Never edit a jar by hand. The firewall hook blocks Kiro's `write` tool from editing jars. Shell writes are caught only by the manifest check.
