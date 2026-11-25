@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "specimen-jar-turn",
+      "trigger": "PromptSubmit",
+      "action": {
+        "type": "command",
+        "command": "npx --no-install specimen hook prompt"
+      }
+    }
+  ]
+}

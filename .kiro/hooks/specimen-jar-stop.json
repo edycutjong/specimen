@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "specimen-jar-stop",
+      "trigger": "Stop",
+      "timeout": 30,
+      "action": {
+        "type": "command",
+        "command": "npx --no-install specimen hook stop --server \"npx tsx servers/hollow-inn/src/main.ts v2.1\""
+      }
+    }
+  ]
+}
