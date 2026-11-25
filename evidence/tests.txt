@@ -250,3 +250,5 @@ browser-replay v2.1 · SHIP · preserved 10 · rattled 0 · cracked 0 · skipped
    Start at  03:33:10
    Duration  52.61s (transform 2.30s, setup 0ms, collect 23.72s, tests 212.84s, environment 5.77s, prepare 6.63s)
 
+
+$ npm run typecheck  (tsc -p tsconfig.json --noEmit)  2026-11-26 — exit 0
