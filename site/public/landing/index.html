@@ -109,6 +109,8 @@ code, kbd, samp, pre, .data { font-family: var(--font-data); font-variant-ligatu
 .btn[aria-disabled="true"] { cursor: default; }
 .btn--link { background: none; border-color: transparent; color: var(--bone-2); text-decoration: underline; text-decoration-color: var(--iron-hi); text-underline-offset: 5px; padding-inline: 6px; }
 .btn--link:hover { background: none; border-color: transparent; color: var(--ink); text-decoration-color: var(--ink); box-shadow: none; }
+.btn--lock.is-private { border: 1px dashed var(--iron-hi); background: rgba(11, 15, 10, .55); color: var(--bone-2); font-weight: 500; font-size: 15px; cursor: help; }
+.btn--lock.is-private:hover { transform: none; box-shadow: none; background: rgba(11, 15, 10, .55); border-color: var(--bone-2); color: var(--ink); }
 .btn--link.is-private { text-decoration: none; color: var(--muted); font-weight: 400; font-size: 15px; transform: none; }
 
 /* ---------- hero ---------- */
@@ -123,7 +125,13 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .lede { font-size: 19.5px; line-height: 1.55; color: var(--bone-2); max-width: 33em; }
 .lede b { color: var(--ink); }
 .lede .r { color: var(--after); }
-.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 22px; }
+.lede--a { margin-bottom: 12px; color: var(--ink); }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 24px; }
+.seams { display: flex; align-items: flex-start; max-width: 600px; margin: 0 0 22px; }
+.seam { flex: none; display: grid; justify-items: center; gap: 5px; }
+.seam b { font: 900 clamp(22px, 1.9vw, 27px)/1 var(--font-display); letter-spacing: .02em; color: var(--ink); }
+.seam small { font: 500 11.5px/1 var(--font-data); letter-spacing: .04em; color: var(--muted); white-space: nowrap; }
+.seams > svg { flex: 1 1 0; min-width: 18px; height: 16px; margin: 4px 6px 0; }
 .proof { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 15px; color: var(--muted); }
 .cmd { display: inline-flex; align-items: stretch; border: 1px solid var(--rule); background: var(--stone); max-width: 100%; }
 .cmd code { padding: 9px 12px; font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
@@ -137,12 +145,14 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .switch { display: flex; flex-direction: column; gap: 8px; }
 .switch__label { white-space: nowrap; font: 500 13px/1 var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .switch__seg { align-self: flex-start; display: inline-flex; border: 2px solid var(--iron-hi); background: var(--stone); }
-.switch__seg button { font: 700 16px/1 var(--font-data); color: var(--bone-2); background: none; border: 0; padding: 12px 16px; cursor: pointer; transition: background-color .2s, color .2s; }
+.switch__seg button { display: grid; justify-items: center; gap: 5px; font: 700 17px/1 var(--font-data); color: var(--bone-2); background: none; border: 0; padding: 11px 16px 9px; cursor: pointer; transition: background-color .2s, color .2s; }
 .switch__seg button + button { border-left: 1px solid var(--rule); }
 .switch__seg button:hover { background: var(--glass); color: var(--ink); }
 .switch__seg button[aria-pressed="true"] { background: var(--ink); color: var(--label-ink); }
-.switch__hint { font-size: 14px; color: var(--muted); max-width: 19em; line-height: 1.35; }
-.plate-v { min-width: 0; text-align: right; border: 2px solid var(--rule); background: linear-gradient(180deg, rgba(25, 34, 25, .92), rgba(16, 21, 15, .92)); padding: 10px 16px 12px; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+.switch__seg button small { font: 500 10.5px/1 var(--font-data); letter-spacing: .03em; opacity: .78; white-space: nowrap; }
+.switch__hint { font-size: 14px; color: var(--muted); max-width: 21em; line-height: 1.4; }
+.switch__hint .path, .switch__hint a { font-size: 13px; color: var(--bone-2); }
+.plate-v { min-width: 0; max-width: 452px; text-align: right; border: 2px solid var(--rule); background: linear-gradient(180deg, rgba(25, 34, 25, .92), rgba(16, 21, 15, .92)); padding: 10px 16px 12px; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
 .plate-v::before, .plate-v::after { content: ""; position: absolute; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--iron-hi); }
 .plate-v::before { left: 7px; } .plate-v::after { right: 7px; }
 .plate-v__word { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; font: 900 50px/1 var(--font-display); color: var(--after); min-height: 50px; }
@@ -153,27 +163,41 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .plate-v__cov { font: 500 13px/1.35 var(--font-data); color: var(--muted); }
 .plate-v.is-stamped { animation: stampin .42s cubic-bezier(.2, 1.6, .4, 1) both; }
 
-.prov { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font: 700 12.5px/1 var(--font-data); letter-spacing: .12em; text-transform: uppercase; padding: 6px 9px; border: 1px solid var(--rule); color: var(--muted); }
-.prov::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-.prov[data-kind="live"] { color: var(--ink); border-color: var(--iron-hi); }
-.prov[data-kind="live"]::before { background: var(--ink); box-shadow: 0 0 0 3px rgba(236, 230, 211, .18); animation: pulse 1.6s ease-in-out infinite; }
-.prov span { font-weight: 500; letter-spacing: .02em; text-transform: none; color: var(--muted); }
+.plate-v__top { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.lamp { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 10px; row-gap: 3px; padding: 8px 13px 8px 11px; border: 2px solid var(--iron-hi); border-radius: 3px; background: #0A0D09; text-align: left; transition: border-color .3s, box-shadow .3s; }
+.lamp i { grid-row: span 2; width: 13px; height: 13px; border-radius: 50%; background: var(--muted); }
+.lamp b { font: 700 18px/1 var(--font-data); letter-spacing: .2em; text-transform: uppercase; color: var(--bone-2); }
+.lamp small { grid-column: 2; font: 500 11.5px/1.15 var(--font-data); color: var(--muted); white-space: nowrap; }
+.lamp[data-kind="live"] { border-color: var(--storm); box-shadow: 0 0 0 1px rgba(201, 214, 242, .25), 0 0 26px rgba(201, 214, 242, .3), inset 0 0 16px rgba(201, 214, 242, .12); }
+.lamp[data-kind="live"] i { background: #F4F7FF; box-shadow: 0 0 12px var(--storm), 0 0 2px #fff; animation: lamp 1.5s ease-in-out infinite; }
+.lamp[data-kind="live"] b { color: #F4F7FF; text-shadow: 0 0 14px rgba(201, 214, 242, .7); }
+.lamp[data-kind="live"] small { color: var(--bone-2); }
+.plate-v__delta { font: 700 14px/1.3 var(--font-data); min-height: 0; }
+.plate-v__delta:empty { display: none; }
+.plate-v__delta[data-tone="g"] { color: var(--before); } .plate-v__delta[data-tone="r"] { color: var(--after); }
+.tick { display: grid; gap: 2px; margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--rule); font: 500 13px/1.35 var(--font-data); color: var(--bone-2); text-align: right; min-height: calc(2.7em + 9px); }
+.tick__sum { color: var(--ink); font-weight: 700; }
+.plate-v.is-slam .plate-v__word { animation: verdictslam .55s cubic-bezier(.2, 1.7, .4, 1) both; transform-origin: 100% 60%; }
 
-.room { position: relative; padding-top: 6px; }
-.window { position: absolute; z-index: 0; left: 50%; top: -14px; width: min(46%, 300px); aspect-ratio: 300 / 400; transform: translateX(-50%); }
-.window > svg { width: 100%; height: 100%; }
-.window canvas { position: absolute; inset: 9% 11% 6% 11%; width: 78%; height: 85%; border-radius: 48% 48% 0 0 / 30% 30% 0 0; opacity: .8; pointer-events: none; }
-.window .bolt { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
-.window .bolt path { stroke-dasharray: 260; stroke-dashoffset: 260; }
-.window .glare { position: absolute; inset: 6% 8% 4%; border-radius: 48% 48% 0 0 / 30% 30% 0 0; background: radial-gradient(70% 60% at 58% 24%, rgba(201, 214, 242, .95), rgba(201, 214, 242, 0) 72%); opacity: 0; mix-blend-mode: screen; pointer-events: none; }
-.room.is-flash .window .glare { animation: glare .8s ease-out 1; }
-.room.is-flash .window .bolt { animation: boltop .8s ease-out 1; }
-.room.is-flash .window .bolt path { animation: bolt .25s ease-out forwards; }
-.room::after { content: ""; position: absolute; inset: -30px -20px -10px; pointer-events: none; z-index: 4; background: radial-gradient(60% 40% at 50% 0%, rgba(201, 214, 242, .22), transparent 70%); opacity: 0; }
-.room.is-flash::after { animation: sweep .9s ease-out 1; }
+.room { position: relative; padding-top: 4px; isolation: isolate; }
+/* the wall-sized storm window behind both racks: stone reveal, iron bars between the jars, the planks are its transoms */
+.wall { position: absolute; z-index: 0; left: -14px; right: -14px; top: 0; bottom: 34px; border-radius: 50% 50% 0 0 / 118px 118px 0 0; background: linear-gradient(180deg, #232C22, #161C15 70%); box-shadow: inset 0 0 0 2px #313A2F, inset 0 0 0 10px #1A2018, inset 0 0 0 12px #080B07, 0 -20px 90px -40px rgba(201, 214, 242, .35); }
+.wall__glass { position: absolute; inset: 12px 12px 0; border-radius: 50% 50% 0 0 / 108px 108px 0 0; overflow: hidden; background: radial-gradient(60% 46% at 62% 14%, rgba(201, 214, 242, .2), transparent 72%), linear-gradient(180deg, #2A3953 0%, #1B2740 36%, #121A2C 70%, #0C111D 100%); box-shadow: inset 0 18px 40px rgba(0, 0, 0, .45); }
+.wall__glass::before { content: ""; position: absolute; inset: 0; background: radial-gradient(42% 22% at 28% 18%, rgba(14, 20, 36, .85), transparent 70%), radial-gradient(50% 20% at 74% 30%, rgba(12, 18, 32, .8), transparent 72%), radial-gradient(60% 18% at 46% 8%, rgba(18, 26, 44, .9), transparent 70%); }
+.wall__glass canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wall .bar { position: absolute; top: 0; bottom: 0; width: 11px; margin-left: -5.5px; background: linear-gradient(90deg, #050705, #2E352C 45%, #0A0D09); box-shadow: 2px 0 6px rgba(0, 0, 0, .5); }
+.wall .bar:nth-of-type(1) { left: 20%; } .wall .bar:nth-of-type(2) { left: 40%; } .wall .bar:nth-of-type(3) { left: 60%; } .wall .bar:nth-of-type(4) { left: 80%; }
+.rim { opacity: .5; }
+.room.is-flash .rim { animation: rim .95s ease-out 1; }
+.room.is-flash .jar__svg { animation: jarlit .95s ease-out 1; }
+.wash { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(90% 75% at 70% 24%, rgba(201, 214, 242, .5), rgba(201, 214, 242, .16) 55%, rgba(201, 214, 242, .05)); }
+.wash.is-on { animation: wash .95s ease-out 1; }
+.wash.is-ship { background: radial-gradient(90% 75% at 66% 46%, rgba(168, 227, 95, .42), rgba(168, 227, 95, .12) 55%, rgba(168, 227, 95, .03)); animation-duration: 1.2s; }
+.sweep { position: absolute; z-index: 3; left: 0; top: 0; bottom: 34px; width: 34%; pointer-events: none; opacity: 0; transform: translateX(-100%); mix-blend-mode: screen; background: linear-gradient(90deg, transparent, rgba(168, 227, 95, .2) 40%, rgba(214, 255, 154, .42) 50%, rgba(168, 227, 95, .2) 60%, transparent); }
+.room.is-ship .sweep { animation: sweepx 1.15s cubic-bezier(.3, .1, .25, 1) 1; }
 
 .shelf { position: relative; z-index: 1; list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 clamp(2px, .4vw, 6px); }
-.shelf--a { padding-top: clamp(140px, 14vw, 196px); }
+.shelf--a { padding-top: clamp(104px, 9.5vw, 136px); }
 .shelf--b { padding-top: 24px; }
 .plank { position: relative; z-index: 1; height: 16px; margin-top: -6px; background: linear-gradient(180deg, #5A6258 0, #3A4238 22%, var(--iron) 60%, #161A15 100%); box-shadow: 0 14px 18px -10px rgba(0, 0, 0, .8); }
 .plank::before, .plank::after { content: ""; position: absolute; top: 5px; width: 6px; height: 6px; border-radius: 50%; background: #7E877C; box-shadow: 0 1px 0 #0A0C09; }
@@ -424,6 +448,12 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 @keyframes stampin { 0% { transform: scale(1.12); } 100% { transform: scale(1); } }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(236, 230, 211, .18); } 50% { box-shadow: 0 0 0 6px rgba(236, 230, 211, 0); } }
 @keyframes caret { 50% { opacity: 0; } }
+@keyframes rim { 0% { opacity: .5; } 6% { opacity: 1; } 13% { opacity: .55; } 22% { opacity: 1; } 100% { opacity: .5; } }
+@keyframes jarlit { 0% { filter: none; } 6% { filter: brightness(1.35) saturate(1.1); } 13% { filter: brightness(1.05); } 22% { filter: brightness(1.28); } 100% { filter: none; } }
+@keyframes wash { 0% { opacity: 0; } 5% { opacity: .8; } 12% { opacity: .1; } 21% { opacity: .6; } 100% { opacity: 0; } }
+@keyframes sweepx { 0% { transform: translateX(-100%); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(300%); opacity: 0; } }
+@keyframes verdictslam { 0% { transform: scale(2.2) rotate(-5deg); opacity: 0; } 55% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes lamp { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @keyframes hero-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .js .hero .anim { animation: hero-in .7s cubic-bezier(.2, .7, .2, 1) both; }
 .js .hero .anim:nth-child(2) { animation-delay: .08s; } .js .hero .anim:nth-child(3) { animation-delay: .16s; } .js .hero .anim:nth-child(4) { animation-delay: .24s; } .js .hero .anim:nth-child(5) { animation-delay: .32s; }
@@ -467,12 +497,36 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   .plate-v { text-align: left; min-width: 0; }
   .plate-v__word { justify-content: flex-start; font-size: 42px; }
   .switch__hint { max-width: none; }
-  .window { width: 52%; top: -60px; }
-  .shelf--a { padding-top: 120px; }
-  .tag { left: 6%; right: 0; padding: 4px 3px 4px 12px; }
+  /* phones: the plain sentence, then the shelf, then the rest (the wow above the fold) */
+  .hero .wrap { row-gap: 0; }
+  .hero__copy { display: contents; }
+  .hero .plate { order: 1; } .hero h1 { order: 2; } .lede--a { order: 3; margin-bottom: 0; }
+  .lab { order: 4; margin: 16px 0 22px; display: flex; flex-direction: column; }
+  .lede--b { order: 5; } .hero .ctas { order: 6; } .seams { order: 7; } .proof { order: 8; }
+  .hero .code { display: none; }
+  .lab__bar { display: contents; }
+  .switch { order: 1; margin-bottom: 8px; }
+  .switch__label { display: none; }
+  .switch__hint { font-size: 13px; }
+  .room { order: 2; }
+  .lab .plate-v { order: 3; margin-top: 10px; max-width: none; }
+  .lab .notebook { order: 4; }
+  .plate-v__top { justify-content: space-between; }
+  .lamp b { font-size: 16px; } .lamp small { font-size: 11px; }
+  .plate-v__top { flex-wrap: wrap; gap: 8px 12px; }
+  .lab .plate-v__word { font-size: 36px; min-height: 36px; }
+  .lab .plate-v__word i { font-size: 24px; }
+  .tick { text-align: left; }
+  .wall { left: -8px; right: -8px; border-radius: 50% 50% 0 0 / 60px 60px 0 0; }
+  .wall__glass { border-radius: 50% 50% 0 0 / 54px 54px 0 0; }
+  .shelf--a { padding-top: 70px; }
+  .seams { max-width: none; }
+  .seam b { font-size: 18px; } .seam small { font-size: 10px; letter-spacing: 0; }
+  .seams > svg { min-width: 8px; margin: 3px 3px 0; }
+  .tag { left: 4%; right: -2%; padding: 3px 2px 3px 10px; }
   .tag::before { left: 4px; width: 5px; height: 5px; margin-top: -2.5px; }
   .tag__tool { display: none; }
-  .tag__acc { font-size: 10px; }
+  .tag__acc { font-size: 8.5px; letter-spacing: -.03em; white-space: nowrap; }
   .tag__flag { font-size: 10.5px; margin: 3px -3px -4px -12px; letter-spacing: 0; }
   .stamp { font-size: 17px; padding: 4px 8px; }
   .plank__codes { font-size: 11px; letter-spacing: .12em; }
@@ -490,6 +544,10 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   .receipt__n { font-size: clamp(40px, 12.5vw, 60px); }
   .ledger__row { grid-template-columns: minmax(0, 1fr); }
   .ledger__row > b { border-right: 0; border-bottom: 1px solid var(--rule); padding: 12px 14px; }
+}
+@media (max-width: 420px) {
+  .seam small { display: none; }
+  .seams > svg { margin-top: 1px; }
 }
 @media (max-width: 380px) {
   .mark img { display: none; }
@@ -516,6 +574,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <linearGradient id="fl-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9A4A3C"/><stop offset="1" stop-color="#3E1A14"/></linearGradient>
 <linearGradient id="lid-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6E776C"/><stop offset=".45" stop-color="#3F463E"/><stop offset="1" stop-color="#22281F"/></linearGradient>
 <linearGradient id="bolt-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8C948A"/><stop offset=".5" stop-color="#4C534A"/><stop offset="1" stop-color="#262B24"/></linearGradient>
+<linearGradient id="rim-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9D6F2" stop-opacity=".95"/><stop offset=".2" stop-color="#C9D6F2" stop-opacity="0"/><stop offset=".82" stop-color="#C9D6F2" stop-opacity="0"/><stop offset="1" stop-color="#C9D6F2" stop-opacity=".5"/></linearGradient>
 <clipPath id="jar-inner" clipPathUnits="userSpaceOnUse"><path d="M26 33 Q15 35 15 49 L15 173 Q15 185 27 185 L93 185 Q105 185 105 173 L105 49 Q105 35 94 33 Z"/></clipPath>
 <g id="jar-lid"><rect x="22" y="17" width="76" height="12" rx="3" fill="#2A3028" stroke="#0A0C09" stroke-opacity=".6"/><rect x="16" y="-1" width="88" height="20" rx="4" fill="url(#lid-g)" stroke="#0A0C09" stroke-opacity=".7"/><rect x="18" y="1" width="84" height="3" rx="1.5" fill="#ECE6D3" opacity=".18"/><circle cx="30" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="50" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="70" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="90" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><rect x="-4" y="17" width="27" height="9" rx="2" fill="url(#bolt-g)"/><rect x="-12" y="14" width="10" height="15" rx="2" fill="url(#bolt-g)" stroke="#0A0C09" stroke-opacity=".6"/><rect x="97" y="17" width="27" height="9" rx="2" fill="url(#bolt-g)"/><rect x="122" y="14" width="10" height="15" rx="2" fill="url(#bolt-g)" stroke="#0A0C09" stroke-opacity=".6"/></g>
 <g id="brace"><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#0E120D" stroke-opacity=".45" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#ECE6D3" stroke-opacity=".82" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#5E6E4E" stroke-opacity=".55" stroke-width="1.6" stroke-dasharray="2 4" stroke-linecap="round"/></g>
@@ -530,18 +589,20 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="hero__copy">
 <div class="plate anim"><span class="stampline">Kiroween 2026 · Frankenstein</span><span class="code"><span class="dot" aria-hidden="true"></span>Rack A · Rack B · 10 jars</span></div>
 <h1 id="h1" class="anim">The jars remember what your server <span class="hl">used to say.</span></h1>
-<p class="lede anim">Every call your Kiro agent makes to a hooked MCP server is sealed in a jar, the response text byte for byte. Swap in the next server and replay them: under v2, <b class="r">5 of 10 jars</b> came back different, where an input-schema diff saw <b>2 changes</b>. Kiro's curator filed three bugfix specs, Kiro's Bug Fix workflow wrote v2.1, and the replay says <b class="nw">SHIP · 10 of 10</b>.</p>
-<div class="ctas anim"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--link is-private" aria-disabled="true" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub">Source · public at submission</span></div>
-<div class="proof anim"><span>The shelf replays in this tab: no backend, no keys. The CLI:</span><span class="cmd"><code>npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"</code><button class="copy" type="button">copy</button></span></div>
+<p class="lede lede--a anim">Kiro hooks seal each call your agent makes to a hooked MCP server in a jar, the response text byte for byte.</p>
+<p class="lede lede--b anim">Swap in the next server and replay them: under v2, <b class="r">5 of 10 jars</b> came back different, where an input-schema diff saw <b>2 changes</b>.</p>
+<div class="ctas anim"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--lock is-private" aria-disabled="true" title="The repository is private until the Devpost submission, then public" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source · opens at submission</span></div>
+<div class="seams anim" role="img" aria-label="Four parts stitched into one loop: the MCP server, Kiro hooks, the replay, a Kiro bugfix spec"><span class="seam"><b>MCP</b><small>the server</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>HOOKS</b><small>Kiro, per call</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>REPLAY</b><small>in this tab</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>SPEC</b><small>Kiro bugfix</small></span></div>
+<div class="proof anim"><span>In a terminal:</span><span class="cmd"><code>npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"</code><button class="copy" type="button">copy</button></span></div>
 </div>
 <div class="lab" data-lab aria-label="The specimen shelf: ten recorded calls, replayed against the server you pick">
 <div class="lab__bar">
-<div class="switch"><span class="switch__label" id="sw">Server under replay</span><div class="switch__seg" role="group" aria-labelledby="sw"><button type="button" data-ver="v1" aria-pressed="false">v1</button><button type="button" data-ver="v2" aria-pressed="true">v2</button><button type="button" data-ver="v2.1" aria-pressed="false">v2.1</button></div><span class="switch__hint">Throw the switch: the jars replay live, in this tab.</span></div>
-<div class="plate-v" data-verdict="HOLD"><p class="plate-v__word">HOLD <i>v2</i></p><p class="plate-v__counts">5 preserved · 4 rattled · 1 cracked</p><p class="plate-v__cov">10 jars compared · 4 of 6 tools</p><p class="prov" data-kind="recorded" title="The committed CLI replay (replays/)">Recorded <span>CLI · 2026-11-25 12:38 UTC</span></p></div>
+<div class="switch"><span class="switch__label" id="sw">Server under replay</span><div class="switch__seg" role="group" aria-labelledby="sw"><button type="button" data-ver="v1" aria-pressed="false">v1<small>recorded</small></button><button type="button" data-ver="v2" aria-pressed="true">v2<small>3 breaks</small></button><button type="button" data-ver="v2.1" aria-pressed="false">v2.1<small>Kiro's fix</small></button></div><span class="switch__hint">Throw the switch: the jars replay here, in the cabinet's own code (<span class="path" data-gh="apps/cabinet/src/browser-replay.ts">browser-replay.ts</span>). DevTools → Network stays quiet.</span></div>
+<div class="plate-v" data-verdict="HOLD"><div class="plate-v__top"><p class="lamp" data-kind="recorded" title="The committed CLI replay (replays/)"><i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small></p><p class="plate-v__word">HOLD <i>v2</i></p></div><p class="plate-v__counts">5 preserved · 4 rattled · 1 cracked</p><p class="plate-v__cov">10 jars compared · 4 of 6 tools</p><p class="plate-v__delta" data-tone=""></p><p class="tick"><span class="tick__jar">CLI run · 2026-11-25 12:38 UTC</span><span class="tick__sum"></span></p></div>
 </div>
 <div class="room">
-<div class="window" aria-hidden="true"><svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="lw0s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3A55"/><stop offset="0.55" stop-color="#18223A"/><stop offset="1" stop-color="#0E1424"/></linearGradient><radialGradient id="lw0f" cx="62%" cy="22%" r="60%"><stop offset="0" stop-color="#C9D6F2" stop-opacity="0.35"/><stop offset="1" stop-color="#C9D6F2" stop-opacity="0"/></radialGradient><clipPath id="lw0c"><path d="M30 392 L30 150 Q30 34 150 22 Q270 34 270 150 L270 392 Z"/></clipPath></defs><path d="M14 400 L14 148 Q14 14 150 4 Q286 14 286 148 L286 400 Z" fill="#1E261D"/><path d="M14 400 L14 148 Q14 14 150 4 Q286 14 286 148 L286 400" fill="none" stroke="#2C352A" stroke-width="3"/><g clip-path="url(#lw0c)"><rect width="300" height="400" fill="url(#lw0s)"/><rect width="300" height="400" fill="url(#lw0f)"/><path d="M10 120 Q60 88 110 112 Q150 80 200 108 Q250 84 300 112 L300 160 L0 160 Z" fill="#0F1628" opacity="0.75"/><path d="M0 200 Q50 176 96 196 Q150 168 204 194 Q252 176 300 196 L300 240 L0 240 Z" fill="#0B1120" opacity="0.6"/><path d="M196 30 L158 118 L188 124 L140 230 L162 234 L126 330" fill="none" stroke="#C9D6F2" stroke-opacity="0.35" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/><path d="M196 30 L158 118 L188 124 L140 230 L162 234 L126 330" fill="none" stroke="#F4F7FF" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M150 160 L118 196" fill="none" stroke="#F4F7FF" stroke-opacity="0.7" stroke-width="2.4" stroke-linecap="round"/><g stroke="#C9D6F2" stroke-opacity="0.18" stroke-width="1.2"><line x1="20" y1="30" x2="14" y2="56"/><line x1="35.5" y1="83" x2="29.5" y2="109"/><line x1="51" y1="136" x2="45" y2="162"/><line x1="66.5" y1="189" x2="60.5" y2="215"/><line x1="82" y1="242" x2="76" y2="268"/><line x1="97.5" y1="295" x2="91.5" y2="321"/><line x1="113" y1="48" x2="107" y2="74"/><line x1="128.5" y1="101" x2="122.5" y2="127"/><line x1="144" y1="154" x2="138" y2="180"/><line x1="159.5" y1="207" x2="153.5" y2="233"/><line x1="175" y1="260" x2="169" y2="286"/><line x1="190.5" y1="313" x2="184.5" y2="339"/><line x1="206" y1="66" x2="200" y2="92"/><line x1="221.5" y1="119" x2="215.5" y2="145"/><line x1="237" y1="172" x2="231" y2="198"/><line x1="252.5" y1="225" x2="246.5" y2="251"/><line x1="268" y1="278" x2="262" y2="304"/><line x1="283.5" y1="31" x2="277.5" y2="57"/></g></g><g fill="#0A0D09" stroke="#3A4238" stroke-width="1.5"><rect x="86" y="24" width="12" height="372" rx="3"/><rect x="144" y="18" width="12" height="378" rx="3"/><rect x="202" y="24" width="12" height="372" rx="3"/><rect x="30" y="232" width="240" height="12" rx="3"/></g><g fill="#5A6257"><circle cx="92" cy="238" r="3"/><circle cx="150" cy="238" r="3"/><circle cx="208" cy="238" r="3"/></g><rect x="4" y="384" width="292" height="16" rx="2" fill="#262E24"/></svg><canvas></canvas><svg class="bolt" viewBox="0 0 300 400"><path d="M188 52 L156 140 L184 146 L138 262" fill="none" stroke="#C9D6F2" stroke-width="5" stroke-linejoin="round"/></svg><span class="glare"></span></div>
-<span class="stamp is-static" style="left:16%;top:138px" aria-hidden="true">IT'S MOVING</span>
+<div class="wall" aria-hidden="true"><div class="wall__glass"><canvas></canvas><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i></div></div>
+<span class="stamp is-static" style="left:16%;top:58px" aria-hidden="true">IT'S MOVING</span>
 <ol class="shelf shelf--a" aria-label="Rack A"><li class="jar" data-acc="SPC-0001" data-pos="A1" data-state="preserved" style="--tilt:-2.2deg;--tag-tilt:-4deg">
 <button class="jar__btn" type="button" title="Show SPC-0001 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
 <ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
@@ -553,7 +614,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0001</span> <span class="tag__tool">search_rooms</span> <span class="tag__flag"></span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf A1: preserved</span></button></li><li class="jar" data-acc="SPC-0002" data-pos="A2" data-state="rattled" style="--tilt:1.6deg;--tag-tilt:3deg">
 <button class="jar__btn" type="button" title="Show SPC-0002 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -566,7 +627,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0002</span> <span class="tag__tool">quote</span> <span class="tag__flag">ABNORMAL</span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf A2: rattled: /total, /total_cents</span></button></li><li class="jar" data-acc="SPC-0003" data-pos="A3" data-state="preserved" style="--tilt:-1.1deg;--tag-tilt:-5deg">
 <button class="jar__btn" type="button" title="Show SPC-0003 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -579,7 +640,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0003</span> <span class="tag__tool">book</span> <span class="tag__flag"></span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf A3: preserved</span></button></li><li class="jar" data-acc="SPC-0004" data-pos="A4" data-state="preserved" style="--tilt:2.4deg;--tag-tilt:2deg">
 <button class="jar__btn" type="button" title="Show SPC-0004 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -592,7 +653,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0004</span> <span class="tag__tool">list_bookings</span> <span class="tag__flag"></span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf A4: preserved</span></button></li><li class="jar" data-acc="SPC-0010" data-pos="A5" data-state="rattled" style="--tilt:-1.8deg;--tag-tilt:-3deg">
 <button class="jar__btn" type="button" title="Show SPC-0010 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -605,7 +666,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0010</span> <span class="tag__tool">search_rooms</span> <span class="tag__flag">ABNORMAL</span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf A5: rattled: /rooms, /rooms/r-08</span></button></li></ol>
 <div class="plank" aria-hidden="true"></div><div class="plank__codes" aria-hidden="true"><span>A1</span><span>A2</span><span>A3</span><span>A4</span><span>A5</span></div><ol class="shelf shelf--b" aria-label="Rack B"><li class="jar" data-acc="SPC-0005" data-pos="B1" data-state="preserved" style="--tilt:-2.2deg;--tag-tilt:-4deg">
@@ -619,7 +680,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0005</span> <span class="tag__tool">search_rooms</span> <span class="tag__flag"></span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf B1: preserved</span></button></li><li class="jar" data-acc="SPC-0006" data-pos="B2" data-state="rattled" style="--tilt:1.6deg;--tag-tilt:3deg">
 <button class="jar__btn" type="button" title="Show SPC-0006 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -632,7 +693,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0006</span> <span class="tag__tool">quote</span> <span class="tag__flag">ABNORMAL</span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf B2: rattled: /total, /total_cents</span></button></li><li class="jar" data-acc="SPC-0007" data-pos="B3" data-state="rattled" style="--tilt:-1.1deg;--tag-tilt:-5deg">
 <button class="jar__btn" type="button" title="Show SPC-0007 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -645,7 +706,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0007</span> <span class="tag__tool">quote</span> <span class="tag__flag">ABNORMAL</span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf B3: rattled: /total, /total_cents</span></button></li><li class="jar" data-acc="SPC-0008" data-pos="B4" data-state="preserved" style="--tilt:2.4deg;--tag-tilt:2deg">
 <button class="jar__btn" type="button" title="Show SPC-0008 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -658,7 +719,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0008</span> <span class="tag__tool">book</span> <span class="tag__flag"></span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf B4: preserved</span></button></li><li class="jar" data-acc="SPC-0009" data-pos="B5" data-state="cracked" style="--tilt:-1.8deg;--tag-tilt:-3deg">
 <button class="jar__btn" type="button" title="Show SPC-0009 in the lab notebook"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
@@ -671,18 +732,20 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
 <rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
 <path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
-<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span>
 <span class="tag"><span class="tag__acc">SPC-0009</span> <span class="tag__tool">cancel_booking</span> <span class="tag__flag">CRACKED</span><span class="tag__plus"></span></span><span class="sr-only jar__say">, shelf B5: cracked: tool not in tools/list</span></button></li></ol>
 <div class="plank" aria-hidden="true"></div><div class="plank__codes" aria-hidden="true"><span>B1</span><span>B2</span><span>B3</span><span>B4</span><span>B5</span></div>
+<div class="sweep" aria-hidden="true"></div>
 </div>
 <div class="notebook" data-tone="red" aria-live="off"><p class="notebook__head">SPC-0002 · quote · A2 — replayed against hollow-inn v2</p>
 <ul class="notebook__rows"><li><span class="p">/total</span><s>425.00</s><span class="k">removed</span></li>
 <li><span class="p">/total_cents</span><span class="now">42500</span><span class="k">added</span><span class="note">suspected rename from /total ×100</span></li></ul>
 <span class="notebook__crack" aria-hidden="true"><svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#0A0D09" stroke-width="3" stroke-linejoin="round"/><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#ECE6D3" stroke-opacity="0.35" stroke-width="1" stroke-linejoin="round" transform="translate(1 1)"/><path d="M92 22 L80 14 M70 46 L58 40" fill="none" stroke="#0A0D09" stroke-width="2"/></svg></span></div>
 <p class="sr-only" aria-live="polite" data-say></p>
-<script>(function(){var l=document.querySelector("[data-lab]");l.querySelectorAll(".jar").forEach(function(j){j.dataset.state="preserved"});var s=l.querySelector(".stamp");s.classList.remove("is-static");var p=l.querySelector(".plate-v");p.dataset.verdict="pending";l.querySelector(".plate-v__word").innerHTML="… <i>v2</i>";l.querySelector(".plate-v__counts").textContent="storm in the window";})()</script>
+<script>(function(){var l=document.querySelector("[data-lab]");l.querySelectorAll(".jar").forEach(function(j){j.dataset.state="preserved"});var s=l.querySelector(".stamp");s.classList.remove("is-static");var p=l.querySelector(".plate-v");p.dataset.verdict="pending";l.querySelector(".plate-v__word").innerHTML="… <i>v2</i>";l.querySelector(".plate-v__counts").textContent="storm in the window";l.querySelector(".tick__jar").textContent=" ";})()</script>
 </div>
+<div class="wash" aria-hidden="true"></div>
 </div></section>
 
 <section class="receipts" aria-label="Receipts"><div class="wrap">
@@ -695,12 +758,12 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec" id="demo" aria-labelledby="h-demo"><div class="wrap">
 <p class="eyebrow">C1 · The demo</p>
 <h2 id="h-demo">Same jars, two windows.</h2>
-<p class="sub">The command a developer runs before merging, and the cabinet a judge opens. Same ten jars, same <code>@specimen/core</code>.</p>
+<p class="sub">The command a developer runs before merging; the cabinet a judge opens. Same jars, same <code>@specimen/core</code>.</p>
 <div class="pair">
 <div><div class="term"><div class="term__bar"><i></i><i></i><i></i><span>specimen · real output, three separate runs</span><button class="replay" type="button">replay</button></div><pre data-term><span class="line c">npx specimen replay --server &quot;npx tsx servers/hollow-inn/src/main.ts v2&quot;</span><span class="line h">HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room</span><span class="line x">SPC-0002 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0010 · search_rooms · rattled · /rooms, /rooms/r-08, /rooms/r-09 · -</span><span class="line x">SPC-0006 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0007 · quote · rattled · /total, /total_cents · suspected rename from /total ×100</span><span class="line x">SPC-0009 · cancel_booking · cracked · - · tool not in tools/list</span><span class="line n"># 5 preserved lines omitted</span><span class="line h">not filed · SPC-0002, SPC-0010, SPC-0006, SPC-0007, SPC-0009</span><span class="line c">npx specimen file SPC-0002</span><span class="line s">filed .kiro/specs/quote-total-total-cents/bugfix.md · PASS SPC-0002, SPC-0006, SPC-0007</span><span class="line n"># the other two red tools are filed the same way; Kiro's Bug Fix workflow writes servers/hollow-inn/src/v2_1.ts</span><span class="line c">npx specimen replay --server &quot;npx tsx servers/hollow-inn/src/main.ts v2.1&quot;</span><span class="line s">SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room</span><span class="line">SPC-0002 · quote · preserved · - · +1 field</span><span class="line n"># 9 more lines: every jar preserved; SPC-0006 and SPC-0007 also +1 field</span></pre></div>
 <p class="cap">Pasted from <span class="path" data-gh="evidence/replay/racks-vs-v2.txt">evidence/replay/racks-vs-v2.txt</span>, <span class="path" data-gh="evidence/slice/01-specimen-file.txt">evidence/slice/01-specimen-file.txt</span>, <span class="path" data-gh="evidence/replay/racks-vs-v2.1-ship.txt">evidence/replay/racks-vs-v2.1-ship.txt</span>; <code>#</code> lines are ours.</p></div>
 <figure><div class="frame"><div class="frame__bar"><span>specimen.edycu.dev · jar SPC-0002</span></div><img src="/static/img/cabinet-drawer-spc-0002.webp" width="480" height="742" alt="The live cabinet's jar drawer for SPC-0002, quote, rack A position A2, flagged ABNORMAL: /total 425.00 replaced by /total_cents 42500, times 100, renamed and changed from dollars to cents; below it the bugfix spec filed as a Kiro bugfix spec, check-spec PASS, .kiro/specs/quote-total-total-cents/bugfix.md." loading="lazy"></div>
-<figcaption class="cap"><b>The cabinet</b>, after its in-browser replay of v2, with jar SPC-0002 open: the diff, and the bugfix spec Kiro's curator filed for it.</figcaption></figure>
+<figcaption class="cap"><b>The cabinet</b> after replaying v2, jar SPC-0002 open: the diff and the bugfix spec Kiro's curator filed.</figcaption></figure>
 </div>
 </div></section>
 
@@ -733,7 +796,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <h2 id="h-how">Five parts, <span class="hl--g">stitched into one loop.</span></h2>
 <div class="bento">
 <article class="organ organ--1"><svg class="organ__ico" viewBox="0 0 48 48" fill="none" stroke="#ECE6D3" stroke-width="2.2" aria-hidden="true"><rect x="13" y="6" width="22" height="6" rx="1.5"/><path d="M8 9h5M35 9h5"/><path d="M15 12c-4 1-5 4-5 7v19c0 3 2 5 5 5h18c3 0 5-2 5-5V19c0-3-1-6-5-7"/><path d="M14 24h20" stroke="#A8E35F"/></svg>
-<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on every call to the MCP server and seal it as a jar: request, response text byte for byte, redacted on write. No proxy. The specimen CLI takes p50 465 ms before a call and 474 ms after (Kiro's own hook launch not included).</p>
+<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on each call to the hooked server and seal a jar: request and response text, byte for byte, redacted on write. No proxy. The CLI's p50: 465 ms before a call, 474 ms after (Kiro's own hook launch not included).</p>
 <pre><b>"trigger"</b>: "PostToolUse",
 <b>"matcher"</b>: "@hollowinn",
 <b>"command"</b>: "npx --no-install specimen hook post --server hollowinn"</pre></article>
@@ -765,16 +828,16 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec" id="kiro" aria-labelledby="h-kiro"><div class="wrap">
 <p class="eyebrow">C5 · Kiro</p>
 <h2 id="h-kiro">Stitched together <span class="hl--g">by Kiro.</span></h2>
-<p class="sub">Kiro is the builder: every prompt sent to Kiro is in <code>prompts/</code>, with measured credits; <code>prompts/README.md</code> lists the exceptions.</p>
+<p class="sub">Kiro is the builder: <b>95.6 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came in <code>kiro:</code> commits (38,564 of 40,333). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
 <div class="kiro">
 <ul class="inv">
 <li><b>49</b><div><strong>numbered Kiro prompts</strong><span class="path" data-gh="prompts/README.md">prompts/README.md</span></div></li>
-<li><b>7</b><div><strong>hooks</strong>: capture, the Stop gate, the jar firewall, the manifest check, tests<span class="path" data-gh=".kiro/hooks/">.kiro/hooks/</span></div></li>
+<li><b>7</b><div><strong>hook files</strong>: capture, the Stop gate, the jar firewall, the manifest check, tests<span class="path" data-gh=".kiro/hooks/">.kiro/hooks/</span></div></li>
 <li><b>3</b><div><strong>feature specs</strong>, requirements → design → tasks, executed by Kiro<span class="path" data-gh=".kiro/specs/">cabinet-ui · jar-capture · replay-engine</span></div></li>
 <li><b>3</b><div><strong>bugfix specs</strong>, filed by the curator from the red jars<span class="path" data-gh=".kiro/specs/">.kiro/specs/*/bugfix.md</span></div></li>
 <li><b>4</b><div><strong>steering files</strong> and <strong>1 agent</strong>, the curator: no blanket trust, writes denied outside <code>.kiro/specs/</code><span class="path" data-gh=".kiro/agents/specimen-curator.json">.kiro/agents/specimen-curator.json</span></div></li>
 </ul>
-<div><div class="organs"><div class="organs__row" aria-label="MCP, hooks, replay and spec, stitched together"><span>MCP</span><svg viewBox="0 0 64 24" width="64" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q32 14.5 60 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="23.5" y1="4.5" x2="25.9" y2="19.5"/><line x1="40.5" y1="4.5" x2="38.1" y2="19.5"/><line x1="52.8" y1="4.5" x2="55.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="23.5" cy="4.5" r="1.3"/><circle cx="25.9" cy="19.5" r="1.3"/><circle cx="40.5" cy="4.5" r="1.3"/><circle cx="38.1" cy="19.5" r="1.3"/><circle cx="52.8" cy="4.5" r="1.3"/><circle cx="55.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="60.5" cy="12" r="3.5" fill="#8C948A"/></svg><span>HOOKS</span><svg viewBox="0 0 64 24" width="64" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q32 14.5 60 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="23.5" y1="4.5" x2="25.9" y2="19.5"/><line x1="40.5" y1="4.5" x2="38.1" y2="19.5"/><line x1="52.8" y1="4.5" x2="55.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="23.5" cy="4.5" r="1.3"/><circle cx="25.9" cy="19.5" r="1.3"/><circle cx="40.5" cy="4.5" r="1.3"/><circle cx="38.1" cy="19.5" r="1.3"/><circle cx="52.8" cy="4.5" r="1.3"/><circle cx="55.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="60.5" cy="12" r="3.5" fill="#8C948A"/></svg><span>REPLAY</span><svg viewBox="0 0 64 24" width="64" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q32 14.5 60 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="23.5" y1="4.5" x2="25.9" y2="19.5"/><line x1="40.5" y1="4.5" x2="38.1" y2="19.5"/><line x1="52.8" y1="4.5" x2="55.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="23.5" cy="4.5" r="1.3"/><circle cx="25.9" cy="19.5" r="1.3"/><circle cx="40.5" cy="4.5" r="1.3"/><circle cx="38.1" cy="19.5" r="1.3"/><circle cx="52.8" cy="4.5" r="1.3"/><circle cx="55.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="60.5" cy="12" r="3.5" fill="#8C948A"/></svg><span>SPEC</span></div>
+<div><div class="organs">
 <figure><a href="/static/img/architecture.png"><img src="/static/img/architecture.png" width="2000" height="2524" alt="The architecture figure, drawn from the code: a Kiro agent session calls the hollow-inn MCP server; Kiro hook events run specimen, which seals jars; specimen replay runs them against the next server; a red jar is filed as a Kiro bugfix spec; Kiro's Bug Fix workflow writes the fix; the cabinet runs the same replay in the browser." loading="lazy"></a><figcaption class="cap">The architecture figure, drawn from the code as built. Opens full size.</figcaption></figure></div>
 <p class="not-kiro">Kiro did not write the hollow-inn demo server v1 and v2 (the planted breaks are ours), the test harnesses and glue (commits marked <code>claude-direct:</code>), the docs, or this page and the deck.</p></div>
 </div>
@@ -793,10 +856,10 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec" id="faq" aria-labelledby="h-faq"><div class="wrap">
 <h2 id="h-faq">Questions a judge would ask.</h2>
 <div class="faq">
-<details><summary>Is the replay on this page real, or a recording?</summary><div class="ans">Real. Your browser runs the cabinet's own replay code (<code>apps/cabinet/src/browser-replay.ts</code>) against the hollow-inn v1, v2 and v2.1 modules over an in-memory MCP transport, and the plate says LIVE with the time it took. If that code cannot load, the shelf shows the committed CLI replay and says RECORDED.</div></details>
+<details><summary>Is the replay on this page real, or a recording?</summary><div class="ans">Real: the cabinet's own replay code (<code>apps/cabinet/src/browser-replay.ts</code>) runs in your browser against hollow-inn v1, v2 and v2.1 over an in-memory MCP transport. If it cannot load, the shelf shows the committed CLI replay, labelled RECORDED.</div></details>
 <details><summary>Are the v2 breaks real?</summary><div class="ans">Real changes, made by us on purpose (<code>servers/hollow-inn/CHANGES.md</code>): <code>total</code> became <code>total_cents</code>, the <code>search_rooms</code> default limit fell from 20 to 5, <code>cancel_booking</code> was renamed. Our one run against a server we did not write (<code>server-memory</code> 1.0.0 → 2.2.1) found no break.</div></details>
-<details><summary>Did Kiro really write the fix?</summary><div class="ans">Kiro's curator filed the three bugfix specs; Kiro's Bug Fix workflow wrote each design and task list and executed them into <code>servers/hollow-inn/src/v2_1.ts</code>, headless on the Kiro CLI with no IDE approval step. For two of the fixes the final acceptance ran outside Kiro: turn 43 stopped at its last task and turn 45 hit our timeout (<code>prompts/README.md</code>).</div></details>
-<details><summary>Why not just diff the schema?</summary><div class="ans">An input-schema diff of <code>tools/list</code> saw 2 changes for v2: <code>cancel_booking</code> removed, <code>booking_cancel</code> added. It compares tools and their input schemas, not descriptions or responses, so the <code>quote</code> and <code>search_rooms</code> changes, which show only there, pass it.</div></details>
+<details><summary>Did Kiro really write the fix?</summary><div class="ans">Kiro's curator filed the three bugfix specs; Kiro's Bug Fix workflow wrote each design and task list and executed them into <code>servers/hollow-inn/src/v2_1.ts</code>, headless on the Kiro CLI, no IDE approval step. For two fixes the final acceptance ran outside Kiro: turn 43 stopped at its last task, turn 45 hit our timeout (<code>prompts/README.md</code>).</div></details>
+<details><summary>Why not just diff the schema?</summary><div class="ans">An input-schema diff of <code>tools/list</code> saw 2 changes for v2: <code>cancel_booking</code> removed, <code>booking_cancel</code> added. It compares tools and input schemas, not descriptions or responses, so the <code>quote</code> and <code>search_rooms</code> changes pass it.</div></details>
 <details><summary>Is this the first record/replay tool for MCP?</summary><div class="ans">No. <code>mcp-recorder</code>, AgentVCR and mcpsnoop exist. What differs here is capture <em>inside</em> the agent through Kiro hooks (no proxy) and the closed loop into a Kiro bugfix spec.</div></details>
 </div>
 </div></section>
@@ -804,7 +867,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec final" aria-labelledby="h-final"><div class="wrap">
 <h2 id="h-final">Throw the switch <span class="hl">yourself.</span></h2>
 <p class="sub" style="margin-inline:auto">The cabinet replays the same ten jars in your browser. Open a red jar, read the spec Kiro filed for it, then switch to v2.1.</p>
-<div class="ctas"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--link is-private" aria-disabled="true" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub">Source · public at submission</span></div>
+<div class="ctas"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--lock is-private" aria-disabled="true" title="The repository is private until the Devpost submission, then public" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source · opens at submission</span></div>
 </div></section>
 </main>
 <footer class="foot"><div class="wrap">
@@ -812,7 +875,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <nav aria-label="Footer"><a href="/">The cabinet</a><a href="/deck/">Pitch deck</a><a href="/static/img/architecture.png">Architecture</a><a href="https://kiroween.devpost.com/" rel="noopener">Kiroween 2026</a><span class="repo-text" data-repo="https://github.com/edycutjong/specimen" data-repo-label="Source on GitHub">Source: github.com/edycutjong/specimen, public at submission</span></nav>
 <p>Kiroween 2026 · Frankenstein · MIT · every number here comes from a file in the repository (public at submission), except the live replay time.</p>
 </div></footer>
-<script type="application/json" id="rec">{"v1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-24T20:41:39.100Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}}]},"v2":{"verdict":"HOLD","counts":{"preserved":5,"rattled":4,"cracked":1,"unsealed":0,"skipped":0},"started_at":"2026-11-25T12:38:40.763Z","coverage":{"compared":10,"tools":4,"listed":6,"unrecorded":["booking_cancel","get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"rattled","reason":null,"changes":[{"path":"/total","kind":"removed","was":425,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":42500,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"rattled","reason":null,"changes":[{"path":"/rooms","kind":"length","was":7,"now":5,"note":null},{"path":"/rooms/r-08","kind":"removed","was":null,"now":null,"note":null},{"path":"/rooms/r-09","kind":"removed","was":null,"now":null,"note":null}],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"rattled","reason":null,"changes":[{"path":"/total","kind":"removed","was":98,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":9800,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"rattled","reason":null,"changes":[{"path":"/total","kind":"removed","was":142,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":14200,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"cracked","reason":"tool not in tools/list","changes":[],"compatible":[],"raw":{}}]},"v2.1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-25T13:21:57.291Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":42500}],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":9800}],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":14200}],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"changes":[],"compatible":[],"raw":{}}]}}</script>
+<script type="application/json" id="rec">{"v1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-24T20:41:39.100Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}}]},"v2":{"verdict":"HOLD","counts":{"preserved":5,"rattled":4,"cracked":1,"unsealed":0,"skipped":0},"started_at":"2026-11-25T12:38:40.763Z","coverage":{"compared":10,"tools":4,"listed":6,"unrecorded":["booking_cancel","get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/total","kind":"removed","was":425,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":42500,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/rooms","kind":"length","was":7,"now":5,"note":null},{"path":"/rooms/r-08","kind":"removed","was":null,"now":null,"note":null},{"path":"/rooms/r-09","kind":"removed","was":null,"now":null,"note":null}],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/total","kind":"removed","was":98,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":9800,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"rattled","reason":null,"ms":0,"changes":[{"path":"/total","kind":"removed","was":142,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":14200,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"cracked","reason":"tool not in tools/list","ms":0,"changes":[],"compatible":[],"raw":{}}]},"v2.1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-25T13:21:57.291Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":4,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":42500}],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":3,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":4,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":9800}],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":14200}],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}}]}}</script>
 <script>
 /* SPECIMEN JAR landing — behaviour. Inlined by build_site.mjs. No dependencies.
    The shelf runs the cabinet's own replay (/static/replay.js) in this tab; if that module cannot load, it shows the
@@ -853,11 +916,84 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
     const REC = JSON.parse($("#rec").textContent);
     const room = $(".room", lab), stamp = $(".stamp", lab), plate = $(".plate-v", lab);
     const word = $(".plate-v__word", lab), counts = $(".plate-v__counts", lab), cov = $(".plate-v__cov", lab);
-    const prov = $(".prov", lab), say = $("[data-say]", lab);
+    const lamp = $(".lamp", lab), delta = $(".plate-v__delta", lab), tickJar = $(".tick__jar", lab), tickSum = $(".tick__sum", lab);
+    const say = $("[data-say]", lab), wash = $(".wash");
     const nb = $(".notebook", lab), nbHead = $(".notebook__head", nb), nbRows = $(".notebook__rows", nb);
     const jars = $$(".jar", lab), byId = Object.fromEntries(jars.map((el) => [el.dataset.acc, el]));
     const segs = $$("[data-ver]", lab);
     let engineP = null, busy = false, queued = null, last = null, lastVer = "v2", picked = null;
+
+    /* the storm in the window: rain, cloud light and lightning, drawn on one canvas. Environment only: it never
+       carries a fact. Paused off-screen; off for prefers-reduced-motion. */
+    let storm = { strike() {}, flicker() {} };
+    const cv = $(".wall canvas", lab);
+    if (cv && !reduce) {
+      const ctx = cv.getContext("2d");
+      let W = 1, H = 1, d = 1, drops = [], on = false, raf = 0, bolts = [], sky = 0;
+      const drop = (y) => ({ x: Math.random() * W * 1.15, y: y ?? Math.random() * H, l: (10 + Math.random() * 20) * d, v: (8 + Math.random() * 8) * d, g: Math.random() < 0.25 ? 1 : 0 });
+      const size = () => {
+        d = Math.min(devicePixelRatio || 1, 1.5);
+        W = cv.width = Math.max(1, Math.round(cv.clientWidth * d)); H = cv.height = Math.max(1, Math.round(cv.clientHeight * d));
+        drops = Array.from({ length: Math.min(320, Math.round((W * H) / (4200 * d * d))) }, () => drop());
+      };
+      const fork = (x1, y1, x2, y2, disp, out) => { // midpoint displacement: a new bolt every time
+        if (disp < 2.5 * d) { out.push(x1, y1, x2, y2); return; }
+        const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * disp, my = (y1 + y2) / 2 + (Math.random() - 0.5) * disp * 0.3;
+        fork(x1, y1, mx, my, disp / 2, out); fork(mx, my, x2, y2, disp / 2, out);
+      };
+      const bolt = (power) => {
+        const main = [], br = [], x0 = W * (0.18 + Math.random() * 0.64), x1 = x0 + (Math.random() - 0.5) * W * 0.22;
+        const y1 = H * (power > 0.6 ? 0.55 + Math.random() * 0.3 : 0.22 + Math.random() * 0.18);
+        fork(x0, -4 * d, x1, y1, W * (power > 0.6 ? 0.14 : 0.08), main);
+        for (let k = 0; k < (power > 0.6 ? 3 : 1); k++) {
+          const at = 4 * Math.floor((main.length / 4) * (0.2 + Math.random() * 0.5)), sx = main[at + 2], sy = main[at + 3];
+          fork(sx, sy, sx + (Math.random() - 0.5) * W * 0.26, sy + H * (0.08 + Math.random() * 0.16), W * 0.05, br);
+        }
+        return { main, br, t0: performance.now(), power };
+      };
+      const segs2 = (arr, width, alpha) => {
+        ctx.lineWidth = width; ctx.globalAlpha = alpha; ctx.beginPath();
+        for (let k = 0; k < arr.length; k += 4) { ctx.moveTo(arr[k], arr[k + 1]); ctx.lineTo(arr[k + 2], arr[k + 3]); }
+        ctx.stroke();
+      };
+      const frame = (t) => {
+        ctx.clearRect(0, 0, W, H);
+        if (sky > 0.004) { ctx.globalAlpha = 1; ctx.fillStyle = `rgba(201,214,242,${Math.min(0.5, sky * 0.5).toFixed(3)})`; ctx.fillRect(0, 0, W, H); sky *= 0.9; }
+        ctx.strokeStyle = "#C9D6F2"; ctx.lineCap = "round";
+        for (const g of [0, 1]) { // rain in two weights, one stroke each
+          ctx.globalAlpha = (g ? 0.32 : 0.17) + sky * 0.35; ctx.lineWidth = (g ? 1.5 : 1) * d; ctx.beginPath();
+          for (const p of drops) {
+            if (p.g !== g) continue;
+            ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.l * 0.2, p.y + p.l);
+            p.y += p.v; p.x -= p.v * 0.2; if (p.y > H) Object.assign(p, drop(-p.l));
+          }
+          ctx.stroke();
+        }
+        bolts = bolts.filter((b) => t - b.t0 < 700);
+        for (const b of bolts) { // bright, a dark gap, a re-strike, then the fade
+          const a = t - b.t0, k = a < 70 ? 1 : a < 140 ? 0.12 : a < 240 ? 0.9 : Math.max(0, 0.9 - (a - 240) / 440);
+          if (k <= 0) continue;
+          ctx.shadowColor = "#C9D6F2"; ctx.shadowBlur = 22 * d;
+          ctx.strokeStyle = "#C9D6F2"; segs2(b.main, 7 * d * b.power, k * 0.3);
+          ctx.strokeStyle = "#F4F7FF"; segs2(b.main, 2.4 * d, k); segs2(b.br, 1.3 * d, k * 0.7);
+          ctx.shadowBlur = 0;
+        }
+        ctx.globalAlpha = 1;
+        if (on) raf = requestAnimationFrame(frame);
+      };
+      size(); addEventListener("resize", size);
+      new IntersectionObserver(([e]) => { on = e.isIntersecting; cancelAnimationFrame(raf); if (on) raf = requestAnimationFrame(frame); }).observe(cv);
+      storm = {
+        strike() { bolts.push(bolt(1)); sky = 1; },
+        flicker() { if (Math.random() < 0.6) bolts.push(bolt(0.4)); sky = 0.3 + Math.random() * 0.25; },
+      };
+      const ambient = () => setTimeout(() => { if (on && !busy && document.visibilityState === "visible") storm.flicker(); ambient(); }, 6500 + Math.random() * 9000);
+      ambient();
+    }
+    const flashPage = (tone) => {
+      if (reduce || !wash) return;
+      wash.className = "wash"; void wash.offsetWidth; wash.className = tone === "ship" ? "wash is-on is-ship" : "wash is-on";
+    };
 
     const engine = () => (engineP ||= import("/static/replay.js").catch(() => null));
     const raw = (text, key) => { const m = (text || "").match(new RegExp('"' + key + '":(-?[0-9.]+)')); return m ? m[1] : null; };
@@ -866,7 +1002,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       verdict: r.verdict, counts: r.counts, started_at: r.started_at,
       coverage: { compared: r.coverage.compared, tools: r.coverage.tools_compared.length, listed: r.coverage.tools_listed.length },
       jars: r.jars.map((j) => ({
-        id: j.id, tool: j.tool, state: j.state, reason: j.reason || null,
+        id: j.id, tool: j.tool, state: j.state, reason: j.reason || null, ms: j.ms,
         changes: (j.changes || []).map((c) => ({ path: c.path, kind: c.kind, was: scalar(c.was), now: scalar(c.now), note: c.note || null })),
         compatible: (j.compatible || []).map((c) => ({ path: c.path, kind: c.kind, now: scalar(c.now) })),
         raw: { total: raw(j.response_text, "total"), total_cents: raw(j.response_text, "total_cents") },
@@ -879,6 +1015,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       if (j && j.raw && j.raw[key] && Number(j.raw[key]) === v) return esc(j.raw[key]); // the jarred literal, as written (425.00)
       return esc(typeof v === "string" ? `"${v}"` : String(v));
     };
+    const redOf = (r) => r.counts.rattled + r.counts.cracked;
 
     function notebook(j, ver) {
       if (!j) return;
@@ -921,34 +1058,45 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       stamp.classList.remove("is-on", "is-static"); void stamp.offsetWidth; stamp.classList.add("is-on");
     }
 
-    async function apply(ver, r, kind, ms) {
-      let i = 0, firstRed = null;
+    // meta: kind "live" (this tab, measured) or "recorded" (the committed CLI run), ms = Replay_Time, req = resource
+    // requests that started while the replay ran (PerformanceObserver), null when the browser cannot count them
+    async function apply(ver, r, meta) {
+      let n = 0, firstRed = null;
+      const total = r.jars.length;
       for (const j of r.jars) {
         const el = byId[j.id]; if (!el) continue;
         const s = st(j), prev = el.dataset.state;
+        if (n++) await sleep(s !== prev ? 150 : 80);
+        tickJar.textContent = `jar ${String(n).padStart(2, "0")}/${total} · ${j.id} · ${j.ms < 1 ? "<1" : j.ms} ms · ${s}`;
         label(el, j);
         if (s === "rattled" && !firstRed) firstRed = j;
         if (s !== prev) {
-          if (i++) await sleep(140);
           el.dataset.state = s;
           if (s === "rattled" && !reduce) { el.classList.add("is-rattling"); setTimeout(() => el.classList.remove("is-rattling"), 650); }
         } else if (s === "preserved" && !reduce) { el.classList.add("is-checked"); setTimeout(() => el.classList.remove("is-checked"), 950); }
       }
-      await sleep(260);
+      await sleep(240);
       const c = r.counts, bits = [`${c.preserved} preserved`];
       if (c.rattled) bits.push(`${c.rattled} rattled`); if (c.cracked) bits.push(`${c.cracked} cracked`);
       if (c.unsealed) bits.push(`${c.unsealed} unsealed`); if (c.skipped) bits.push(`${c.skipped} skipped`);
+      const red = redOf(r), was = last ? redOf(last) : null;
+      const payoff = r.verdict === "SHIP" && was > 0;
       plate.dataset.verdict = r.verdict;
       word.innerHTML = `${esc(r.verdict)} <i>${esc(ver)}</i>`;
       counts.textContent = bits.join(" · ");
       cov.textContent = `${r.coverage.compared} jars compared · ${r.coverage.tools} of ${r.coverage.listed} tools`;
-      plate.classList.remove("is-stamped"); void plate.offsetWidth; plate.classList.add("is-stamped");
-      prov.dataset.kind = kind;
-      prov.innerHTML = kind === "live"
-        ? `Live <span>this tab · ${Math.max(1, Math.round(ms))} ms</span>`
-        : `Recorded <span>CLI · ${esc(r.started_at.replace("T", " ").slice(0, 16))} UTC</span>`;
-      prov.title = kind === "live" ? "Replayed just now in this tab by the cabinet's own replay code (apps/cabinet/src/browser-replay.ts)" : "The committed CLI replay (replays/), shown because the replay module did not load";
-      say.textContent = `${r.verdict} ${ver}: ${bits.join(", ")}.`;
+      delta.textContent = was !== null && was !== red ? `red jars ${was} → ${red}` : "";
+      delta.dataset.tone = was !== null && red < was ? "g" : "r";
+      plate.classList.remove("is-stamped", "is-slam"); void plate.offsetWidth; plate.classList.add(payoff ? "is-slam" : "is-stamped");
+      if (payoff) { room.classList.remove("is-ship"); void room.offsetWidth; room.classList.add("is-ship"); flashPage("ship"); }
+      const live = meta.kind === "live";
+      lamp.dataset.kind = meta.kind;
+      lamp.innerHTML = live ? `<i aria-hidden="true"></i><b>Live</b><small>replayed in this tab</small>` : `<i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small>`;
+      lamp.title = live ? "Replayed just now in this tab by the cabinet's own replay code (apps/cabinet/src/browser-replay.ts)" : "The committed CLI replay (replays/), shown because the replay module did not load";
+      tickSum.textContent = live
+        ? `${total} jars in ${Math.max(1, Math.round(meta.ms))} ms${meta.req === null ? "" : ` · ${meta.req} network request${meta.req === 1 ? "" : "s"}`}`
+        : `CLI run · ${r.started_at.replace("T", " ").slice(0, 16)} UTC`;
+      say.textContent = `${r.verdict} ${ver}: ${bits.join(", ")}.${live ? ` Replayed live in this tab in ${Math.max(1, Math.round(meta.ms))} milliseconds.` : " Recorded result."}`;
       placeStamp(firstRed);
       const show = (picked && r.jars.find((j) => j.id === picked)) || firstRed || r.jars.find((j) => j.compatible.length) || r.jars[0];
       notebook(show, ver);
@@ -960,17 +1108,25 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       busy = true;
       segs.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ver === ver)));
       plate.dataset.verdict = "pending"; word.innerHTML = `… <i>${esc(ver)}</i>`;
-      counts.textContent = "replaying 10 jars"; cov.textContent = " ";
-      room.classList.remove("is-flash"); void room.offsetWidth; room.classList.add("is-flash");
+      counts.textContent = "replaying 10 jars"; cov.textContent = " "; delta.textContent = ""; tickSum.textContent = " ";
+      room.classList.remove("is-flash", "is-ship"); void room.offsetWidth; room.classList.add("is-flash");
+      storm.strike(); flashPage("storm");
       const t0 = performance.now();
       const mod = await Promise.race([engine(), new Promise((r) => setTimeout(() => r(null), first ? 4000 : 9000))]);
-      let res = null, kind = "recorded", ms = 0;
+      let res = null, meta = { kind: "recorded", ms: 0, req: null };
       if (mod && mod.runReplay) {
-        try { const out = await mod.runReplay(ver); res = norm(out); kind = "live"; ms = out.replayTimeMs; } catch { res = null; }
+        let seen = [], po = null;
+        try { po = new PerformanceObserver((l) => { seen = seen.concat(l.getEntries()); }); po.observe({ type: "resource" }); } catch { po = null; }
+        try {
+          const a = performance.now(), out = await mod.runReplay(ver), b = performance.now();
+          let req = null;
+          if (po) { seen = seen.concat(po.takeRecords()); po.disconnect(); req = seen.filter((e) => e.startTime >= a && e.startTime <= b).length; }
+          res = norm(out); meta = { kind: "live", ms: out.replayTimeMs, req };
+        } catch { res = null; if (po) po.disconnect(); }
       }
       if (!res) res = REC[ver];
-      await sleep(Math.max(0, 700 - (performance.now() - t0)));
-      await apply(ver, res, kind, ms);
+      await sleep(Math.max(0, 650 - (performance.now() - t0)));
+      await apply(ver, res, meta);
       busy = false;
       if (queued && queued !== ver) { const q = queued; queued = null; run(q); } else queued = null;
     }
@@ -990,16 +1146,6 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       const io0 = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io0.disconnect(); setTimeout(() => run("v2", true), reduce ? 0 : 700); } }, { threshold: 0.2 });
       io0.observe(room);
     } else run("v2", true);
-
-    /* rain behind the bars — environment only, paused off-screen */
-    const cv = $(".window canvas", lab);
-    if (cv && !reduce) {
-      const ctx = cv.getContext("2d"); let W = 0, H = 0, drops = [], on = false, raf = 0;
-      const size = () => { const d = Math.min(devicePixelRatio || 1, 1.5); W = cv.width = cv.clientWidth * d; H = cv.height = cv.clientHeight * d; drops = Array.from({ length: 70 }, () => ({ x: Math.random() * W, y: Math.random() * H, l: (6 + Math.random() * 12) * d, v: (3 + Math.random() * 4) * d })); };
-      const tick = () => { ctx.clearRect(0, 0, W, H); ctx.strokeStyle = "rgba(201,214,242,.35)"; ctx.lineWidth = 1; ctx.beginPath(); for (const p of drops) { ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - 1.5, p.y + p.l); p.y += p.v; p.x -= 0.4; if (p.y > H) { p.y = -p.l; p.x = Math.random() * W; } } ctx.stroke(); if (on) raf = requestAnimationFrame(tick); };
-      size(); addEventListener("resize", size);
-      new IntersectionObserver(([e]) => { on = e.isIntersecting; cancelAnimationFrame(raf); if (on) tick(); }).observe(cv);
-    }
   }
 
   /* ---------- receipts count up (numbers are already in the markup) ---------- */
