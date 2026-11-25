@@ -59,7 +59,7 @@ describe("view model names, counts and positions against real replays", () => {
     expect(jar.flagWord).toBe("ABNORMAL");
     expect(jar.filed).toBe(true);
     expect(jar.accessibleName).toBe(
-      "SPC-0002 quote — rattled, /total removed, /total_cents added, suspected rename from /total ×100",
+      "SPC-0002 quote SPEC ABNORMAL — rattled, /total removed, /total_cents added, suspected rename from /total ×100",
     );
     expect(jar.tooltip).toBe("/total removed, /total_cents added, suspected rename from /total ×100");
   });
@@ -82,7 +82,7 @@ describe("view model names, counts and positions against real replays", () => {
     expect(jar.state).toBe("cracked");
     expect(jar.isRed).toBe(true);
     expect(jar.flagWord).toBe("CRACKED");
-    expect(jar.accessibleName).toBe("SPC-0009 cancel_booking — cracked, tool not in tools/list");
+    expect(jar.accessibleName).toBe("SPC-0009 cancel_booking SPEC CRACKED — cracked, tool not in tools/list");
     expect(jar.tooltip).toBe("tool not in tools/list");
   });
 

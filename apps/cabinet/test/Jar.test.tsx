@@ -71,7 +71,7 @@ describe("Jar accessible name per state (Requirement 8.7)", () => {
     renderJar(jar);
 
     const button = screen.getByRole("button", { name: jar.accessibleName });
-    expect(jar.accessibleName).toMatch(/^SPC-0002 quote — rattled, /);
+    expect(jar.accessibleName).toMatch(/^SPC-0002 quote SPEC ABNORMAL — rattled, /);
     expect(button.getAttribute("aria-label")).toBe(jar.accessibleName);
   });
 
@@ -89,7 +89,7 @@ describe("Jar accessible name per state (Requirement 8.7)", () => {
 
     expect(jar.state).toBe("cracked");
     expect(screen.getByRole("button", { name: jar.accessibleName })).toBeTruthy();
-    expect(jar.accessibleName).toMatch(/^SPC-0009 \S+ — cracked, /);
+    expect(jar.accessibleName).toMatch(/^SPC-0009 \S+ SPEC CRACKED — cracked, /);
   });
 
   it("names a jar that is not yet revealed as not replayed, even when its replayed state is rattled", () => {
@@ -247,5 +247,22 @@ describe("Jar focus ring (Requirement 8.12)", () => {
     // Vitest skips CSS processing, so the stylesheet is read from disk. `npm test` runs at the repo root.
     const jarCss = readFileSync(resolve("apps/cabinet/src/components/Jar.css"), "utf8");
     expect(jarCss).toMatch(/\.jar__button:focus-visible[\s\S]*?outline:\s*3px solid var\(--before\)/);
+  });
+});
+
+describe("Jar accessible name starts with the visible toe-tag text (WCAG 2.5.3)", () => {
+  it("starts every v2 jar's accessible name with the text its toe-tag shows", () => {
+    const jars = revealOrder(modelFor(v2));
+    expect(jars.length).toBeGreaterThan(0);
+    for (const jar of jars) {
+      const { container, unmount } = renderJar(jar, { revealed: true });
+      const tag = container.querySelector(".jar__tag");
+      const name = jar.accession;
+      expect(tag, name).not.toBeNull();
+      const visible = (tag?.textContent ?? "").replace(/\s+/g, " ").trim();
+      expect(visible.length, name).toBeGreaterThan(0);
+      expect(jar.accessibleName.startsWith(visible), `${name}: "${visible}"`).toBe(true);
+      unmount();
+    }
   });
 });

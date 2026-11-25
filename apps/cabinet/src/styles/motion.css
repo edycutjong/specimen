@@ -14,6 +14,8 @@
   --ink-ms: 320ms;
   --bubble-ms: 6s;
   --stamp-ms: 180ms;
+  /* Hover and press feedback on the disclosures and the footer link (QA item 3). */
+  --hover-ms: 160ms;
   /* The verdict word stamps in once the settle (700 ms) and the 400 ms count-up are both done. */
   --verdict-stamp-delay-ms: 1100ms;
 }

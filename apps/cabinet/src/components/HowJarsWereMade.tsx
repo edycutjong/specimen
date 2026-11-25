@@ -56,7 +56,7 @@ export function HowJarsWereMade() {
       </p>
 
       <details className="how-made__details">
-        <summary>Show the two hook files</summary>
+        <summary className="how-made__summary">Show the two hook files</summary>
         <div className="how-made__hooks">
           {HOOK_FILES.map((hook) => (
             <figure key={hook.name} className="how-made__hook">
@@ -71,7 +71,7 @@ export function HowJarsWereMade() {
 
       <p>
         The hook configuration and the rest of the Kiro setup are in{" "}
-        <a href={KIRO_GITHUB_URL} target="_blank" rel="noopener noreferrer">
+        <a className="how-made__link" href={KIRO_GITHUB_URL} target="_blank" rel="noopener noreferrer">
           /.kiro on GitHub
         </a>
         .

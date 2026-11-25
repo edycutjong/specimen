@@ -111,22 +111,28 @@ export function Jar({ jar, revealed, expanded, cue = false, drawerId, onActivate
           <span className={cue ? "jar__overlay jar__overlay--cue" : "jar__overlay"} style={overlayStyle}>
             <span className={tagClass} style={tagStyle}>
               <span className="jar__eyelet" aria-hidden="true" />
-              <span className="jar__accession">{jar.accession}</span>
+              <span className="jar__accession">{jar.accession}</span>{" "}
               <span className="jar__tool">
                 <ToolName tool={jar.tool} />
               </span>
               <Barcode accession={jar.accession} />
               {filedShown ? (
-                <span className="jar__spec" aria-hidden="true">
-                  SPEC
-                </span>
+                <>
+                  {" "}
+                  <span className="jar__spec" aria-hidden="true">
+                    SPEC
+                  </span>
+                </>
               ) : null}
               {flagWord !== null && (
-                <span
-                  className={`jar__flag jar__flag--${flagWord === "ABNORMAL" ? "abnormal" : "cracked"} jar-art__strip`}
-                >
-                  {flagWord}
-                </span>
+                <>
+                  {" "}
+                  <span
+                    className={`jar__flag jar__flag--${flagWord === "ABNORMAL" ? "abnormal" : "cracked"} jar-art__strip`}
+                  >
+                    {flagWord}
+                  </span>
+                </>
               )}
             </span>
           </span>

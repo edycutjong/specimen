@@ -1,0 +1,58 @@
+/*
+ * Phones up to 480 px (QA turn-46, item 5). On a 375 x 812 screen the first jar button must start at or above
+ * y = 460 px, so the header, the tagline, the plate and the task text take less space here. Every rule sits in
+ * this one block, so the layout from 481 px up is the same as before. No text is removed: the CountsPair moves
+ * below the shelves by `order` alone.
+ */
+@media (max-width: 480px) {
+  .cabinet-header {
+    gap: 4px;
+    padding: 4px 10px 6px;
+  }
+
+  .cabinet-header__top {
+    gap: 4px;
+  }
+
+  .cabinet-tagline {
+    margin-top: 2px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .cabinet-plate-slot > .verdict-plate--plaque {
+    padding: 6px 10px;
+  }
+
+  .counts-pair-group {
+    order: 3;
+  }
+
+  .guide-strip {
+    order: 4;
+  }
+
+  .cabinet-details {
+    order: 5;
+  }
+
+  .shelf {
+    gap: 4px;
+    padding-top: 8px;
+  }
+
+  .shelf-meta {
+    margin-top: 0;
+  }
+
+  .shelf-task {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .shelf-followup {
+    margin-top: 0;
+    line-height: 1.2;
+  }
+}

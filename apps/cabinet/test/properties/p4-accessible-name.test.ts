@@ -13,6 +13,7 @@ import {
   buildViewModel,
   jarAccessibleName,
   revealOrder,
+  toeTagWords,
   type JarViewModel,
 } from "../../src/cabinet-model.js";
 import type { CabinetReplayResult } from "../../src/browser-replay.js";
@@ -143,14 +144,18 @@ function resultFor(jars: ResultEntry[]): CabinetReplayResult {
 
 const GUIDE_FLAGS = { openedRedJar: false, viewedSpec: false, replayedFixedVersion: false };
 
-/** The accessible name must be "<accession> <tool> — <state>" with an optional ", <details>". */
+/**
+ * The accessible name must start with the toe-tag text (WCAG 2.5.3), then " — <state>", then an
+ * optional ", <details>".
+ */
 function expectNamesAccessionToolState(
   jar: JarViewModel,
   accession: string,
   tool: string,
   state: string,
 ): void {
-  const head = `${accession} ${tool} — ${state}`;
+  expect(jar.accessibleName.startsWith(`${accession} ${tool}`)).toBe(true);
+  const head = `${toeTagWords(jar).join(" ")} — ${state}`;
   expect(jar.accessibleName.startsWith(head)).toBe(true);
   const rest = jar.accessibleName.slice(head.length);
   expect(rest === "" || rest.startsWith(", ")).toBe(true);

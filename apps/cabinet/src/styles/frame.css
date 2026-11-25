@@ -156,6 +156,16 @@
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
+  transition: border-color var(--hover-ms) ease-out, background-color var(--hover-ms) ease-out;
+}
+
+/* Hover shows a tag-coloured border. A press fills the summary with --rule while the pointer is down. */
+.cabinet-details__summary:hover {
+  border-color: var(--tag);
+}
+
+.cabinet-details__summary:active {
+  background: var(--rule);
 }
 
 .cabinet-details__summary:focus-visible {
@@ -390,7 +400,7 @@
   margin: 12px 0;
 }
 
-.how-made__details summary {
+.how-made__summary {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -401,15 +411,35 @@
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 16px;
+  transition: border-color var(--hover-ms) ease-out, background-color var(--hover-ms) ease-out;
 }
 
-.how-made__details summary:focus-visible {
+.how-made__summary:hover {
+  border-color: var(--tag);
+}
+
+.how-made__summary:active {
+  background: var(--rule);
+}
+
+.how-made__summary:focus-visible {
   outline: 3px solid var(--before);
   outline-offset: 2px;
 }
 
-.how-made a {
+.how-made__link {
   color: var(--tag);
+  transition: color var(--hover-ms) ease-out;
+}
+
+/* The footer link underlines on hover and turns --before while it is pressed. */
+.how-made__link:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.how-made__link:active {
+  color: var(--before);
 }
 
 .how-made figure {

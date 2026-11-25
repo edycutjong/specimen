@@ -144,6 +144,11 @@
   background: var(--label-ink);
 }
 
+/*
+ * The accession sits on its own tag-coloured plate with the label ink. The tag and the overlay are
+ * pointer-events: none, so a hit test (and axe's colour-contrast check) finds the jar art below them, not the tag.
+ * Giving the accession its own background and hit area makes the text's background the tag colour in every state.
+ */
 .jar__accession {
   font-family: var(--font-data);
   font-variant-ligatures: none;
@@ -151,6 +156,9 @@
   font-weight: 500;
   line-height: 1.15;
   white-space: nowrap;
+  color: var(--label-ink);
+  background: var(--tag);
+  pointer-events: auto;
 }
 
 .jar__tool {

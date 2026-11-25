@@ -207,9 +207,22 @@ function detailsOf(
   }
 }
 
+/**
+ * The words the toe-tag shows, in the order they appear on the tag: the accession, the tool, the SPEC stub of a
+ * filed jar, and the ABNORMAL or CRACKED flag. A jar that is not replayed shows only the accession and the tool.
+ */
+export function toeTagWords(jar: Pick<JarViewModel, "accession" | "tool" | "state" | "filed" | "flagWord">): string[] {
+  const words = [jar.accession, jar.tool];
+  if (jar.state === "not replayed") return words;
+  if (jar.filed) words.push("SPEC");
+  if (jar.flagWord !== null) words.push(jar.flagWord);
+  return words;
+}
+
 function nameFor(jar: Omit<JarViewModel, "accessibleName" | "tooltip">): string {
   const details = detailsOf(jar.state, jar.changes, jar.compatible, jar.reason);
-  const head = `${jar.accession} ${jar.tool} — ${jar.state}`;
+  // The name starts with the toe-tag text (WCAG 2.5.3), then keeps the state sentence after it.
+  const head = `${toeTagWords(jar).join(" ")} — ${jar.state}`;
   return details.length === 0 ? head : `${head}, ${details.join(", ")}`;
 }
 

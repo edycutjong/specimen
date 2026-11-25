@@ -72,10 +72,15 @@
   font-size: 16px;
   cursor: pointer;
   list-style-position: inside;
+  transition: border-color var(--hover-ms) ease-out, background-color var(--hover-ms) ease-out;
 }
 
 .version-notes__summary:hover {
   border-color: var(--tag);
+}
+
+.version-notes__summary:active {
+  background: var(--rule);
 }
 
 .version-notes__summary:focus-visible {
