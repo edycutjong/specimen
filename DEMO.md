@@ -56,10 +56,12 @@ npx specimen check-spec .kiro/specs/quote-total-total-cents/bugfix.md --jar SPC-
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"
 ```
 
-The CLI wrote the spec's repro block and diff table, Kiro's `specimen-curator` agent wrote its prose, Kiro's Bug Fix workflow wrote its design and tasks, and Kiro
-executed them into `servers/hollow-inn/src/v2_1.ts` — `evidence/slice/`. On v2.1 the three quote jars replay preserved;
-committed output `evidence/replay/racks-vs-v2.1.txt`; the overall verdict stays HOLD (SPC-0010 `search_rooms` rattled, SPC-0009 `cancel_booking` cracked — v2.1 fixes only
-quote). `specimen replay` also writes a new file under `replays/` each run.
+The CLI wrote each spec's repro block and diff table, Kiro's `specimen-curator` agent wrote the prose, Kiro's Bug Fix workflow wrote the design and tasks, and Kiro
+executed them into `servers/hollow-inn/src/v2_1.ts` — `quote` first (`evidence/slice/`), then `search_rooms` and `cancel_booking`
+(`.kiro/specs/*/`, prompts 42–45; the last execution turn was cut during its final acceptance task, which the autopilot ran itself — see `prompts/README.md`).
+Every v2 break now replays preserved on v2.1: `evidence/replay/racks-vs-v2.1-ship.txt` is `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
+exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not filed` (`racks-vs-v2.1.txt`); after filing and before the fixes it read
+`HOLD · covered` with exit 3 (`racks-vs-v2.1-after-filing-all.txt`). `specimen replay` also writes a new file under `replays/` each run.
 
 ## Notes — field shelf (hour 1)
 

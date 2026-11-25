@@ -12,7 +12,7 @@
     "schema_removed": [],
     "schema_added": [],
     "schema_input_changed": [],
-    "ms": 1990
+    "ms": 2111
   },
   {
     "version": "v2",
@@ -37,28 +37,21 @@
       "booking_cancel"
     ],
     "schema_input_changed": [],
-    "ms": 2001
+    "ms": 1985
   },
   {
     "version": "v2.1",
-    "verdict": "HOLD",
+    "verdict": "SHIP",
     "compared": 10,
-    "preserved": 8,
-    "rattled": 1,
-    "cracked": 1,
+    "preserved": 10,
+    "rattled": 0,
+    "cracked": 0,
     "unsealed": 0,
     "skipped": 0,
-    "red_ids": [
-      "SPC-0010",
-      "SPC-0009"
-    ],
-    "schema_removed": [
-      "cancel_booking"
-    ],
-    "schema_added": [
-      "booking_cancel"
-    ],
+    "red_ids": [],
+    "schema_removed": [],
+    "schema_added": [],
     "schema_input_changed": [],
-    "ms": 2232
+    "ms": 2088
   }
 ]

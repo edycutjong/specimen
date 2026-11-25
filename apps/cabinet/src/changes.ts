@@ -22,11 +22,11 @@ export type VersionNote = {
  * it fixes and what it does not. The clause "still HOLD" comes from the plate, in `v21FixLead`.
  */
 export const V21_FIX_LEAD =
-  "v2.1 is the version Kiro built from the filed quote bugfix spec. It fixes only quote — the search_rooms page size and the cancel_booking rename are not filed yet";
+  "v2.1 is the version Kiro built from three filed bugfix specs, one per v2 change: the quote total, the search_rooms page size and the cancel_booking rename";
 
 /** The v2.1 lead for a plate verdict. "still HOLD" is said only when the plate says HOLD. */
 export function v21FixLead(verdict: "SHIP" | "HOLD" | null): string {
-  return verdict === "HOLD" ? `${V21_FIX_LEAD}, so v2.1 is still HOLD.` : `${V21_FIX_LEAD}.`;
+  return verdict === "HOLD" ? `${V21_FIX_LEAD}, and v2.1 is still HOLD.` : `${V21_FIX_LEAD}.`;
 }
 
 /**

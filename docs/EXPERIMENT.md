@@ -13,7 +13,7 @@ server (hollow-inn), what does it see, and what does replaying the recorded call
 | server | input-schema diff | replay |
 |---|---|---|
 | hollow-inn v2 | 2 diff entries (1 tool renamed): removed `cancel_booking`, added `booking_cancel` — the cabinet shows this as "1 of 6 tools changed · renamed" | HOLD · 5 preserved · 4 rattled · 1 cracked — red jars SPC-0002, SPC-0010, SPC-0006, SPC-0007, SPC-0009 |
-| hollow-inn v2.1 | 2 diff entries, 1 tool renamed (same) | HOLD · 8 preserved · 1 rattled · 1 cracked — red jars SPC-0010, SPC-0009 |
+| hollow-inn v2.1 | 0 diff entries (the tool list is v1's again) | SHIP · 10 preserved · 0 rattled · 0 cracked (measured 2026-11-25 after Kiro executed all three bugfix specs; the same table before the (b)/(c) fixes read HOLD · 8 · 1 · 1) |
 
 **Result:** the input-schema diff sees the tool rename and nothing else. It cannot see the three `quote` jars whose
 `/total` became `/total_cents` (×100), nor the no-limit `search_rooms` jar that lost `r-08` and `r-09` — the inputs of
