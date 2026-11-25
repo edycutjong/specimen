@@ -37,6 +37,8 @@ follow-up prompt, `prompts/rack-a-followup.md`, told the agent to omit the limit
 
 The jars still rattle, and they should: the response contract changed (`/total` removed, `/total_cents` added ×100,
 a tool renamed). One LLM agent with the new tool descriptions loaded adapted this time, in n = 1 run per
-task. Hypothesis, not tested here: code and clients that read `total` (a typed SDK, a cached plan, a downstream service, an
-agent with a stale tool list) would not have the new description and would get nothing. Replay reports the change; whether a given consumer survives it is a separate,
+task. Hypothesis when this was written: code and clients that read `total` (a typed SDK, a cached plan, a downstream service, an
+agent with a stale tool list) would not have the new description and would get nothing. Measured since for one such
+consumer (`consumer.md`, `scripts/consumer.ts`): under v2 its charge line throws (`total` is undefined), it offers 5 of
+9 rooms, and its cancel fails (`cancel_booking` not found); under v2.1 every line matches v1. Replay reports the change; whether a given consumer survives it is a separate,
 per-consumer question — and this run is the measured answer for one consumer, on one day.
