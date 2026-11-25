@@ -50,6 +50,7 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
   (`.specimen/turn.json`, written by `specimen hook prompt` on `UserPromptSubmit`; a missing snapshot means "check"). `decideStop` blocks only when a red (rattled or cracked) jar has no
   passing filed bugfix spec; SHIP, empty, all-skipped, quarantined or spoiled results never block. At most 3 blocks per session (`.specimen/gate-<session>.json`), then it allows the stop and
   writes `.specimen/unresolved.md`. Any error or timeout allows the stop. `specimen file` starts the curator with `SPECIMEN_GATE=off` so the curator's own turn is not sent back.
+  The committed hook's `--server` is hollow-inn v2.1 (the current, SHIP server: no block until v2.1 changes); the E1–E3 runs pass v1 or v2 to `specimen hook stop --server` directly (`scripts/stop-gate-eval.sh:21`) and the live runs rewrite the hook's `--server` to v2 or v1 in a scratch copy (`scripts/stop-gate-live.sh:26`).
 
 ## Hosting
 
@@ -57,4 +58,4 @@ Static output (`apps/cabinet/dist`) on Vercel, `vercel.json` builds `npm run bui
 
 ## Not built
 
-Not in this repository, and why (each is a cut for time against the Must path, not a technical blocker we found): a Playwright end-to-end test of the judge path (the live page was checked by a recorded Puppeteer + axe run instead, `evidence/interaction-qa.md`, and by 253 cabinet component tests); a larger field shelf (hour 1 tried one public server, server-memory 1.0.0 → 2.2.1: replay SHIP 5 of 5, no break found, `evidence/field/server-memory.md`); `specimen seal` / `cabinet`; a gate A/B beyond N = 1 per arm; any IDE measurement of the Stop gate; and an MCP server inside the Power (`power/specimen/` ships one skill).
+Not in this repository, and why (each is a cut for time against the Must path, not a technical blocker we found): a Playwright end-to-end test of the judge path (the live page was checked by a recorded Puppeteer + axe run instead, `evidence/interaction-qa.md`, and by 253 cabinet component tests); a larger field shelf (hour 1 tried one public server, server-memory 1.0.0 → 2.2.1: no break found, HOLD · 3 preserved · 2 unsealed by structuredContent a text-only jar cannot compare, `evidence/field/server-memory.md`); `specimen seal` / `cabinet`; a gate A/B beyond N = 1 per arm; any IDE measurement of the Stop gate; and an MCP server inside the Power (`power/specimen/` ships one skill).

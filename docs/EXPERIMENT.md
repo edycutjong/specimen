@@ -61,7 +61,7 @@ with the new descriptions loaded adapted, in one run per task.
   `scripts/bench.ts detect` agrees (`evidence/bench/detect.md`: v2.1 SHIP, 10 preserved).
 - `specimen init` on a scratch workspace with the real hollow-inn v2.1 as the test instance: exit 0, six files written (four hook files, `.specimen/replay.json`, `.gitignore`), second run changes nothing — `evidence/init-smoke.md`. That run predates the turn-snapshot hook; the current `init` writes seven files (five hook files).
 
-**Caveat:** hollow-inn's three breaks are author-made, so this shows the loop closes, not how often real server changes are caught. The one public server we replayed (`server-memory` 1.0.0 → 2.2.1) was a null result (`evidence/field/server-memory.md`).
+**Caveat:** hollow-inn's three breaks are author-made, so this shows the loop closes, not how often real server changes are caught. The one public server we replayed (`server-memory` 1.0.0 → 2.2.1) was a null result for breaks; 2 of its 5 jars are unsealed because its `structuredContent` carries a key the text does not (`evidence/field/server-memory.md`).
 
 ## 5. Gate ON vs OFF (Kiro CLI, N = 1 per arm)
 

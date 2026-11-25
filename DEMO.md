@@ -68,9 +68,10 @@ exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not
 
 One real headless Kiro session against the public `@modelcontextprotocol/server-memory@1.0.0` was captured as 5 jars
 (`field/server-memory/jars/`) and replayed against 1.0.0 and 2.2.1 — see `evidence/field/server-memory.md`. Both replays are
-SHIP on the recorded set, while an input-schema diff flags all 9 tools (every one changed its `$schema` dialect URI; three
-also gained optional inputs — details in the evidence file). No break was found in that hour; that is the result. Reproduce:
-`sh field/server-memory/replay.sh 2.2.1`.
+HOLD · 3 preserved · 2 unsealed: `create_entities` and `create_relations` also return a `structuredContent` that wraps the
+text's array in an `entities`/`relations` key, which a text-only jar cannot compare. An input-schema diff flags all 9 tools
+(every one changed its `$schema` dialect URI; three also gained optional inputs — details in the evidence file). No break
+was found in that hour; that is the result. Reproduce: `sh field/server-memory/replay.sh 2.2.1` (exit 1, HOLD).
 
 ## 6. Set it up in another repository, and the readiness gate
 

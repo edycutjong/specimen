@@ -1,0 +1,13 @@
+HOLD · 3 rattled · 10 jars compared · 5 of 6 tools · not recorded: get_room
+SPC-0001 · search_rooms · preserved · - · -
+SPC-0002 · quote · rattled · /total_cents · -
+SPC-0003 · book · preserved · - · -
+SPC-0004 · list_bookings · preserved · - · -
+SPC-0010 · search_rooms · preserved · - · -
+SPC-0005 · search_rooms · preserved · - · -
+SPC-0006 · quote · rattled · /total_cents · -
+SPC-0007 · quote · rattled · /total_cents · -
+SPC-0008 · book · preserved · - · -
+SPC-0009 · cancel_booking · preserved · - · -
+not filed · SPC-0002, SPC-0006, SPC-0007
+exit=1
