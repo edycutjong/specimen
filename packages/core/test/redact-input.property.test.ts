@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { canonicalJson, type Json } from "../src/json.js";
-import { DEFAULT_REDACT_CONFIG, MARKER, compileRedact, redactInput } from "../src/redact.js";
+import { DEFAULT_REDACT_CONFIG, MARKER, compileRedact, keyMatcher, redactInput, type KeyMatcher } from "../src/redact.js";
 
 // Feature: jar-capture, Property 12: Input redaction
 // **Validates: Requirements 7.6, 7.7, 7.8, 7.24**
@@ -75,7 +75,7 @@ const escapeToken = (key: string): string => key.replace(/~/g, "~0").replace(/\/
 function expectedRedaction(
   v: Json,
   ptr: string,
-  keys: ReadonlySet<string>,
+  keys: KeyMatcher,
   pointers: string[],
 ): Json {
   if (typeof v === "string") {
@@ -145,7 +145,7 @@ describe("redactInput property: input redaction", () => {
 
         // Values under matching keys and matching strings are replaced, everything else is kept.
         const pointers: string[] = [];
-        const expected = expectedRedaction(input, "", new Set(keys), pointers);
+        const expected = expectedRedaction(input, "", keyMatcher(keys), pointers);
         expect(canonicalJson(actual.value)).toBe(canonicalJson(expected));
         expect([...actual.pointers].sort()).toEqual([...pointers].sort());
 

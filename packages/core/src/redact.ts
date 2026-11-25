@@ -26,9 +26,56 @@ export const DEFAULT_REDACT_CONFIG: RedactConfig = {
   text: "redact",
 };
 
+/** Decides whether an object key is sensitive. */
+export type KeyMatcher = { has(key: string): boolean };
+
+/**
+ * The lowercase words of a key: camelCase, PascalCase, snake_case, kebab-case and dotted keys all
+ * split the same way, so `accessToken`, `access_token`, `Access-Token` and `ACCESS_TOKEN` are all
+ * ["access", "token"].
+ */
+export function keyWords(key: string): string[] {
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((word) => word !== "");
+}
+
+/** True when `words` holds `run` as a contiguous run. */
+function hasRun(words: readonly string[], run: readonly string[]): boolean {
+  for (let start = 0; start + run.length <= words.length; start += 1) {
+    if (run.every((word, offset) => words[start + offset] === word)) return true;
+  }
+  return false;
+}
+
+/**
+ * The sensitive-key rule (a2a round 05; it replaced the exact, case-sensitive match). A key is
+ * sensitive when it equals a configured key, or when its words contain a configured key's words as
+ * a contiguous run, ignoring case and separators: `token` covers `Token`, `access_token` and
+ * `X-Auth-Token` but not `tokens_used` or `max_tokens`; `api_key` covers `apiKey` and `x-api-key`;
+ * `authorization` covers the HTTP header's canonical `Authorization`. A configured key with no
+ * letters or digits matches only itself. Jars are committed to git, so the rule errs towards
+ * redacting.
+ */
+export function keyMatcher(keys: readonly string[]): KeyMatcher {
+  const exact = new Set(keys);
+  const runs = keys.map(keyWords).filter((words) => words.length > 0);
+  return {
+    has(key: string): boolean {
+      if (exact.has(key)) return true;
+      if (runs.length === 0) return false;
+      const words = keyWords(key);
+      return runs.some((run) => hasRun(words, run));
+    },
+  };
+}
+
 /** A Redact_Config whose patterns compiled as global, case-sensitive RegExp objects. */
 export type Compiled = {
-  keys: ReadonlySet<string>;
+  keys: KeyMatcher;
   res: readonly RegExp[];
   text: "redact" | "hash";
 };
@@ -54,7 +101,7 @@ export function compileRedact(
     }
     res.push(re);
   }
-  return { ok: true, value: { keys: new Set(c.keys), res, text: c.text } };
+  return { ok: true, value: { keys: keyMatcher(c.keys), res, text: c.text } };
 }
 
 /** True when a non-empty match of any pattern occurs in the string. */

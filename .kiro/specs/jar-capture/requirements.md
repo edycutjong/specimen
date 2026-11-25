@@ -188,6 +188,8 @@ Known limitations of this feature:
 
 #### Acceptance Criteria
 
+> **Amendment, 2026-11-25 (agent review round 05; `claude-direct:` — this note is not Kiro's text, Kiro's wording below is unchanged):** criteria 7 and 9 match keys "exact, case-sensitive", which left the canonical HTTP header `Authorization`, `accessToken`, `x-api-key` and `client_secret` unredacted in jars that are committed to git. The code now applies the sensitive-key rule of `keyMatcher` in `packages/core/src/redact.ts`: a key is sensitive when it equals a configured key, or when its words (split on case changes and separators, lowercased) contain the configured key's words as a contiguous run (`token` covers `X-Auth-Token`, not `max_tokens`). Tests: `packages/core/test/redact-keys.test.ts`.
+
 1. THE Redact_Config reader SHALL parse `.specimen/redact.json` with a strict zod schema that requires `keys` and `patterns` to be arrays of strings and `text` to be `"redact"` or `"hash"`, and that treats an unknown key as invalid.
 2. IF `.specimen/redact.json` is missing, THEN THE Post_Hook SHALL apply a built-in default Redact_Config equal to the content of the shipped `.specimen/redact.json`, so that a missing file does not store secrets.
 3. IF `.specimen/redact.json` exists and fails its zod schema, THEN THE Post_Hook SHALL log the problem to the Hook_Log, SHALL append no Jar_Line for that call, SHALL leave the Counter_File and the Jar unchanged, and SHALL exit with code 0, so that an unvalidated configuration never lets a secret through.

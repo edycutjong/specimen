@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { canonicalJson, type Json } from "../src/json.js";
-import { DEFAULT_REDACT_CONFIG, MARKER, compileRedact, redactResponse } from "../src/redact.js";
+import { DEFAULT_REDACT_CONFIG, MARKER, compileRedact, keyMatcher, redactResponse, type KeyMatcher } from "../src/redact.js";
 
 // Feature: jar-capture, Property 13: Raw-text fidelity of response redaction
 // **Validates: Requirements 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16, 7.21, 11.5, 11.6**
@@ -235,7 +235,7 @@ type Located = { node: GNode; ptr: string };
 type Oracle = { located: Located[]; numbers: GNum[] };
 
 /** True when a string inside the node matches a pattern, or a key inside it is sensitive. */
-function containsOracle(node: GNode, keys: ReadonlySet<string>, patterns: readonly string[]): boolean {
+function containsOracle(node: GNode, keys: KeyMatcher, patterns: readonly string[]): boolean {
   if (node.kind === "str") return matchesOracle(node.text, patterns);
   if (node.kind === "num" || node.kind === "lit") return false;
   if (node.kind === "arr") {
@@ -254,7 +254,7 @@ function containsOracle(node: GNode, keys: ReadonlySet<string>, patterns: readon
 function oracle(
   node: GNode,
   ptr: string,
-  keys: ReadonlySet<string>,
+  keys: KeyMatcher,
   patterns: readonly string[],
   out: Oracle,
 ): void {
@@ -319,7 +319,7 @@ describe("redactResponse property: raw-text fidelity", () => {
         if (!compiled.ok) return;
 
         const out: Oracle = { located: [], numbers: [] };
-        oracle(doc.root, "", new Set(keyList), PATTERNS, out);
+        oracle(doc.root, "", keyMatcher(keyList), PATTERNS, out);
         const located = out.located
           .map((l) => ({ ...l, span: spanOf(spans, l.node) }))
           .sort((a, b) => a.span.start - b.span.start);
