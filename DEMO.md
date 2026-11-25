@@ -1,13 +1,13 @@
 # DEMO — reproduce what SPECIMEN JAR measured
 
-Work in progress (build week). Every number below is printed by the command next to it; the outputs are committed under
-`evidence/`.
+Every number below is printed by the command next to it; the outputs are committed under `evidence/`. The live cabinet,
+<https://specimen.edycu.dev/>, replays the same jars in the browser on load.
 
 ## 0. Install
 
 ```sh
 npm ci
-npm test            # vitest: unit, property (fast-check) and end-to-end suites
+npm test            # vitest: unit, property (fast-check) and end-to-end suites — 989 tests in 114 files at the last run (evidence/tests.txt)
 npm run seed:check  # the hollow-inn fixture still holds the properties the demo depends on
 ```
 
@@ -70,3 +70,16 @@ One real headless Kiro session against the public `@modelcontextprotocol/server-
 SHIP on the recorded set, while an input-schema diff flags all 9 tools (every one changed its `$schema` dialect URI; three
 also gained optional inputs — details in the evidence file). No break was found in that hour; that is the result. Reproduce:
 `sh field/server-memory/replay.sh 2.2.1`.
+
+## 6. Set it up in another repository, and the readiness gate
+
+```sh
+npx specimen init --server-key hollowinn --test-server "npx tsx servers/hollow-inn/src/main.ts v2.1" --watch 'servers/**'
+npx tsx scripts/check_submission_readiness.ts --allow-pending-video
+```
+
+`specimen init` writes the capture and firewall hooks, `.specimen/replay.json` (replay allow-list pre-filled from `readOnlyHint`) and the ignore rules; a second run
+changes nothing. A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
+that hook calls `specimen hook stop`, which is **not built yet** (see "Not built" in `ARCHITECTURE.md`).
+The readiness script checks `.kiro/` and `prompts/` are tracked, no unfinished-text markers, every spec folder complete, every bugfix spec passes `check-spec`, no third-party host in the built
+cabinet and no kitchen file tracked; the demo video URL is the one field allowed to stay `PENDING` until it is uploaded.

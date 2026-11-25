@@ -59,3 +59,32 @@ Bug Fix workflow) run headless from `kiro-cli`, and what does each phase cost?
 10. A curator that writes the three EARS sections around a CLI-written repro block can be held to a structural checker:
     the first attempt failed `shall_continue` and `unchanged_jar`, and one retry with the failures quoted passed
     ([`evidence/slice/01-specimen-file.md`](../evidence/slice/01-specimen-file.md)).
+
+## Experiment 3 — closing the loop for the other two breaks, and `specimen init` (day 3, 2026-11-25)
+**Question:** once the curator, the Bug Fix workflow and the checker exist, what does it cost to file and fix the second and third break, and
+where does headless Kiro stop on its own?
+**Measured** (credits from each session's `usage_summary`; prompts [37–47 in `prompts/`](../prompts/README.md)):
+
+| Step | Mode / model | Credits |
+|---|---|---|
+| `specimen file SPC-0010` (curator, CLI) | `--agent specimen-curator`, auto | 0.34 |
+| `specimen file SPC-0009` (curator; the first attempt exited 22 — Kiro's model registry was unavailable — and cost 0) | auto | 0.55 |
+| `specimen init` (code + 32 tests, turn 41) | claude-haiku-5.5 | 0.91 |
+| Bug Fix design.md + tasks.md for `search_rooms` (turn 42) / `cancel_booking` (turn 44) | `--mode spec`, auto | 4.91, 5.01 |
+| Bug Fix task execution (turn 43 / turn 45) | claude-haiku-5.5 | 1.02, 1.12 |
+| cabinet fixes from the axe + hover + focus gate (turns 46, 47) | claude-haiku-5.5 | 2.51, 1.49 |
+
+## Findings, day 3
+11. A Bug Fix spec is much cheaper than a feature spec: design + tasks 4.9–6.3 credits, execution about 1 credit on claude-haiku-5.5, against 27–53 credits to execute a whole feature spec (finding 7). The fix itself is small
+    because the filed spec holds a repro block, the diff and the jarred reference.
+12. Headless Kiro stops by itself when a task's acceptance criterion touches code outside the task. Turn 43 stopped at its last task to ask whether four cabinet tests that pin the old
+    counts should be updated; we updated them ourselves (`claude-direct:`) because `--no-interactive` cannot answer.
+13. We cut two execution turns with our own `timeout` (turn 45 inside its final acceptance task, turns 46 and 47 near their final measurement). Kiro's work up to the cut was kept and the remaining acceptance steps
+    were run by us and labelled so in `prompts/README.md` and the ledger. The tasks that were not completed stay unchecked in `tasks.md` — we never edited them. Next time: run the turn in the background with no timeout.
+14. `specimen file` tolerates a transient Kiro failure (`exit 22`, model registry) with a plain retry; the failed attempt is not billed.
+15. **axe-core reports `color-contrast` (serious) on the jars' toe-tag text that we could not fix because the measured contrast is fine.** Ink `#1E1912` on tag `#D9C49A` is 10.24:1 and
+    `document.elementsFromPoint` returns the accession label first at its own points, but axe samples the dark jar art underneath the rotated, overlapping SVG + HTML tag. Four changes left axe unchanged
+    (rotation removed from the tag, rotation removed from the overlay, `pointer-events:auto`, filter/blend/opacity/animation neutralised). We treat it as a false positive and do **not** claim "axe 0 violations";
+    everything else axe checks is clean at 1440, 375 and 320 px (`label-content-name-mismatch` was real and Kiro fixed it in turns 46–47).
+16. The interaction gate (`hover` byte-diff of the element screenshot, focus-ring check, link status, 375 and 320 px scroll width) first reported the summary in the version notes as dead on hover; the cause was that
+    the notes sit inside the closed "Details" fold, whose children have no real box until it is opened. After opening the fold the same element receives the pointer and its hover changes.

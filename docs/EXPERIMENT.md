@@ -47,3 +47,18 @@ loaded; we did not run an ablation, so this is the likely reason, not a measured
 response changed in a way no input-schema diff (the check measured in experiment 1, which does not compare descriptions)
 and no unit test in the server saw; a consumer that still reads `total` would get nothing (not run here). One LLM agent
 with the new descriptions loaded adapted, in one run per task.
+
+## 4. The loop closes for all three breaks (2026-11-25)
+
+**Question:** does every red jar of the committed racks get a passing filed bugfix spec, and does replaying v2.1 then read SHIP?
+
+**Run:** `specimen file SPC-0010` and `specimen file SPC-0009` (the quote jars were filed in the day-2 slice, `evidence/slice/`), `specimen check-spec` on each, then Kiro's Bug Fix design + tasks + execution for
+`search_rooms` and `cancel_booking`, then `specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"`.
+
+**Result (committed outputs):**
+- Before filing, v2 read `HOLD` with SPC-0010 and SPC-0009 `not filed`; after filing all five red jars it read `HOLD · covered`, exit 3 — `evidence/replay/racks-vs-v2-after-filing-all.txt`.
+- After the fixes, v2.1 reads `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`, exit 0 — `evidence/replay/racks-vs-v2.1-ship.txt`;
+  `scripts/bench.ts detect` agrees (`evidence/bench/detect.md`: v2.1 SHIP, 10 preserved).
+- `specimen init` on a scratch workspace with the real hollow-inn v2.1 as the test instance: exit 0, six files written (four hook files, `.specimen/replay.json`, `.gitignore`), second run changes nothing — `evidence/init-smoke.md`.
+
+**Caveat:** hollow-inn's three breaks are author-made, so this shows the loop closes, not how often real server changes are caught. The one public server we replayed (`server-memory` 1.0.0 → 2.2.1) was a null result (`evidence/field/server-memory.md`).
