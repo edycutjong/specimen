@@ -57,5 +57,7 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 43 | executed that spec's tasks: `v2_1.ts` default limit back to 20 + tests + CHANGES.md; stopped at the final acceptance task (see ledger) | 1.02 |
 | 44 | Bug Fix workflow for the `cancel_booking` spec: `design.md` + `tasks.md` | 5.01 |
 | 45 | executed that spec's tasks 1–3 (`cancel_booking` registered again in v2.1, `booking_cancel` unlisted); cut by a timeout during the final acceptance task 4 — the replay and test run for 4.1–4.3 were done by the autopilot, so tasks 4–5 stay unchecked in `tasks.md` | 1.12 |
+| 46 | cabinet UX fixes from the live axe + hover/focus gate (accession contrast, accessible name starts with the visible label, hover/press on summaries and the footer link, favicon); cut by a wall-clock timeout inside item 5 | 2.51 |
+| 47 | continuation of 46: tests for items 1–4 and the phone first-screen spacing (first jar y 624 → 453 at 375×812); cut by a timeout at its final measurement, tests/typecheck/build re-run by the autopilot | 1.49 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
