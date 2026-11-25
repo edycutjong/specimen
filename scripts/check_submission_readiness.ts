@@ -97,8 +97,8 @@ if (existsSync(dist)) {
     }
   }
   // Outbound <a href> links to GitHub are navigation, not requests; any other host is listed.
-  const other = [...hosts].filter((h) => h !== "github.com");
-  add("built cabinet requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (github.com links are navigation only)`);
+  const other = [...hosts].filter((h) => !["github.com", "specimen.edycu.dev", "kiroween.devpost.com"].includes(h));
+  add("built cabinet requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (github.com and kiroween.devpost.com links are navigation; specimen.edycu.dev is our own host)`);
 } else add("built cabinet requests no third-party host", "FAIL", "apps/cabinet/dist missing: run `npm run build -w apps/cabinet` first");
 
 // 7. A kitchen file never sits in the repository.
