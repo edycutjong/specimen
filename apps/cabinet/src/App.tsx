@@ -15,7 +15,14 @@ import { SpoiledTray } from "./components/SpoiledTray.js";
 import { VerdictPlate } from "./components/VerdictPlate.js";
 import { VersionNotes } from "./components/VersionNotes.js";
 import { StormWindow } from "./jar-art.js";
-import { REVEAL_INTERVAL_MS, useReducedMotion, useReveal } from "./reveal.js";
+import {
+  COLD_OPEN_LEAD_MS,
+  REVEAL_INTERVAL_MS,
+  REVEAL_SETTLE_MS,
+  useLightning,
+  useReducedMotion,
+  useReveal,
+} from "./reveal.js";
 import "./styles/motion.css";
 import "./styles/header.css";
 
@@ -24,6 +31,9 @@ const PAGE_VERSION: HollowInnVersion = "v2";
 
 /** The id of the element that wraps the JarDrawer. Each Jar's aria-controls names it. */
 const DRAWER_ID = "jar-drawer";
+
+/** The cue on the first red filed jar lasts this long (design pass, item 4). */
+const CUE_MS = 1200;
 
 /** The committed Bugfix_Specs, read once. */
 const BUGFIX_SPECS = getBugfixSpecs();
@@ -44,6 +54,9 @@ export function App(): ReactElement {
     viewedSpec: false,
     replayedFixedVersion: false,
   });
+  // The cue on the first red filed jar plays once per page load (design pass, item 4).
+  const [cueOn, setCueOn] = useState(false);
+  const [cueSpent, setCueSpent] = useState(false);
   const reducedMotion = useReducedMotion();
 
   // Each replay request takes the next token. A result is applied only while its token is the
@@ -127,8 +140,30 @@ export function App(): ReactElement {
   );
 
   // The Reveal paces the jars of the current result in Reveal order (Requirements 2.3, 2.15, 2.16).
+  // The first jar waits for the cold-open lightning: a hold, then two flashes (design pass, item 2).
   const order = useMemo(() => revealOrder(viewModel), [viewModel]);
-  const reveal = useReveal(order, result, reducedMotion);
+  const reveal = useReveal(order, result, reducedMotion, reducedMotion ? 0 : COLD_OPEN_LEAD_MS);
+
+  // The first red jar flips, and the flash fires once for it.
+  const firstRed = useMemo(() => order.find((jar) => jar.isRed), [order]);
+  const firstRedRevealed = firstRed !== undefined && reveal.isRevealed(firstRed);
+  const lit = useLightning(result, reducedMotion, firstRedRevealed);
+
+  // The first red filed jar glows once, after the cold open has settled.
+  const cueJar = useMemo(() => order.find((jar) => jar.isRed && jar.filed), [order]);
+  useEffect(() => {
+    if (!reveal.complete || cueSpent || cueJar === undefined || reducedMotion) return undefined;
+    const start = window.setTimeout(() => setCueOn(true), REVEAL_SETTLE_MS);
+    const end = window.setTimeout(() => {
+      setCueOn(false);
+      setCueSpent(true);
+    }, REVEAL_SETTLE_MS + CUE_MS);
+    return () => {
+      window.clearTimeout(start);
+      window.clearTimeout(end);
+      setCueOn(false);
+    };
+  }, [reveal.complete, cueSpent, cueJar, reducedMotion]);
 
   const openJar: JarViewModel | null =
     openKey === null ? null : (order.find((jar) => jar.accession === openKey) ?? null);
@@ -183,11 +218,18 @@ export function App(): ReactElement {
         </div>
       </header>
 
-      <CabinetFrame>
+      <CabinetFrame lit={lit}>
         <main className="cabinet-main">
           <div className="cabinet-wall">
             <div className="cabinet-wall__text">
-              <CountsPair counts={viewModel.counts} replayed={viewModel.replayed} />
+              <CountsPair
+                counts={viewModel.counts}
+                replayed={viewModel.replayed}
+                result={result}
+                jarCount={order.length}
+                revealed={revealed}
+                countUp={!reducedMotion}
+              />
               <div className="cabinet-ledger">
                 <VerdictPlate
                   plate={viewModel.plate}
@@ -195,11 +237,11 @@ export function App(): ReactElement {
                   revealIntervalMs={REVEAL_INTERVAL_MS}
                   part="ledger"
                 />
-                <VersionNotes version={version} />
+                <VersionNotes version={version} verdict={viewModel.plate.verdict} />
               </div>
               <GuideStrip steps={viewModel.guide} coldOpenDone={revealed} reducedMotion={reducedMotion} />
             </div>
-            <StormWindow className="cabinet-wall__window" />
+            <StormWindow className="cabinet-wall__window" lit={lit} />
           </div>
 
           {viewModel.racks.map((rack) => (
@@ -209,6 +251,7 @@ export function App(): ReactElement {
                 isRevealed={reveal.isRevealed}
                 expandedAccession={openKey}
                 stampAccession={reveal.stampAccession}
+                cueAccession={cueOn ? (cueJar?.accession ?? null) : null}
                 drawerId={DRAWER_ID}
                 onActivate={onActivate}
               />

@@ -15,6 +15,7 @@ import { runReplay } from "../src/browser-replay.js";
 import { revealOrder } from "../src/cabinet-model.js";
 import {
   COLD_OPEN_BOUND_MS,
+  COLD_OPEN_LEAD_MS,
   NO_MOTION_CLASS,
   REDUCED_MOTION_QUERY,
   REVEAL_INTERVAL_MS,
@@ -97,10 +98,13 @@ async function settleReplay(): Promise<void> {
   throw new Error("the replay did not reach the page");
 }
 
+/** The clock moves in these steps. Both the lead-in and the Reveal_Interval are multiples of 10 ms. */
+const CLOCK_STEP_MS = 10;
+
 /**
  * Moves the fake clock forward by `ms`. Each Reveal timer schedules the next one from a React
  * effect, and that effect runs only when its `act` scope closes. The clock therefore moves in
- * steps of one Reveal_Interval, each inside its own `act`, so every timer is armed at its real time.
+ * steps of 10 ms, each inside its own `act`, so every timer is armed at its real time.
  */
 function advance(ms: number): void {
   act(() => {
@@ -108,7 +112,7 @@ function advance(ms: number): void {
   });
   let left = ms;
   while (left > 0) {
-    const step = Math.min(left, REVEAL_INTERVAL_MS);
+    const step = Math.min(left, CLOCK_STEP_MS);
     act(() => {
       vi.advanceTimersByTime(step);
     });
@@ -172,7 +176,7 @@ describe("Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5)"
     render(<App />);
     await settleReplay();
 
-    advance(500);
+    advance(COLD_OPEN_LEAD_MS + 500);
     expect(revealedAccessions()).toHaveLength(3);
     expect(verdictWord()).toBeNull();
 
@@ -185,7 +189,7 @@ describe("Reduced_Motion class and live changes (Requirements 2.13, 2.14, 16.5)"
 });
 
 describe("Reveal order and interval (Requirement 2.3)", () => {
-  it("reveals one jar at a time in revealOrder, 250 ms apart, with the first jar at 0 ms", async () => {
+  it("reveals one jar at a time in revealOrder, 250 ms apart, after the 620 ms cold-open lightning", async () => {
     const replay = await runReplay("v2");
     const expected = revealOrder(viewModelOf("v2", replay)).map((jar) => jar.accession);
     expect(expected).toHaveLength(JAR_COUNT);
@@ -197,7 +201,10 @@ describe("Reveal order and interval (Requirement 2.3)", () => {
 
     expect(revealedAccessions()).toEqual([]);
 
-    advance(0);
+    advance(COLD_OPEN_LEAD_MS - 1);
+    expect(revealedAccessions()).toEqual([]);
+
+    advance(1);
     expect(revealedAccessions()).toEqual(expected.slice(0, 1));
 
     advance(REVEAL_INTERVAL_MS - 1);
@@ -222,7 +229,7 @@ describe("Completion on user action (Requirement 2.15)", () => {
     render(<App />);
     await settleReplay();
 
-    advance(750);
+    advance(COLD_OPEN_LEAD_MS + 750);
     expect(revealedAccessions()).toHaveLength(4);
     expect(verdictWord()).toBeNull();
 
@@ -238,7 +245,7 @@ describe("Completion on user action (Requirement 2.15)", () => {
     render(<App />);
     await settleReplay();
 
-    advance(250);
+    advance(COLD_OPEN_LEAD_MS + 250);
     expect(revealedAccessions()).toHaveLength(2);
 
     fireEvent.keyDown(document.body, { key: "ArrowDown" });

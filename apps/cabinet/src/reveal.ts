@@ -21,6 +21,20 @@ export const REVEAL_INTERVAL_MS = 250;
 /** The longest rattled-jar animation, the 700 ms flood (Requirement 2.8). */
 export const REVEAL_SETTLE_MS = 700;
 
+/** The cold-open lightning: a 300 ms hold, then two 120 ms flashes 80 ms apart (design pass, item 2). */
+export const LIGHTNING_HOLD_MS = 300;
+export const LIGHTNING_FLASH_MS = 120;
+export const LIGHTNING_GAP_MS = 80;
+
+/** The lead-in before the first jar takes its state: the hold and both flashes. */
+export const COLD_OPEN_LEAD_MS = LIGHTNING_HOLD_MS + LIGHTNING_FLASH_MS + LIGHTNING_GAP_MS + LIGHTNING_FLASH_MS;
+
+/** The one flash the moment the first red jar flips. */
+export const RED_FLIP_FLASH_MS = 120;
+
+/** The replay count counts up over this many ms, after the settle (design pass, item 2). */
+export const COUNT_UP_MS = 400;
+
 /** The whole cold open, Replay_Time included, must finish inside this bound (design, Testing Strategy). */
 export const COLD_OPEN_BOUND_MS = 4500;
 
@@ -101,6 +115,7 @@ export function useReveal(
   order: readonly JarViewModel[],
   source: object | null,
   reducedMotion: boolean,
+  leadMs = 0,
 ): Reveal {
   const total = order.length;
   const interval = revealIntervalFor(reducedMotion);
@@ -117,17 +132,18 @@ export function useReveal(
   const effectiveCount = !active ? 0 : reducedMotion || skipped ? total : count;
   const complete = active && effectiveCount >= total;
 
-  // One timer per jar. The first jar takes its state at once and each later jar waits one interval.
+  // One timer per jar. The first jar takes its state after the lead-in (the lightning), and each
+  // later jar waits one interval.
   useEffect(() => {
     if (!active || reducedMotion || skipped || count >= total) return undefined;
-    const delay = count === 0 ? 0 : interval;
+    const delay = count === 0 ? leadMs : interval;
     const id = window.setTimeout(() => {
       setStored((current) =>
         current.source === source && !current.skipped ? { ...current, count: current.count + 1 } : current,
       );
     }, delay);
     return () => window.clearTimeout(id);
-  }, [active, source, count, skipped, total, reducedMotion, interval]);
+  }, [active, source, count, skipped, total, reducedMotion, interval, leadMs]);
 
   // Any user action completes the Reveal at once. The listeners sit in the capture phase, so the
   // Reveal is complete before a Jar, the ReplayButton or the ServerSwitch takes its action.
@@ -183,4 +199,46 @@ export function useReveal(
   );
 
   return { isRevealed, complete, stampAccession };
+}
+
+/**
+ * The cold-open lightning and the red-flip flash (design pass, item 2). `source` is the Replay_Result
+ * shown, so each new result runs the cold-open lightning once: a flash at the end of the hold and
+ * another after the gap. `firstRedRevealed` turns true when the first red jar takes its state, and
+ * that fires one more flash. Under Reduced_Motion nothing flashes. Returns true while the wall and
+ * the window are lit.
+ */
+export function useLightning(source: object | null, reducedMotion: boolean, firstRedRevealed: boolean): boolean {
+  const [coldOpenLit, setColdOpenLit] = useState(false);
+  const [redLit, setRedLit] = useState(false);
+
+  useEffect(() => {
+    setColdOpenLit(false);
+    if (source === null || reducedMotion) return undefined;
+    const firstStart = LIGHTNING_HOLD_MS;
+    const secondStart = firstStart + LIGHTNING_FLASH_MS + LIGHTNING_GAP_MS;
+    const timers = [
+      window.setTimeout(() => setColdOpenLit(true), firstStart),
+      window.setTimeout(() => setColdOpenLit(false), firstStart + LIGHTNING_FLASH_MS),
+      window.setTimeout(() => setColdOpenLit(true), secondStart),
+      window.setTimeout(() => setColdOpenLit(false), secondStart + LIGHTNING_FLASH_MS),
+    ];
+    return () => {
+      for (const id of timers) window.clearTimeout(id);
+      setColdOpenLit(false);
+    };
+  }, [source, reducedMotion]);
+
+  useEffect(() => {
+    setRedLit(false);
+    if (!firstRedRevealed || reducedMotion) return undefined;
+    setRedLit(true);
+    const id = window.setTimeout(() => setRedLit(false), RED_FLIP_FLASH_MS);
+    return () => {
+      window.clearTimeout(id);
+      setRedLit(false);
+    };
+  }, [firstRedRevealed, reducedMotion, source]);
+
+  return coldOpenLit || redLit;
 }

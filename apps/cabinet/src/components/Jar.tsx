@@ -20,6 +20,8 @@ export type JarProps = {
   revealed: boolean;
   /** True while this jar's JarDrawer is open (Requirement 8.13). */
   expanded: boolean;
+  /** True while the "open me" glow plays on this filed red jar (design pass, item 4). */
+  cue?: boolean;
   /** The id of the JarDrawer that this jar controls. */
   drawerId: string;
   /** Called on activation. The parent toggles the drawer and completes any running Reveal. */
@@ -58,7 +60,7 @@ function Barcode({ accession }: { accession: string }): ReactElement {
   );
 }
 
-export function Jar({ jar, revealed, expanded, drawerId, onActivate }: JarProps): ReactElement {
+export function Jar({ jar, revealed, expanded, cue = false, drawerId, onActivate }: JarProps): ReactElement {
   const tipId = useId();
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -81,6 +83,14 @@ export function Jar({ jar, revealed, expanded, drawerId, onActivate }: JarProps)
     window.addEventListener("keydown", onKey, true);
     return () => window.removeEventListener("keydown", onKey, true);
   }, [tipOpen]);
+
+  const tagClass = [
+    "jar__tag",
+    flagWord === null ? "" : "jar__tag--flagged",
+    jar.filed ? "jar__tag--filed" : "",
+  ]
+    .filter((name) => name !== "")
+    .join(" ");
 
   // The hang angle of the tag is a custom property, so the stylesheet owns the transform.
   const tagStyle = { "--tag-rotate": `${toeTagRotation(shownState)}deg` } as CSSProperties;
@@ -108,14 +118,19 @@ export function Jar({ jar, revealed, expanded, drawerId, onActivate }: JarProps)
             tool={jar.tool}
             tilt={jar.tilt}
           />
-          <span className="jar__overlay" style={overlayStyle}>
-            <span className={flagWord === null ? "jar__tag" : "jar__tag jar__tag--flagged"} style={tagStyle}>
+          <span className={cue ? "jar__overlay jar__overlay--cue" : "jar__overlay"} style={overlayStyle}>
+            <span className={tagClass} style={tagStyle}>
               <span className="jar__eyelet" aria-hidden="true" />
               <span className="jar__accession">{jar.accession}</span>
               <span className="jar__tool">
                 <ToolName tool={jar.tool} />
               </span>
               <Barcode accession={jar.accession} />
+              {jar.filed ? (
+                <span className="jar__spec" aria-hidden="true">
+                  SPEC
+                </span>
+              ) : null}
               {flagWord !== null && (
                 <span
                   className={`jar__flag jar__flag--${flagWord === "ABNORMAL" ? "abnormal" : "cracked"} jar-art__strip`}

@@ -17,9 +17,28 @@ export type VersionNote = {
   body: string;
 };
 
-/** Requirement 3.9: shown when v2.1 is selected, before any replay. It names nothing else broken. */
+/**
+ * Requirement 3.9 and design pass, item 6: the v2.1 lead. It says v2.1 is what Kiro built, and what
+ * it fixes and what it does not. The clause "still HOLD" comes from the plate, in `v21FixLead`.
+ */
 export const V21_FIX_LEAD =
-  "v2.1 is the version Kiro fixed from the filed quote bugfix spec.";
+  "v2.1 is the version Kiro built from the filed quote bugfix spec. It fixes only quote — the search_rooms page size and the cancel_booking rename are not filed yet";
+
+/** The v2.1 lead for a plate verdict. "still HOLD" is said only when the plate says HOLD. */
+export function v21FixLead(verdict: "SHIP" | "HOLD" | null): string {
+  return verdict === "HOLD" ? `${V21_FIX_LEAD}, so v2.1 is still HOLD.` : `${V21_FIX_LEAD}.`;
+}
+
+/**
+ * A heading split into its title and its parenthetical aside, with the backticks removed. The aside
+ * is the honesty note of a version (for example "this is the demo's planted break set"), or null.
+ */
+export function splitHeading(heading: string): { title: string; aside: string | null } {
+  const plain = heading.replace(/`/g, "");
+  const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(plain);
+  if (match === null) return { title: plain, aside: null };
+  return { title: (match[1] ?? "").trim(), aside: (match[2] ?? "").trim() };
+}
 
 /**
  * Requirement 3.10: the wording for v2.1 once its replay has run. The VerdictPlate shows the

@@ -45,7 +45,7 @@ export function ReplayButton({ version, running, onReplay }: ReplayButtonProps) 
           if (!running) onReplay();
         }}
       >
-        Replay cabinet {version}
+        Replay <span className="replay-button__cabinet">cabinet {version}</span>
       </button>
       {running ? (
         <span className="replay-button__elapsed" aria-hidden="true">

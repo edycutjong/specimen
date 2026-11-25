@@ -132,6 +132,71 @@ export function labReportOf(entry: ResultEntry): LabReportModel {
   };
 }
 
+/**
+ * The suspected-rename callout (design pass, item 5): the old path and its jarred value, the new path and
+ * its replayed value, the factor, and the plain sentence under them. Built from the rename note and the rows.
+ */
+export type RenameCallout = {
+  oldPath: string;
+  oldValue: string;
+  newPath: string;
+  newValue: string;
+  /** The factor digits of the note, for example "100" for ×100. */
+  factor: string;
+  /** The last name of the old path, for example "total" for "/total". */
+  oldName: string;
+  /** The plain sentence under the line. */
+  sentence: string;
+};
+
+const RENAME_NOTE = /^suspected rename from (.+) ×(\d+)$/;
+
+/** The unit change that the factor names. Only ×100 has a plain name; any other factor reads as a multiple. */
+function unitPhrase(factor: string): string {
+  return factor === "100" ? "from dollars to cents" : `by a factor of ${factor}`;
+}
+
+/** The callout of a jar whose changes carry a suspected-rename note, or null when none does. */
+export function renameCalloutOf(entry: ResultEntry): RenameCallout | null {
+  const note = entry.changes.find((change) => change.note !== undefined && RENAME_NOTE.test(change.note))?.note;
+  if (note === undefined) return null;
+  const match = RENAME_NOTE.exec(note);
+  if (match === null) return null;
+  const oldPath = match[1] ?? "";
+  const factor = match[2] ?? "";
+  const added = entry.changes.find((change) => change.note === note && change.kind === "added");
+  if (added === undefined) return null;
+
+  const oldRow = labReportOf(entry).rows.find(
+    (row): row is LabReportChangeRow => row.type === "change" && row.path === displayPath(oldPath) && row.flag === "REMOVED",
+  );
+  const oldValue = oldRow?.reference ?? NO_VALUE;
+  const oldName = lastToken(oldPath);
+  return {
+    oldPath,
+    oldValue,
+    newPath: added.path,
+    newValue: added.now === undefined ? NO_VALUE : JSON.stringify(added.now),
+    factor,
+    oldName,
+    sentence: `Renamed, and the unit changed ${unitPhrase(factor)}. A client that reads ${oldName} gets nothing.`,
+  };
+}
+
+function RenameCalloutView({ callout }: { callout: RenameCallout }): ReactElement {
+  return (
+    <section className="lab-report__rename" aria-label="Suspected rename">
+      <p className="lab-report__rename-line">
+        <span className="lab-report__rename-path">{callout.oldPath}</span>{" "}
+        <s className="lab-report__rename-old">{callout.oldValue}</s> → <span className="lab-report__rename-path">{callout.newPath}</span>{" "}
+        <span className="lab-report__rename-new">{callout.newValue}</span>{" "}
+        <span className="lab-report__chip">×{callout.factor}</span>
+      </p>
+      <p className="lab-report__rename-sentence">{callout.sentence}</p>
+    </section>
+  );
+}
+
 export type LabReportTableProps = {
   /** The Result_Entry of the jar in the selected Replay_Result. */
   entry: ResultEntry;
@@ -169,6 +234,7 @@ function ValueLine({ label, value, changed }: { label: string; value: string; ch
   );
 }
 
+/** The cells of one change row. Only a REMOVED row is struck through (design pass, item 5). */
 function ChangeCells({ row, changed }: { row: LabReportChangeRow; changed: boolean }) {
   return (
     <>
@@ -194,8 +260,10 @@ function ChangeCells({ row, changed }: { row: LabReportChangeRow; changed: boole
 
 export function LabReportTable({ entry }: LabReportTableProps) {
   const report = labReportOf(entry);
+  const callout = renameCalloutOf(entry);
   return (
     <div className="lab-report">
+      {callout !== null ? <RenameCalloutView callout={callout} /> : null}
       <div className="lab-report__paper">
         <table className="lab-report__table" aria-label="Field-by-field diff of the replayed jar">
           <thead>
@@ -213,7 +281,7 @@ export function LabReportTable({ entry }: LabReportTableProps) {
                 </tr>
               ) : (
                 <tr key={index} className="lab-report__row lab-report__row--changed">
-                  <ChangeCells row={row} changed />
+                  <ChangeCells row={row} changed={row.flag === "REMOVED"} />
                 </tr>
               ),
             )}

@@ -22,6 +22,8 @@ export type ShelfRowProps = {
   expandedAccession: string | null;
   /** The accession of the first rattled jar once the stamp is due, or null. The stamp sits on its cell. */
   stampAccession?: string | null;
+  /** The accession of the filed red jar that glows as the "open me" cue, or null (design pass, item 4). */
+  cueAccession?: string | null;
   /** The id of the JarDrawer that each jar controls. */
   drawerId: string;
   onActivate: (jar: JarViewModel) => void;
@@ -32,6 +34,7 @@ export function ShelfRow({
   isRevealed,
   expandedAccession,
   stampAccession = null,
+  cueAccession = null,
   drawerId,
   onActivate,
 }: ShelfRowProps): ReactElement {
@@ -61,6 +64,7 @@ export function ShelfRow({
               jar={jar}
               revealed={isRevealed(jar)}
               expanded={expandedAccession === jar.accession}
+              cue={cueAccession === jar.accession}
               drawerId={drawerId}
               onActivate={onActivate}
             />

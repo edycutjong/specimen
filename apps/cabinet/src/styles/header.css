@@ -170,9 +170,27 @@
   }
 }
 
+/*
+ * The plate keeps the height of its final text from the first paint (design pass, item 1), so the Reveal
+ * does not move the header. The heights follow the plate's type sizes at each breakpoint.
+ */
+.cabinet-plate-slot > .verdict-plate--plaque {
+  min-height: 60px;
+}
+
+@media (min-width: 600px) {
+  .cabinet-plate-slot > .verdict-plate--plaque {
+    min-height: 96px;
+  }
+}
+
 /* 1280 px and wider: the wordmark is 44 px, as the design sets it. */
 @media (min-width: 1280px) {
   .cabinet-wordmark {
     font-size: 44px;
+  }
+
+  .cabinet-plate-slot > .verdict-plate--plaque {
+    min-height: 104px;
   }
 }

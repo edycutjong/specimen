@@ -109,6 +109,20 @@
   outline-offset: 2px;
 }
 
+/* Below 600 px the button reads REPLAY at 16 px on one line (design pass, item 11). */
+@media (max-width: 599px) {
+  .replay-button__control {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .replay-button__cabinet {
+    display: none;
+  }
+}
+
 /* While a replay runs the button keeps focus but reads as disabled. */
 .replay-button__control[aria-disabled="true"],
 .replay-button__control[aria-disabled="true"]:hover {

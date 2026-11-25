@@ -64,6 +64,17 @@
   overflow-wrap: anywhere;
 }
 
+/* The compact counts line is for the phone plate only, so the desktop plate shows the full line. */
+.verdict-plate__compact {
+  display: none;
+  margin: 0;
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
 .verdict-plate__idle {
   margin: 0;
   font-family: var(--font-data);
@@ -80,11 +91,12 @@
   color: var(--muted);
 }
 
+/* The ledger facts are flex items, so they wrap without a literal separator at a line start (design pass, item 7). */
 .verdict-plate--ledger .verdict-plate__status {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 2px 0;
+  gap: 4px 16px;
 }
 
 .verdict-plate--ledger .verdict-plate__status:empty {
@@ -105,11 +117,6 @@
 
 .verdict-plate--ledger p {
   margin: 0;
-}
-
-.verdict-plate--ledger p + p::before {
-  content: "·";
-  margin: 0 8px;
 }
 
 /* Replay failure: a plaque-style card with the message and a Retry control. */
@@ -154,6 +161,36 @@
 .verdict-error__retry:focus-visible {
   outline: 3px solid var(--before);
   outline-offset: 2px;
+}
+
+/* Below 600 px the plaque is one row: "HOLD v2 · 4 rattled · 1 cracked" (design pass, item 11). */
+@media (max-width: 599px) {
+  .verdict-plate--plaque {
+    padding: 10px 14px;
+  }
+
+  .verdict-plate--plaque .verdict-plate__status {
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+  }
+
+  .verdict-plate__word,
+  .verdict-plate__version {
+    font-size: 32px;
+  }
+
+  .verdict-plate__counts {
+    display: none;
+  }
+
+  .verdict-plate__compact {
+    display: block;
+  }
+
+  .verdict-plate__compact::before {
+    content: "· ";
+  }
 }
 
 /* 600 px and up: the plaque words grow. */

@@ -463,13 +463,27 @@ export function CrackLine({
  * other place besides the lightning where `--storm` appears. `flash` raises the glow for the
  * cold-open lightning. The flash and bolt carry CSS class names for `motion.css`.
  */
-export function StormWindow({ flash = true, className }: { flash?: boolean; className?: string }): ReactElement {
+export function StormWindow({
+  flash = true,
+  className,
+  lit = false,
+}: {
+  flash?: boolean;
+  className?: string;
+  /** True while the cold-open lightning or the red-flip flash is lit (design pass, item 2). */
+  lit?: boolean;
+}): ReactElement {
   const uid = safeId(useId());
   const ids = { sky: `${uid}-sky`, flash: `${uid}-flash`, clip: `${uid}-clip` };
   const rain = Array.from({ length: 18 }, (_, i) => ({ x: 20 + i * 15.5, y: 30 + ((i * 53) % 300) }));
   const bolt = "M196 30 L158 118 L188 124 L140 230 L162 234 L126 330";
   return (
-    <svg className={className} viewBox="0 0 300 400" aria-hidden="true" focusable="false">
+    <svg
+      className={lit ? `${className ?? ""} storm-window--lit`.trim() : className}
+      viewBox="0 0 300 400"
+      aria-hidden="true"
+      focusable="false"
+    >
       <defs>
         <linearGradient id={ids.sky} x1={0} y1={0} x2={0} y2={1}>
           <stop offset={0} style={{ stopColor: mixed("var(--storm)", 22, "var(--bg)") }} />

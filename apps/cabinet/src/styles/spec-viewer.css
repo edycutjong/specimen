@@ -23,14 +23,15 @@
   color: var(--muted);
 }
 
+/* The filing status is a sentence, so it uses the body face (design pass, item 5). The PASS badge keeps the data face. */
 .spec-viewer__status {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
   margin: 0;
-  font-family: var(--font-data);
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 16px;
   color: var(--ink);
 }
 
@@ -47,6 +48,7 @@
 
 .spec-viewer__provenance {
   margin: 0;
+  font-family: var(--font-body);
   color: var(--muted);
   font-size: 15px;
 }
@@ -80,6 +82,7 @@
 
 .spec-viewer__body {
   min-width: 0;
+  font-family: var(--font-body);
   padding: 12px;
   border: 1px solid var(--rule);
   border-radius: 4px;

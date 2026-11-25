@@ -34,6 +34,17 @@
   color: var(--tag);
 }
 
+/* The honesty aside of a version heading: --muted 15 px in the body face, not bold. */
+.version-notes__honesty {
+  flex: 1 1 100%;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
 /* A closed disclosure stays on the ledger line. An open one takes its own full line under the row. */
 .version-notes__details {
   min-width: 0;

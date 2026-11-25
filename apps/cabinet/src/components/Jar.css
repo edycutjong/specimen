@@ -82,9 +82,54 @@
   overflow: visible;
 }
 
-/* A flagged tag keeps its bottom band for the 16 px flag strip, and the text stops above it. */
+/* A flagged tag keeps its bottom band for the 22 px flag strip, and the text stops above it. */
 .jar__tag--flagged {
-  padding-bottom: 16px;
+  padding-bottom: 22px;
+}
+
+/* A filed red tag keeps a band at its top-right for the SPEC stub, so the accession line sits lower. */
+.jar__tag--filed {
+  padding-top: 22px;
+}
+
+/* The barcode moves down with the accession line, clear of the SPEC stub. */
+.jar__tag--filed .jar__barcode {
+  top: 26px;
+}
+
+/* The SPEC stub: a small label in the top-right band of a filed tag (design pass, item 4). */
+.jar__spec {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--before);
+  color: var(--label-ink);
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+/*
+ * The "open me" glow of the first red filed jar (design pass, item 4). The tag's clip-path would clip a
+ * box-shadow, so the glow is a drop-shadow on the overlay that holds the tag. It plays once.
+ */
+.jar__overlay--cue {
+  animation: jar-cue-glow 1.2s ease-out 1;
+}
+
+@keyframes jar-cue-glow {
+  0% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px var(--after));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
 }
 
 /* The dark eyelet dot at the notch, where the string is fixed. */
@@ -132,21 +177,22 @@
   background: var(--label-ink);
 }
 
-/* The flag strip runs the full width of the tag along its bottom edge. */
+/* The flag strip runs the full width of the tag along its bottom edge: 22 px tall, the word in the body face. */
 .jar__flag {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 16px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
   line-height: 1;
-  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   white-space: nowrap;
 }
 

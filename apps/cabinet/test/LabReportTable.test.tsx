@@ -53,15 +53,19 @@ describe("LabReportTable (Requirement 11, 16.4)", () => {
     expect(screen.getByText("suspected rename from /total ×100").tagName).toBe("TD");
   });
 
-  it("strikes through and flags each changed row of SPC-0002 in v2 (11.3, 11.4, 11.12)", () => {
+  it("strikes through only the REMOVED rows of SPC-0002 in v2, and flags each changed row (11.3, 11.4, 11.12)", () => {
     const entry = entryOf("v2", "SPC-0002");
     render(<LabReportTable entry={entry} />);
 
+    const table = screen.getByRole("table", { name: /field-by-field diff/i });
     const rows = entry.changes.map((change) => change.path);
     expect(rows.length).toBeGreaterThan(0);
-    for (const path of rows) {
-      const cell = screen.getByText(path, { selector: "s" });
-      expect(cell.tagName).toBe("S");
+    for (const change of entry.changes) {
+      if (change.kind === "removed") {
+        expect(within(table).getByText(change.path, { selector: "s" }).tagName).toBe("S");
+      } else {
+        expect(within(table).getByText(change.path).closest("s")).toBeNull();
+      }
     }
     const flags = Array.from(document.querySelectorAll(".lab-report__flag")).map((cell) => cell.textContent);
     expect(flags).toEqual(entry.changes.map((change) => FLAG_OF[change.kind]));

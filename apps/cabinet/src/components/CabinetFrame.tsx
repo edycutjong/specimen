@@ -27,13 +27,16 @@ const safeId = (raw: string): string => raw.replace(/[^A-Za-z0-9_-]/g, "");
 
 export type CabinetFrameProps = {
   children?: ReactNode;
+  /** True while the lightning is lit: the storm overlay covers the whole wall (design pass, item 2). */
+  lit?: boolean;
 };
 
-export function CabinetFrame({ children }: CabinetFrameProps): ReactElement {
+export function CabinetFrame({ children, lit = false }: CabinetFrameProps): ReactElement {
   const grainId = `frame-grain-${safeId(useId())}`;
 
   return (
-    <div className="cabinet-frame">
+    <div className={lit ? "cabinet-frame cabinet-frame--lit" : "cabinet-frame"}>
+      <span aria-hidden="true" className="lightning-wall" />
       <svg className="cabinet-frame__grain" aria-hidden="true" focusable="false">
         <defs>
           <filter id={grainId} x="0" y="0" width="100%" height="100%">

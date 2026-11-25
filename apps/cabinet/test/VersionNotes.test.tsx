@@ -6,7 +6,7 @@
  */
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { V21_FIX_LEAD } from "../src/changes.js";
+import { v21FixLead } from "../src/changes.js";
 import { VersionNotes } from "../src/components/VersionNotes.js";
 
 afterEach(() => {
@@ -15,16 +15,16 @@ afterEach(() => {
 
 describe("VersionNotes (Requirements 3.5, 3.9)", () => {
   it("shows the CHANGES.md heading and the v2.1 lead for v2.1 (3.5, 3.9)", () => {
-    const { rerender } = render(<VersionNotes version="v2.1" />);
+    const { rerender } = render(<VersionNotes version="v2.1" verdict="HOLD" />);
 
     const note = screen.getByRole("region", { name: "Changes in v2.1" });
     expect(within(note).getByRole("heading", { name: /v2\.1\.0/ })).toBeTruthy();
-    expect(within(note).getByText(V21_FIX_LEAD)).toBeTruthy();
+    expect(within(note).getByText(v21FixLead("HOLD"))).toBeTruthy();
     expect(note.textContent).toContain("returns total (dollars, 425.00) again");
 
     rerender(<VersionNotes version="v1" />);
     const baseline = screen.getByRole("region", { name: "Changes in v1" });
-    expect(within(baseline).queryByText(V21_FIX_LEAD)).toBeNull();
+    expect(within(baseline).queryByText(v21FixLead("HOLD"))).toBeNull();
   });
 
   it("collapses the body under a What changed disclosure", () => {

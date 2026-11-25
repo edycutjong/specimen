@@ -129,6 +129,45 @@ summary {
   }
 }
 
+/*
+ * Below 600 px the order is: the CountsPair, the shelves, the GuideStrip, the ledger and the version notes,
+ * then the rest of the page (design pass, item 11). The wall's wrappers stop boxing, so their children
+ * flow as items of the page column and take the order below.
+ */
+@media (max-width: 599px) {
+  .cabinet-wall,
+  .cabinet-wall__text {
+    display: contents;
+  }
+
+  .cabinet-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cabinet-main > * {
+    order: 5;
+  }
+
+  .counts-pair-group {
+    order: 1;
+  }
+
+  .rack-slot {
+    order: 2;
+  }
+
+  .guide-strip {
+    order: 3;
+    margin: 0;
+  }
+
+  .cabinet-ledger {
+    order: 4;
+  }
+}
+
 /* 1024 px and up: the drawer is a right panel 420 px wide. */
 @media (min-width: 1024px) {
   .jar-drawer {

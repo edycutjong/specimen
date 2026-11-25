@@ -55,7 +55,7 @@
   gap: 4px;
   font-family: var(--font-data);
   font-size: 14px;
-  color: var(--muted);
+  color: var(--ink);
 }
 
 .guide-strip__mark {

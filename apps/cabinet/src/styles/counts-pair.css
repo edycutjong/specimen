@@ -1,8 +1,12 @@
 /*
  * CountsPair (Requirement 6, the lab-notebook strip). A full-width strip on ruled paper with a 3 px
- * --after margin line 48 px from the left. The schema half is on the left in --muted. The replay half
- * is on the right in --after. A 1 px --rule divider sits between them. Colours come from the Token_File.
+ * --after margin line 48 px from the left. The schema half is on the left, the connector sits between
+ * the halves, and the replay half is on the right. Colours come from the Token_File.
  */
+
+.counts-pair-group {
+  min-width: 0;
+}
 
 .counts-pair {
   position: relative;
@@ -10,7 +14,7 @@
   align-items: stretch;
   gap: 0;
   min-width: 0;
-  margin: 16px 0 0;
+  margin: 0;
   padding: 16px 24px 16px 64px;
   border: 1px solid var(--rule);
   background-color: var(--glass);
@@ -45,13 +49,23 @@
   padding-left: 28px;
 }
 
-.counts-pair__divider {
-  flex: 0 0 1px;
-  width: 1px;
-  background: var(--rule);
+/* The connector sits between the two halves and carries the comparison. Its left rule is the divider. */
+.counts-pair__connector {
+  flex: 0 1 300px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 4px 20px;
+  border-left: 1px solid var(--rule);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
-/* The schema line: the label in the body face, then the value at 20 px. */
+/* The schema line: the label in the body face, then the value at 24 px in --ink. */
 .counts-pair__schema,
 .counts-pair__replay {
   margin: 0;
@@ -77,18 +91,26 @@
 }
 
 .counts-pair__schema .counts-pair__value {
-  font-size: 20px;
-  color: var(--muted);
+  font-size: 24px;
+  color: var(--ink);
 }
 
-/* The replay value is the figure of the page: Azeret Mono 700 at 34 px in --after. */
+/* The replay value is the figure of the page: Atkinson Hyperlegible Next 700 at 34 px in --after, one line at 1440. */
 .counts-pair__replay .counts-pair__value {
   display: inline-block;
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 34px;
   line-height: 1.1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
   color: var(--after);
+}
+
+/* The values wait for the Reveal to settle (design pass, item 2). They keep their space while hidden. */
+.counts-pair__value--hidden,
+.counts-pair__connector--hidden {
+  visibility: hidden;
 }
 
 .counts-pair__added {
@@ -99,7 +121,18 @@
   overflow-wrap: anywhere;
 }
 
-/* Below 720 px the two halves stack, and the divider becomes a horizontal rule. */
+/* The lede under the strip: 19 px in the body face, in --ink. */
+.counts-pair__lede {
+  margin: 12px 0 0;
+  padding: 0 24px 0 64px;
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* Below 720 px the two halves stack, and the connector gives way to the lede. */
 @media (max-width: 719px) {
   .counts-pair {
     flex-direction: column;
@@ -110,11 +143,8 @@
     left: 40px;
   }
 
-  .counts-pair__divider {
-    flex: 0 0 1px;
-    width: auto;
-    height: 1px;
-    margin: 12px 0;
+  .counts-pair__connector {
+    display: none;
   }
 
   .counts-pair__side--replay {
@@ -123,5 +153,29 @@
 
   .counts-pair__replay .counts-pair__value {
     font-size: 26px;
+    white-space: normal;
+  }
+
+  .counts-pair__lede {
+    padding: 0 16px 0 60px;
+  }
+}
+
+/* Below 600 px the strip shows values only: the labels go, and the lede carries the comparison. */
+@media (max-width: 599px) {
+  .counts-pair__label {
+    display: none;
+  }
+
+  .counts-pair__lede {
+    padding: 0 16px;
+  }
+
+  .counts-pair::before {
+    left: 16px;
+  }
+
+  .counts-pair {
+    padding-left: 32px;
   }
 }

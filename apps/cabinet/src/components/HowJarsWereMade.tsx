@@ -20,6 +20,9 @@ export const DEMO_LINE =
   "This page is an interactive demo over the hollow-inn server with jars captured by Kiro hooks. " +
   "On your own server: capture with the hooks → specimen replay --server <your test instance>";
 
+/** The CLI fragment at the end of the demo line. It is set in <code> (design pass, item 10). */
+export const DEMO_CLI = "specimen replay --server <your test instance>";
+
 /** Requirement 14.11. */
 export const SHIP_LINE =
   'SHIP means "replay clean on the recorded set". It never means "this server is safe".';
@@ -30,27 +33,36 @@ export const HOOK_FILES = [
 ] as const;
 
 export function HowJarsWereMade() {
+  const lead = DEMO_LINE.slice(0, DEMO_LINE.indexOf(DEMO_CLI));
   return (
     <section className="how-made" aria-labelledby="how-made-heading">
-      <h2 id="how-made-heading">How the jars were made</h2>
+      <h2 id="how-made-heading" className="how-made__title">
+        How the jars were made
+      </h2>
 
-      <p>{DEMO_LINE}</p>
+      <p>
+        {lead}
+        <code>{DEMO_CLI}</code>
+      </p>
 
       <p>
         Two Kiro hooks record each call to the hollow-inn server. The pre hook runs before the call
         and the post hook runs after it.
       </p>
 
-      <div className="how-made__hooks">
-        {HOOK_FILES.map((hook) => (
-          <figure key={hook.name} className="how-made__hook">
-            <figcaption>{hook.path}</figcaption>
-            <pre data-hook={hook.name}>
-              <code>{hook.text}</code>
-            </pre>
-          </figure>
-        ))}
-      </div>
+      <details className="how-made__details">
+        <summary>Show the two hook files</summary>
+        <div className="how-made__hooks">
+          {HOOK_FILES.map((hook) => (
+            <figure key={hook.name} className="how-made__hook">
+              <figcaption>{hook.path}</figcaption>
+              <pre data-hook={hook.name}>
+                <code>{hook.text}</code>
+              </pre>
+            </figure>
+          ))}
+        </div>
+      </details>
 
       <p>
         The hook configuration and the rest of the Kiro setup are in{" "}

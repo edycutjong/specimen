@@ -45,11 +45,13 @@ describe("HowJarsWereMade hook files (Requirement 14.8)", () => {
 });
 
 describe("HowJarsWereMade text (Requirements 14.10 and 14.11)", () => {
-  it("shows the demo line with <your test instance> as literal text", () => {
+  it("shows the demo line with <your test instance> as literal text, the CLI fragment in code", () => {
     const { container } = render(<HowJarsWereMade />);
+    const line = container.querySelector("p");
 
-    expect(screen.getByText(DEMO_LINE)).toBeTruthy();
+    expect(line?.textContent).toBe(DEMO_LINE);
     expect(DEMO_LINE.endsWith("specimen replay --server <your test instance>")).toBe(true);
+    expect(line?.querySelector("code")?.textContent).toBe("specimen replay --server <your test instance>");
     expect(container.textContent).toContain("<your test instance>");
     expect(container.querySelector("your")).toBeNull();
   });

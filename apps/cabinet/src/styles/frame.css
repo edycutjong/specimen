@@ -59,8 +59,8 @@
 .cabinet-frame__rivet--br { bottom: -10px; right: -10px; }
 
 /*
- * The lightning wash, used below 1280 px in place of the storm window. It is one flash on the iron, with the
- * same 900 ms keyframes as the window flash (motion.css). The colour is --storm, so the rule names the window.
+ * The lightning wash, used below 1280 px in place of the storm window. It shows only while the lightning is
+ * lit (`cabinet-frame--lit`, design pass, item 2). The colour is --storm, so the rule names the window.
  */
 .storm-window__wash {
   display: block;
@@ -68,12 +68,16 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  opacity: 0;
   background: radial-gradient(
     ellipse at 62% 22%,
     color-mix(in srgb, var(--storm) 26%, transparent),
     transparent 62%
   );
-  animation: storm-flash var(--flash-ms) linear 1 both;
+}
+
+.cabinet-frame--lit .storm-window__wash {
+  opacity: 1;
 }
 
 /* The wall: the verdict text, then the shelves. From 1280 px the barred window sits in a right column. */
@@ -92,7 +96,7 @@
 }
 
 /* The CountsPair and the ledger row sit at the top of the wall, with no margin of their own. */
-.cabinet-wall__text > .counts-pair {
+.cabinet-wall__text > .counts-pair-group {
   margin: 0;
 }
 
@@ -196,17 +200,22 @@
   min-width: 0;
 }
 
+/*
+ * Each organ is a riveted iron plaque: a 1 px rule and a glass fill, with rivets at both ends. It is not a
+ * button, so it has no button border and no pointer style (design pass, item 9).
+ */
 .cabinet-frame__organ {
   position: relative;
   display: inline-flex;
   padding: 6px 22px;
-  border: 2px solid var(--tag);
+  border: 1px solid var(--rule);
   background: var(--glass);
   color: var(--ink);
   font-family: var(--font-data);
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  cursor: default;
 }
 
 /* Each organ is bolted to the iron at both ends. */
@@ -254,13 +263,43 @@
   color: var(--ink);
 }
 
-/* A section heading of the page: the body face, bold. The display face is for the wordmark and the plate. */
-.how-made h2 {
+/* The footer heading: the display face at 28 px (design pass, item 10). */
+.how-made__title {
   margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+/* The CLI fragment in the demo line is set in the data face. */
+.how-made code {
+  font-family: var(--font-data);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+/* The hook files sit in a disclosure, collapsed until a reader opens them. */
+.how-made__details {
+  margin: 12px 0;
+}
+
+.how-made__details summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--rule);
+  background: var(--glass);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1.2;
+  font-size: 16px;
+}
+
+.how-made__details summary:focus-visible {
+  outline: 3px solid var(--before);
+  outline-offset: 2px;
 }
 
 .how-made a {
