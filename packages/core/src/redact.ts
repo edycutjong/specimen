@@ -114,26 +114,39 @@ function matchesAny(s: string, res: readonly RegExp[]): boolean {
   return false;
 }
 
+/** Stringified JSON nested deeper than this is redacted without being inspected. */
+const MAX_STRINGIFIED_DEPTH = 8;
+
 /**
- * True when a string value is itself JSON (an object or array) that holds a sensitive key, at any
- * depth, including inside further stringified JSON. Such a string is replaced whole: its
- * characters cannot be spliced without re-serialising what the server wrote.
+ * True when a string value is itself JSON (an object or array) that holds a sensitive key or a
+ * pattern match, at any depth, including inside further stringified JSON. Such a string is
+ * replaced whole: its characters cannot be spliced without re-serialising what the server wrote.
+ * Fails closed (a2a round 07): JSON-looking text past the depth limit, or too deep to walk (a
+ * RangeError), counts as sensitive. Text that does not parse as JSON is not JSON and is left to
+ * the patterns.
  */
 function stringifiedSensitive(s: string, c: Compiled, depth = 0): boolean {
-  if (depth > 8) return false;
   const t = s.trimStart();
   if (t[0] !== "{" && t[0] !== "[") return false;
+  if (depth > MAX_STRINGIFIED_DEPTH) return true;
   let parsed: unknown;
   try {
     parsed = JSON.parse(s);
-  } catch {
-    return false;
+  } catch (err) {
+    return err instanceof RangeError;
   }
-  return holdsSensitiveKey(parsed, c, depth);
+  try {
+    return holdsSensitiveKey(parsed, c, depth);
+  } catch (err) {
+    if (err instanceof RangeError) return true;
+    throw err;
+  }
 }
 
 function holdsSensitiveKey(v: unknown, c: Compiled, depth: number): boolean {
-  if (typeof v === "string") return stringifiedSensitive(v, c, depth + 1);
+  // A decoded string is checked like any other value: an escape such as `sk-…` only reads as
+  // a key after JSON.parse, so the patterns run here too, not only on the outer raw text.
+  if (typeof v === "string") return matchesAny(v, c.res) || stringifiedSensitive(v, c, depth + 1);
   if (Array.isArray(v)) return v.some((item) => holdsSensitiveKey(item, c, depth));
   if (v !== null && typeof v === "object") {
     return Object.keys(v).some(
@@ -328,5 +341,34 @@ export function redactText(text: string, c: Compiled): ResponseResult {
       responseLength: replaced.length,
     };
   }
-  return { responseText: replaced, response: null, pointers: [], textRedacted: true };
+  return { responseText: redactTextMembers(replaced, c), response: null, pointers: [], textRedacted: true };
+}
+
+/** A JSON member written inside free text: a quoted key, a colon, then a scalar or the start of a container. */
+const TEXT_MEMBER = /"((?:[^"\\\n]|\\.)*)"(\s*:\s*)("(?:[^"\\\n]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{[])/g;
+
+/**
+ * The sensitive-key rule for a text response kept in plain text (redact mode; a2a round 07): an
+ * error message such as `Error: {"password":"hunter2"}` is not a JSON_Response, so the key rule
+ * never saw it and only the patterns ran. A sensitive key's scalar value becomes the quoted marker;
+ * a sensitive key whose value is an object or an array cannot be bounded safely in free text, so
+ * the whole text becomes the marker (fail closed). Hash mode is unchanged: no plain text is stored.
+ */
+function redactTextMembers(text: string, c: Compiled): string {
+  let whole = false;
+  const out = text.replace(TEXT_MEMBER, (member, rawKey: string, colon: string, value: string) => {
+    let key = rawKey;
+    try {
+      key = JSON.parse(`"${rawKey}"`) as string;
+    } catch {
+      // not a valid JSON string literal: match the key as written
+    }
+    if (!c.keys.has(key)) return member;
+    if (value === "{" || value === "[") {
+      whole = true;
+      return member;
+    }
+    return `"${rawKey}"${colon}${JSON.stringify(MARKER)}`;
+  });
+  return whole ? MARKER : out;
 }

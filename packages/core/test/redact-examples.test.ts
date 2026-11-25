@@ -39,12 +39,19 @@ describe("redaction examples: sibling literals", () => {
 });
 
 describe("redaction examples: non-JSON responses", () => {
-  it("replaces every pattern match in plain text and sets text_redacted", () => {
+  it("replaces every pattern match, and a sensitive key's value written as JSON, in plain text and sets text_redacted", () => {
     const result = redactResponse("Booked. Key sk-ABCDEFGHIJKLMNOPQRSTUV, mail ops@inn.example", base);
     expect(result.responseText).toBe(`Booked. Key ${MARKER}, mail ${MARKER}`);
     expect(result.textRedacted).toBe(true);
     expect(result.response).toBeNull();
     expect(result.responseLength).toBeUndefined();
+    // a2a round 07: an error message that embeds JSON is text, so the key rule runs on it as well
+    expect(redactResponse('Error: {"password":"hunter2","tokens_used":3}', base).responseText).toBe(
+      `Error: {"password":"${MARKER}","tokens_used":3}`,
+    );
+    expect(redactResponse('Error: {"X-Auth-Token": 1234} retry', base).responseText).toBe(`Error: {"X-Auth-Token": "${MARKER}"} retry`);
+    // an object or array under a sensitive key cannot be bounded in free text: the whole text goes
+    expect(redactResponse('Error: {"secret":{"k":"v"}} at line 3', base).responseText).toBe(MARKER);
   });
 
   it("redacts a JSON string scalar as text, keeping its quote marks", () => {

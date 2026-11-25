@@ -91,6 +91,21 @@ describe("a string value that is itself JSON with a sensitive key", () => {
     const inner = JSON.stringify({ items: [{ api_key: "k" }] });
     const { value } = redactInput({ a: inner, b: JSON.stringify({ wrapped: inner }) }, c);
     expect(value).toEqual({ a: MARKER, b: MARKER });
+
+    // a2a round 07: fail closed at the inspection limit (nine wrappers past the first) and on
+    // nesting too deep to walk; a pattern hidden behind a JSON escape is caught after decoding
+    let wrapped = JSON.stringify({ token: "abc" });
+    for (let i = 0; i < 10; i += 1) wrapped = JSON.stringify({ wrapped });
+    const deep = `${"[".repeat(20000)}1${"]".repeat(20000)}`;
+    const escaped = '{"note":"\\u0073k-abcdefghijklmnopqrstuvwxyz"}';
+    expect(redactInput({ w: wrapped, d: deep, e: escaped }, c).value).toEqual({ w: MARKER, d: MARKER, e: MARKER });
+    expect(redactResponse(JSON.stringify({ w: wrapped, d: deep, e: escaped, total: 425 }), c).responseText).toBe(
+      `{"w":"${MARKER}","d":"${MARKER}","e":"${MARKER}","total":425}`,
+    );
+    // eight wrappers of clean JSON are inspected all the way down and kept
+    let clean = JSON.stringify({ room: "r-02" });
+    for (let i = 0; i < 8; i += 1) clean = JSON.stringify({ wrapped: clean });
+    expect(redactInput({ clean }, c).value).toEqual({ clean });
   });
 
   it("is replaced whole in a JSON response, at the value span only", () => {
