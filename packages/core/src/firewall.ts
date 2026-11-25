@@ -14,14 +14,21 @@ function toSlashes(p: string): string {
 }
 
 /**
+ * True for a POSIX absolute path and for a Windows drive-letter absolute path (`C:/…` once the
+ * backslashes are turned around). Without the drive-letter case, `C:\repo\jars\x.jsonl` was
+ * joined onto the cwd and never compared equal to the jars directory (a2a round 05).
+ */
+function isAbsolute(slashed: string): boolean {
+  return slashed.startsWith("/") || /^[A-Za-z]:\//.test(slashed);
+}
+
+/**
  * Makes `p` absolute against `cwd` and collapses "." and ".." segments. Empty segments
  * (from "//") are dropped. A ".." above the root stays at the root. The letter case is
  * kept; comparison lowercases later.
  */
 export function lexicalResolve(cwd: string, p: string): string {
-  const joined = toSlashes(p).startsWith("/")
-    ? toSlashes(p)
-    : `${toSlashes(cwd)}/${toSlashes(p)}`;
+  const joined = isAbsolute(toSlashes(p)) ? toSlashes(p) : `${toSlashes(cwd)}/${toSlashes(p)}`;
   const stack: string[] = [];
   for (const segment of joined.split("/")) {
     if (segment === "" || segment === ".") continue;

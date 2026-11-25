@@ -15,6 +15,17 @@ const decide = (candidates: FirewallCandidate[]) =>
   decideFirewall({ jarsLexical: JARS, jarsReal: JARS, candidates });
 
 describe("lexicalResolve", () => {
+  it("keeps a Windows drive-letter path absolute instead of joining it onto cwd", () => {
+    expect(lexicalResolve("C:\\repo", "C:\\repo\\jars\\a.jsonl")).toBe("/C:/repo/jars/a.jsonl");
+    expect(lexicalResolve("/home/u/repo", "d:/repo/jars/a.jsonl")).toBe("/d:/repo/jars/a.jsonl");
+  });
+
+  it("blocks a Windows absolute path into jars/ whatever the drive letter case", () => {
+    const jars = lexicalResolve("C:\\repo", "jars");
+    const lexical = lexicalResolve("C:\\repo\\src", "c:\\REPO\\Jars\\a.jsonl");
+    expect(decideFirewall({ jarsLexical: jars, jarsReal: jars, candidates: [{ lexical, real: lexical }] })).toBe("block");
+  });
+
   it("makes a relative path absolute against cwd", () => {
     expect(lexicalResolve("/ws", "jars/a.jsonl")).toBe("/ws/jars/a.jsonl");
   });
