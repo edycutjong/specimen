@@ -26,8 +26,8 @@ the v2 server while 5 of the 10 recorded calls come back different.
    It blocks at most 3 times per session and fails open on any error or timeout.
    The committed hook (`.kiro/hooks/specimen-jar-stop.json`) replays the current server, hollow-inn v2.1, which is SHIP, so
    in this repository as committed it allows every stop until someone changes v2.1. The gate rows below ran in scratch
-   copies against v1 or v2: E1–E3 pass `--server` to `specimen hook stop` directly (`scripts/stop-gate-eval.sh:21`), the
-   live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`); each evidence file's header records the command.
+   copies against v1 or v2: E1–E3 pass `--server` to `specimen hook stop` directly (`scripts/stop-gate-eval.sh:26`), the
+   live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`); each live run's header records its hook command, and `evidence/stop-gate/eval.md` names the server version per row.
 
 ## Measured results (every number is a committed output)
 
@@ -44,7 +44,7 @@ the v2 server while 5 of the 10 recorded calls come back different.
 | Stop gate, break arm (N = 1 per arm; scratch at hollow-inn v1; prompt = "rename quote's `total` to `total_cents`, integer cents, reply DONE"; the prompt says nothing about hooks or replay, but the gate's own block reason does tell the agent what to do, and the rename was the requested change, so this is not an accident) | gate ON (171 s): the agent changed 2 lines and said DONE, was sent back once, replayed, ran `specimen file` for the 3 broken `quote` jars (the first filing call failed and was retried), the curator's check rejected the draft (`expected does not name the reference`), no spec was accepted, and the agent stopped with the jars still rattled and asked whether to keep the rename or revert it; gate OFF (about 20 s): 2 changed lines, DONE, "I did not run the test suite or the replay", nothing flagged. Gate ON cost 2.12 credits (main session plus 6 curator sessions), gate OFF 0.04; the unresolved ON turn is what `specimen seal` (accept an intended change, not built) would resolve | `evidence/stop-gate/live-break-on.md`, `live-break-off.md` |
 | Tests | 1078 passing in 121 files (vitest + fast-check), `tsc --noEmit` exit 0 | `evidence/tests.txt` |
 | Consequence run: did the agent's own answer change under v2? | No — its answer was unchanged (`$425.00`); v2's tool description names `total_cents` and the agent had it loaded (no ablation was run, so that is the likely reason, not a measurement). A deterministic consumer written against v1 (`scripts/consumer.ts`) was run since | `evidence/consequence-v2/README.md` |
-| Consequence run, part 2: a client that reads `total` (our v1-era consumer, a 51-line script with no tool descriptions to read) | v2: the charge line throws (`total` is undefined), 5 of 9 rooms offered, cancel fails (`cancel_booking` not found); v2.1: every line matches v1 (`USD 425.00`, 9 rooms, cancelled) | `evidence/consequence-v2/consumer.md` |
+| Consequence run, part 2: a client that reads `total` (our v1-era consumer, a 56-line script with no tool descriptions to read) | v2: the charge line throws (`total` is undefined), 5 of 9 rooms offered, cancel fails (`cancel_booking` not found); v2.1: every line matches v1 (`USD 425.00`, 9 rooms, cancelled) | `evidence/consequence-v2/consumer.md` |
 | Field shelf: a public MCP server (`server-memory` 1.0.0 → 2.2.1) | HOLD · 3 preserved · 2 unsealed — no break found (a null result, reported as one); 2 jars unsealed because the server also returns a `structuredContent` its text does not carry, which a text-only jar cannot compare | `evidence/field/server-memory.md` |
 
 The three breaks in hollow-inn v2 are **author-made on purpose** (`servers/hollow-inn/CHANGES.md`); the demo server is ours. The

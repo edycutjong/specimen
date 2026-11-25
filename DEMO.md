@@ -63,6 +63,9 @@ executed them into `servers/hollow-inn/src/v2_1.ts` — `quote` first (`evidence
 Every v2 break now replays preserved on v2.1: `evidence/replay/racks-vs-v2.1-ship.txt` is `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
 exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not filed` (`racks-vs-v2.1.txt`); after filing and before the fixes it read
 `HOLD · covered` with exit 3 (`racks-vs-v2.1-after-filing-all.txt`). `specimen replay` also writes a new file under `replays/` each run.
+The three `quote` jars pass because `total` is kept and `total_cents` is an added field (`+1 field`, compatible). Strict mode makes an added field rattle:
+`npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1" --strict` prints `HOLD · 3 rattled · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
+exit 1 (`evidence/replay/racks-vs-v2.1-strict.txt`; re-run 2026-11-25 23:27 WIB, output identical).
 
 ## Notes — field shelf (hour 1)
 

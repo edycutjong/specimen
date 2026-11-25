@@ -50,7 +50,7 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
   (`.specimen/turn.json`, written by `specimen hook prompt` on `UserPromptSubmit`; a missing snapshot means "check"). `decideStop` blocks only when a red jar that `specimen file` can file (rattled, or cracked because the tool is gone or now returns an error) has no
   passing filed bugfix spec — an operational crack (start failure, timeout, dead session) is written to `.specimen/unresolved.md` instead; SHIP, empty, all-skipped, quarantined or spoiled results never block. At most 3 blocks per session (`.specimen/gate-<session>.json`), then it allows the stop and
   writes `.specimen/unresolved.md`. Any error or timeout allows the stop. `specimen file` starts the curator with `SPECIMEN_GATE=off` so the curator's own turn is not sent back.
-  The committed hook's `--server` is hollow-inn v2.1 (the current, SHIP server: no block until v2.1 changes); the E1–E3 runs pass v1 or v2 to `specimen hook stop --server` directly (`scripts/stop-gate-eval.sh:21`) and the live runs rewrite the hook's `--server` to v2 or v1 in a scratch copy (`scripts/stop-gate-live.sh:26`).
+  The committed hook's `--server` is hollow-inn v2.1 (the current, SHIP server: no block until v2.1 changes); the E1–E3 runs pass v1 or v2 to `specimen hook stop --server` directly (`scripts/stop-gate-eval.sh:26`) and the live runs rewrite the hook's `--server` to v2 or v1 in a scratch copy (`scripts/stop-gate-live.sh:26`).
 
 ## Hosting
 
