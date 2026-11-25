@@ -11,11 +11,11 @@ SPECIMEN JAR is a tool for people who build MCP servers. It tells you whether a 
 1. **Capture.** A Kiro hook records every MCP tool call a Kiro agent makes, input and response, into an append-only "jar". A jar is one JSON line per call in `jars/<session>.jsonl`.
 2. **Replay.** `specimen replay --server "<cmd>"` replays every jarred call against a changed version of the server. Calls run in recorded order, in a fresh server process per recorded session. Each response is diffed field by field against the recorded one.
 3. **Judge.** Each jar ends in exactly one state:
-   - PRESERVED: identical after normalisation.
+   - PRESERVED: identical after normalisation, or different only by added fields (listed as compatible; `--strict` makes an added field rattle).
    - RATTLED: fields removed, changed or renamed.
    - CRACKED: the tool is gone or now errors.
    - SKIPPED: not allowed by `.specimen/replay.json`.
-   - UNSEALED: not replayable.
+   - UNSEALED: not compared: an unpaired or orphaned call, a fully redacted response, or a result whose structuredContent or non-text content the text does not cover (a jar records text only).
 4. **Verdict.** SHIP only when at least one jar was compared and none is rattled, cracked, unsealed or skipped. Otherwise HOLD, with the reason.
 
 SHIP means "replay clean on the recorded set". It never means "this server is safe".

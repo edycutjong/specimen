@@ -77,6 +77,19 @@ function reasonParts(
     }
   }
 
+  // Unsealed for another reason (a fully redacted response, or result content the text does not
+  // cover): named, so a HOLD never has a silent cause.
+  const other = new Map<string, number>();
+  for (const entry of entries) {
+    if (entry.state !== "unsealed") continue;
+    const reason = entry.reason ?? "unsealed";
+    if (reason === ORPHAN_REASON || reason === UNPAIRED_REASON) continue;
+    other.set(reason, (other.get(reason) ?? 0) + 1);
+  }
+  for (const reason of distinctSorted(other.keys())) {
+    parts.push(`${other.get(reason)} unsealed: ${reason}`);
+  }
+
   if (spoiledCount >= 1) {
     parts.push(`${spoiledCount} ${plural(spoiledCount, "spoiled line", "spoiled lines")}`);
   }

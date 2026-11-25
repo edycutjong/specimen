@@ -1,7 +1,7 @@
-SHIP · replay clean on the recorded set · 5 jars compared · 5 of 9 tools · not recorded: add_observations, delete_entities, delete_observations, delete_relations
-SPC-0001 · create_entities · preserved · - · -
-SPC-0002 · create_relations · preserved · - · -
+HOLD · 2 unsealed: result carries content its text does not cover — jar v1 records text only (structuredContent) · 3 jars compared · 3 of 9 tools · not recorded: add_observations, delete_entities, delete_observations, delete_relations
+SPC-0001 · create_entities · unsealed · - · result carries content its text does not cover — jar v1 records text only (structuredContent)
+SPC-0002 · create_relations · unsealed · - · result carries content its text does not cover — jar v1 records text only (structuredContent)
 SPC-0003 · search_nodes · preserved · - · -
 SPC-0004 · open_nodes · preserved · - · -
 SPC-0005 · read_graph · preserved · - · -
-exit=0 · result: (scratch dir)
+exit=1 · result: (scratch dir)

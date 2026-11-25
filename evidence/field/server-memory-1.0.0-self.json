@@ -1,7 +1,7 @@
 {
   "v": 1,
-  "server": "sh-field-server-memory-run.sh-1.0.0",
-  "started_at": "2026-11-24T20:48:25.238Z",
+  "server": "sh--Users-edycu-Hackathon-devpost-devpost-kiroween-specimen-build-field-server-memory-run.sh-1.0.0",
+  "started_at": "2026-11-25T15:33:34.192Z",
   "strict": false,
   "jars": [
     {
@@ -9,7 +9,7 @@
       "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
       "seq": 1,
       "tool": "create_entities",
-      "state": "preserved",
+      "state": "unsealed",
       "input": {
         "entities": [
           {
@@ -51,14 +51,15 @@
           ]
         }
       ],
-      "ms": 5
+      "reason": "result carries content its text does not cover — jar v1 records text only (structuredContent)",
+      "ms": 14
     },
     {
       "id": "SPC-0002",
       "session_id": "sess_37fd11e9-a85c-43ac-bdae-a49ce1208b60",
       "seq": 2,
       "tool": "create_relations",
-      "state": "preserved",
+      "state": "unsealed",
       "input": {
         "relations": [
           {
@@ -80,7 +81,8 @@
           "relationType": "is part of"
         }
       ],
-      "ms": 2
+      "reason": "result carries content its text does not cover — jar v1 records text only (structuredContent)",
+      "ms": 9
     },
     {
       "id": "SPC-0003",
@@ -115,7 +117,7 @@
           }
         ]
       },
-      "ms": 1
+      "ms": 7
     },
     {
       "id": "SPC-0004",
@@ -152,7 +154,7 @@
           }
         ]
       },
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "SPC-0005",
@@ -192,15 +194,15 @@
           }
         ]
       },
-      "ms": 1
+      "ms": 5
     }
   ],
   "spoiled": [],
   "counts": {
-    "preserved": 5,
+    "preserved": 3,
     "rattled": 0,
     "cracked": 0,
-    "unsealed": 0,
+    "unsealed": 2,
     "skipped": 0
   },
   "schema_diff": {
@@ -208,16 +210,14 @@
     "tools_added": [],
     "input_schema_changed": []
   },
-  "verdict": "SHIP",
+  "verdict": "HOLD",
   "red": 0,
   "filed": 0,
   "covered": false,
-  "reason": "",
+  "reason": "2 unsealed: result carries content its text does not cover — jar v1 records text only (structuredContent)",
   "coverage": {
-    "compared": 5,
+    "compared": 3,
     "tools_compared": [
-      "create_entities",
-      "create_relations",
       "open_nodes",
       "read_graph",
       "search_nodes"

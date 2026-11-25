@@ -260,8 +260,15 @@ async function replayJar(jar: JarLine, run: GroupRun, engine: Engine): Promise<R
   }
 
   const judged = judgeJar(jar, replayedText, engine);
+  // A jar records the text an agent saw. A clean text compare cannot vouch for parts of the result
+  // that the text does not carry, so such a jar is unsealed instead of preserved. A change found in
+  // the text still wins: rattled says more than unsealed.
+  const uncovered = judged.state === "preserved" ? uncoveredContent(result, replayed) : undefined;
+  const state = uncovered === undefined ? judged.state : "unsealed";
+  const reason = uncovered === undefined ? judged.reason : `${UNCOMPARED_CONTENT_REASON} (${uncovered})`;
   return build(jar, {
-    state: judged.state,
+    state,
+    ...(reason === undefined ? {} : { reason }),
     changes: judged.changes,
     compatible: judged.compatible,
     ignored: judged.ignored,
@@ -269,6 +276,31 @@ async function replayJar(jar: JarLine, run: GroupRun, engine: Engine): Promise<R
     replayed,
     ms,
   });
+}
+
+/**
+ * What a tools/call result carries beyond its text, or undefined when the text covers it all:
+ * content items that are not text (image, audio, resource, resource_link), and a structuredContent
+ * that the text does not mirror. A structuredContent equal, in canonical JSON, to the parsed text is
+ * covered, which is how the MCP SDK and most servers return it (server-memory 2.2.1 does).
+ */
+function uncoveredContent(result: unknown, replayed: Json | null): string | undefined {
+  if (typeof result !== "object" || result === null) return undefined;
+  const parts: string[] = [];
+  const content = (result as { content?: unknown }).content;
+  if (Array.isArray(content)) {
+    const types = content
+      .map((item: unknown) => (typeof item === "object" && item !== null ? (item as { type?: unknown }).type : undefined))
+      .filter((type) => type !== "text")
+      .map((type) => (typeof type === "string" ? type : "unknown"));
+    for (const type of [...new Set(types)].sort(compareText)) parts.push(`${type} content`);
+  }
+  const structured = (result as { structuredContent?: unknown }).structuredContent;
+  if (structured !== undefined && structured !== null) {
+    const mirrored = replayed !== null && canonicalJson(replayed) === canonicalJson(structured as Json);
+    if (!mirrored) parts.push("structuredContent");
+  }
+  return parts.length === 0 ? undefined : parts.join(", ");
 }
 
 /**
@@ -351,11 +383,16 @@ export async function listAllTools(client: Pick<Client, "listTools">, timeoutMs:
 
 /** The outcome of comparing one replayed response with the jarred response. */
 type Judged = {
-  state: "preserved" | "rattled";
+  state: "preserved" | "rattled" | "unsealed";
   changes: Change[];
   compatible: Change[];
   ignored: string[];
+  reason?: string;
 };
+
+/** The unsealed reasons added by the a2a round 05 review: a clean text compare that cannot vouch for the result. */
+export const FULLY_REDACTED_REASON = "response fully redacted — nothing left to compare";
+export const UNCOMPARED_CONTENT_REASON = "result carries content its text does not cover — jar v1 records text only";
 
 const UNCHANGED: Omit<Judged, "state"> = { changes: [], compatible: [], ignored: [] };
 
@@ -404,8 +441,12 @@ function judgeBodies(jar: JarLine, replayedText: string, engine: Engine): Judged
     const tail = responseTail(pointer);
     return tail === undefined ? [] : [tail];
   });
-  // The empty pointer excludes the whole Body, so no part of it can produce a Change.
-  if (excluded.includes("")) return { state: "preserved", changes: [], compatible: [], ignored: [""] };
+  // The empty pointer excludes the whole Body. No part of it can produce a Change, and "nothing was
+  // compared" is not "preserved", so the jar is unsealed: it holds the verdict until it is re-recorded
+  // under a narrower Redact_Config (a2a round 05; it was preserved before).
+  if (excluded.includes("")) {
+    return { state: "unsealed", changes: [], compatible: [], ignored: [""], reason: FULLY_REDACTED_REASON };
+  }
 
   const jarBody = removePointers(bodyOf(jar.response_text), excluded);
   const replayedBody = removePointers(bodyOf(replayedText), excluded);
