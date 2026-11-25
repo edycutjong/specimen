@@ -129,20 +129,19 @@ describe("browser-replay against the committed evidence", () => {
     expect(reportText(result, filedIds)).toBe(evidence("racks-vs-v2.txt"));
   });
 
-  it("v2.1 gives HOLD with 8 preserved, 1 rattled, 1 cracked, both red jars filed, and matches racks-vs-v2.1-after-filing-all.txt (1.9, 5.8)", async () => {
+  it("v2.1 gives SHIP with all 10 preserved and matches racks-vs-v2.1-ship.txt (1.9, 5.8)", async () => {
     const result = await runReplay("v2.1");
     const filedIds = committedFiledIds(result);
 
-    expect(result.verdict).toBe("HOLD");
-    expect(count(result, "preserved")).toBe(8);
-    expect(count(result, "rattled")).toBe(1);
-    expect(count(result, "cracked")).toBe(1);
+    expect(result.verdict).toBe("SHIP");
+    expect(count(result, "preserved")).toBe(10);
+    expect(count(result, "rattled")).toBe(0);
+    expect(count(result, "cracked")).toBe(0);
     expect(count(result, "skipped")).toBe(0);
     expect(count(result, "unsealed")).toBe(0);
-    expect([...filedIds].sort()).toEqual(["SPC-0009", "SPC-0010"]);
-    expect(result.filed).toBe(2);
+    expect(result.red).toBe(0);
 
     console.log(summaryLine("v2.1", result, filedIds));
-    expect(reportText(result, filedIds)).toBe(evidence("racks-vs-v2.1-after-filing-all.txt"));
+    expect(reportText(result, filedIds)).toBe(evidence("racks-vs-v2.1-ship.txt"));
   });
 });

@@ -52,6 +52,10 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 38 | cabinet first screen at 1440: one-sentence pitch in the header, jars higher, details folded after the shelves (model claude-haiku-5.5) | 1.89 |
 | 39 | cabinet fixes from QA round 3: honest pitch and labels, rack A follow-up disclosure, one-line headline and plate, plate in step with the reveal, body face for controls (model claude-haiku-5.5) | 8.22 |
 | 40 | cabinet first-screen regression fix after turn-39: one-line tagline at 1440, CountsPair grid, shelf padding (model claude-haiku-5.5) | 1.34 |
+| 41 | wrote `specimen init` (hooks, mcp.json merge, replay.json allow list from `tools/list`, .gitignore, engine check) + 32 tests | 0.91 |
+| 42 | Bug Fix workflow for the `search_rooms` default-limit spec: `design.md` + `tasks.md` | 4.91 |
+| 43 | executed that spec's tasks: `v2_1.ts` default limit back to 20 + tests + CHANGES.md; stopped at the final acceptance task (see ledger) | 1.02 |
+| 44 | Bug Fix workflow for the `cancel_booking` spec: `design.md` + `tasks.md` | 5.01 |
+| 45 | executed that spec's tasks 1–3 (`cancel_booking` registered again in v2.1, `booking_cancel` unlisted); cut by a timeout during the final acceptance task 4 — the replay and test run for 4.1–4.3 were done by the autopilot, so tasks 4–5 stay unchecked in `tasks.md` | 1.12 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
-| 41 | wrote `specimen init` (hooks, mcp.json merge, replay.json allow list from `tools/list`, .gitignore, engine check) + 32 tests | 0.91 |

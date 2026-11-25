@@ -1,4 +1,4 @@
-// hollow-inn v2.1 — v2 with `quote` returning `total` again, alongside `total_cents`. The rest of the tool set is v2 unchanged.
+// hollow-inn v2.1 — v2 with `quote` returning `total` again, alongside `total_cents`, `search_rooms` default limit of 20 restored, and the cancel tool restored as `cancel_booking`. The rest of the tool set is v2 unchanged.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { ROOMS, fail, findRoom, isBookedFor, newState, nextBookingId, nightly, ok, roomView, type InnOptions } from "./inn.js";
@@ -13,13 +13,13 @@ export function createV2_1(opts: InnOptions = {}): McpServer {
     "search_rooms",
     {
       description:
-        "Find rooms that sleep at least `guests`, in room order (a catalogue lookup: bookings do not hide rooms; `book` refuses overlapping stays). Returns at most `limit` rooms (default 5).",
+        "Find rooms that sleep at least `guests`, in room order (a catalogue lookup: bookings do not hide rooms; `book` refuses overlapping stays). Returns at most `limit` rooms (default 20).",
       inputSchema: { check_in: date, nights, guests: z.number().int().min(1).max(8), limit: z.number().int().min(1).max(50).optional() },
       annotations: { readOnlyHint: true },
     },
     async ({ check_in, nights, guests, limit }) => {
       const rooms = ROOMS.filter((r) => r.max_guests >= guests)
-        .slice(0, limit ?? 5)
+        .slice(0, limit ?? 20)
         .map(roomView);
       return ok({ check_in, nights, guests, rooms });
     },
@@ -81,7 +81,7 @@ export function createV2_1(opts: InnOptions = {}): McpServer {
   );
 
   server.registerTool(
-    "booking_cancel",
+    "cancel_booking",
     {
       description: "Cancel a booking by id.",
       inputSchema: { booking_id: z.string() },

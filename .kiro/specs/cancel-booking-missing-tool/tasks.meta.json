@@ -1,0 +1,174 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358680
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612361040
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612405561
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358684
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612407164
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612533563
+      }
+    ],
+    "3.1 Implement the fix in `servers/hollow-inn/src/v2_1.ts`": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358687
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612534708
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612601873
+      }
+    ],
+    "3.2 Update the existing v2.1 tests in `servers/hollow-inn/test/v2_1.test.ts`": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358690
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612603121
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612745229
+      }
+    ],
+    "3.3 Update the v2.1 entry in `servers/hollow-inn/CHANGES.md`": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358691
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612603466
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612745244
+      }
+    ],
+    "3.4 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358692
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612747492
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612811700
+      }
+    ],
+    "3.5 Verify preservation tests still pass": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358693
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612748005
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612812201
+      }
+    ],
+    "4.1 Replay the jars against the fixed v2.1": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358695
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612865847
+      }
+    ],
+    "4.2 Run the full test suite": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358697
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612865805
+      }
+    ],
+    "4.3 Confirm evidence and baselines are untouched": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358698
+      },
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612866218
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612358699
+      }
+    ],
+    "3. Fix for missing `cancel_booking` tool on hollow-inn v2.1": [
+      {
+        "executionId": "6373fc6c-73fb-4339-b0f4-95d4faad26aa",
+        "chatSessionId": "sess_fab9ec9d-631a-419e-a82d-5a41526e8e72",
+        "timestamp": 1795612812211
+      }
+    ]
+  }
+}

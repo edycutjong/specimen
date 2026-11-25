@@ -141,11 +141,11 @@ describe("view model names, counts and positions against real replays", () => {
     const counts = viewModelFor("v2.1", results["v2.1"]).counts;
 
     expect(counts).toMatchObject({
-      schemaChanged: 1,
+      schemaChanged: 0,
       schemaTotal: 6,
-      addedToolNames: ["booking_cancel"],
-      replayToolCount: 2,
-      redJarCount: 2,
+      addedToolNames: [],
+      replayToolCount: 0,
+      redJarCount: 0,
     });
     expect(counts.redJarCount).toBe(results["v2.1"].red);
   });

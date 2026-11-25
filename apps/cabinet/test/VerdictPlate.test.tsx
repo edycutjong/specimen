@@ -66,14 +66,14 @@ describe("VerdictPlate with real replays", () => {
     expect(screen.queryByText("HOLD")).toBeNull();
   });
 
-  it("shows v2.1 as HOLD with the remaining red jars and never as clean (4.1, 4.15)", () => {
+  it("shows v2.1 as SHIP, 10 preserved, only after every red jar's Kiro-executed fix, with the coverage line (4.1, 4.15)", () => {
     render(<VerdictPlate plate={plateOf("v2.1", replays["v2.1"])} revealed revealIntervalMs={INTERVAL_MS} />);
 
-    expect(screen.getByText("HOLD")).toBeTruthy();
-    expect(screen.getByText(countsLine("8 preserved · 1 rattled · 1 cracked"))).toBeTruthy();
-    expect(screen.getByText("2 red · all red jars covered by 2 filed Kiro bugfix specs")).toBeTruthy();
-    expect(screen.getByText(replays["v2.1"].reason)).toBeTruthy();
-    expect(screen.queryByText("SHIP")).toBeNull();
+    expect(screen.getByText("SHIP").style.color).toBe("var(--before)");
+    expect(screen.getByText(countsLine("10 preserved · 0 rattled · 0 cracked"))).toBeTruthy();
+    expect(screen.getByText(coverageString(replays["v2.1"].coverage))).toBeTruthy();
+    expect(statusText()).toContain("replay clean on the recorded set");
+    expect(screen.queryByText("HOLD")).toBeNull();
   });
 
   it("never says a SHIP verdict means the server is safe (4.13)", () => {

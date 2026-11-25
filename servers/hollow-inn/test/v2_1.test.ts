@@ -68,16 +68,10 @@ describe("v2.1 unit tests", () => {
     expect(r.text).toContain("unknown room r-99");
   });
 
-  it("tool list is book, booking_cancel, get_room, list_bookings, quote, search_rooms", async () => {
+  it("tool list is book, cancel_booking, get_room, list_bookings, quote, search_rooms", async () => {
     const { client } = await open();
     const names = (await client.listTools()).tools.map((t) => t.name).sort();
-    expect(names).toEqual(["book", "booking_cancel", "get_room", "list_bookings", "quote", "search_rooms"]);
-  });
-
-  it("search_rooms without limit returns 5 rooms", async () => {
-    const { call } = await open();
-    const r = await call("search_rooms", { check_in: "2026-12-04", nights: 2, guests: 3 });
-    expect(r.json.rooms).toHaveLength(5);
+    expect(names).toEqual(["book", "cancel_booking", "get_room", "list_bookings", "quote", "search_rooms"]);
   });
 
   it("serialiser writes a Money value as its two-decimal literal", () => {
@@ -155,17 +149,17 @@ const EXPECTED_SCHEMAS: Record<string, unknown> = {
     $schema: SCHEMA_DRAFT,
   },
   list_bookings: { type: "object", properties: {}, $schema: SCHEMA_DRAFT },
-  booking_cancel: { type: "object", properties: { booking_id: { type: "string" } }, required: ["booking_id"], $schema: SCHEMA_DRAFT },
+  cancel_booking: { type: "object", properties: { booking_id: { type: "string" } }, required: ["booking_id"], $schema: SCHEMA_DRAFT },
 };
 
 const BOOK_TEXT =
   '{"booking_id":"BK-0001","room_id":"r-01","check_in":"2026-12-11","nights":1,"guest":"E. Lavenza","status":"confirmed","created_at":"2026-11-26T09:00:00.000Z"}';
 
-const bookingFlow = async (c: Conn) => [
+const bookingFlow = async (c: Conn, cancelName: string) => [
   await run(c, "book", { room_id: "r-01", check_in: "2026-12-11", nights: 1, guest: "E. Lavenza" }),
   await run(c, "list_bookings"),
-  await run(c, "booking_cancel", { booking_id: "BK-0001" }),
-  await run(c, "booking_cancel", { booking_id: "BK-0001" }),
+  await run(c, cancelName, { booking_id: "BK-0001" }),
+  await run(c, cancelName, { booking_id: "BK-0001" }),
 ];
 
 const withoutTotal = (json: Record<string, unknown>) => {
@@ -181,21 +175,35 @@ const roomIds = ROOMS.map((r) => r.id);
 const SEED = 2102;
 
 describe("preservation: observed on unfixed v2", () => {
-  it("lists the six v2 tools, with the same inputSchema for each", async () => {
+  it("lists the six tools: v2.1 cancel_booking schema equals v1's, the other five equal v2's", async () => {
     const { base, subj } = await pair();
-    const names = (await base.client.listTools()).tools.map((t) => t.name).sort();
-    expect(names).toEqual(["book", "booking_cancel", "get_room", "list_bookings", "quote", "search_rooms"]);
-    expect(await toolSchemas(base)).toEqual(EXPECTED_SCHEMAS);
-    expect(await toolSchemas(subj)).toEqual(await toolSchemas(base));
+    const v1 = await connect("v1");
+    try {
+      const subjNames = (await subj.client.listTools()).tools.map((t) => t.name).sort();
+      expect(subjNames).toEqual(["book", "cancel_booking", "get_room", "list_bookings", "quote", "search_rooms"]);
+      const baseNames = (await base.client.listTools()).tools.map((t) => t.name).sort();
+      expect(baseNames).toEqual(["book", "booking_cancel", "get_room", "list_bookings", "quote", "search_rooms"]);
+
+      const v1Schemas = await toolSchemas(v1);
+      const baseSchemas = await toolSchemas(base);
+      const subjSchemas = await toolSchemas(subj);
+      expect(v1Schemas.cancel_booking).toEqual(EXPECTED_SCHEMAS.cancel_booking);
+      expect(subjSchemas.cancel_booking).toEqual(v1Schemas.cancel_booking);
+      expect(baseSchemas.booking_cancel).toEqual(EXPECTED_SCHEMAS.cancel_booking);
+      for (const name of ["book", "get_room", "list_bookings", "quote", "search_rooms"]) {
+        expect(subjSchemas[name], name).toEqual(EXPECTED_SCHEMAS[name]);
+        expect(subjSchemas[name], name).toEqual(baseSchemas[name]);
+      }
+    } finally {
+      await v1.close();
+    }
   });
 
-  it("search_rooms without limit returns the default 5 rooms, on both sides", async () => {
+  it("search_rooms input schema is the same on both sides, and the limit is optional", async () => {
     const { base, subj } = await pair();
-    const b = await base.call("search_rooms", { check_in: "2026-12-04", nights: 2, guests: 3 });
-    expect(b.json.rooms.map((x: { id: string }) => x.id)).toEqual(["r-02", "r-03", "r-04", "r-06", "r-07"]);
-    expect(await run(subj, "search_rooms", { check_in: "2026-12-04", nights: 2, guests: 3 })).toEqual(
-      await run(base, "search_rooms", { check_in: "2026-12-04", nights: 2, guests: 3 }),
-    );
+    const bs = (await toolSchemas(base)).search_rooms;
+    expect(bs).toEqual(EXPECTED_SCHEMAS.search_rooms);
+    expect((await toolSchemas(subj)).search_rooms).toEqual(bs);
   });
 
   it("get_room r-04 has the observed text, and an unknown room is an error", async () => {
@@ -210,12 +218,12 @@ describe("preservation: observed on unfixed v2", () => {
 
   it("book, list_bookings and booking_cancel give the observed text, first booking BK-0001", async () => {
     const { base, subj } = await pair();
-    const flow = await bookingFlow(base);
+    const flow = await bookingFlow(base, "booking_cancel");
     expect(flow[0]).toEqual({ isError: false, text: BOOK_TEXT });
     expect(flow[1]).toEqual({ isError: false, text: `{"bookings":[${BOOK_TEXT}]}` });
     expect(flow[2]).toEqual({ isError: false, text: '{"booking_id":"BK-0001","status":"cancelled"}' });
     expect(flow[3]).toEqual({ isError: true, text: '{"error":"BK-0001 is already cancelled"}' });
-    expect(await bookingFlow(subj)).toEqual(flow);
+    expect(await bookingFlow(subj, "cancel_booking")).toEqual(flow);
   });
 
   it("quote for unknown room r-99 is isError true with the same error text", async () => {
@@ -289,13 +297,13 @@ describe("preservation properties: subject (SUBJECT) matches baseline (BASELINE)
     );
   });
 
-  it("search_rooms returns identical text on both sides for any guests, nights, date and optional limit", async () => {
+  it("search_rooms returns identical text on both sides for any guests, nights, date and explicit limit", async () => {
     const { base, subj } = await pair();
     const args = fc.record({
       check_in: isoDate,
       nights: fc.integer({ min: 1, max: 30 }),
       guests: fc.integer({ min: 1, max: 8 }),
-      limit: fc.option(fc.integer({ min: 1, max: 50 }), { nil: undefined }),
+      limit: fc.integer({ min: 1, max: 50 }),
     });
     await fc.assert(
       fc.asyncProperty(args, async (a) => {
@@ -314,7 +322,7 @@ describe("preservation properties: subject (SUBJECT) matches baseline (BASELINE)
     });
     const step = fc.oneof(
       bookArb.map((a) => ({ tool: "book", args: a as Record<string, unknown> })),
-      fc.integer({ min: 1, max: 4 }).map((n) => ({ tool: "booking_cancel", args: { booking_id: `BK-${String(n).padStart(4, "0")}` } })),
+      fc.integer({ min: 1, max: 4 }).map((n) => ({ tool: "cancel", args: { booking_id: `BK-${String(n).padStart(4, "0")}` } })),
       fc.constant({ tool: "list_bookings", args: {} as Record<string, unknown> }),
     );
     await fc.assert(
@@ -322,10 +330,291 @@ describe("preservation properties: subject (SUBJECT) matches baseline (BASELINE)
         const p = await pair(false);
         try {
           for (const s of steps) {
-            expect(await run(p.subj, s.tool, s.args)).toEqual(await run(p.base, s.tool, s.args));
+            const baseName = s.tool === "cancel" ? "booking_cancel" : s.tool;
+            const subjName = s.tool === "cancel" ? "cancel_booking" : s.tool;
+            expect(await run(p.subj, subjName, s.args)).toEqual(await run(p.base, baseName, s.args));
           }
         } finally {
           await p.close();
+        }
+      }),
+      { numRuns: 30, seed: SEED },
+    );
+  });
+});
+
+// ---- Preservation (task 2, search_rooms): an explicit limit, and no-limit calls with 5 or fewer matches, match v2. ----
+// Observed on unfixed v2.1: SPC-0001 input (limit 50) returns 7 rooms and SPC-0005 input (limit 3) returns 3 rooms, both
+// equal to v2 and v1. With no limit, guests 8 matches no room (0 rooms), and guests 4 to 8 match at most 3 rooms. v2.1
+// equals v2 on all of them.
+const searchThree = async (args: Record<string, unknown>) => {
+  const { base, subj, close } = await pair(false);
+  const v1 = await connect("v1");
+  try {
+    return { subj: await run(subj, "search_rooms", args), base: await run(base, "search_rooms", args), v1: await run(v1, "search_rooms", args) };
+  } finally {
+    await close();
+    await v1.close();
+  }
+};
+
+describe("preservation (task 2): search_rooms with an explicit limit, and few-match calls", () => {
+  it("SPC-0001 input (limit 50) returns 7 rooms, identical on v2.1, v2 and v1", async () => {
+    const r = await searchThree({ check_in: "2026-12-04", nights: 2, guests: 3, limit: 50 });
+    expect(r.subj).toEqual(r.base);
+    expect(textOf(r.subj)).toBe(textOf(r.v1));
+    expect(JSON.parse(textOf(r.subj)).rooms).toHaveLength(7);
+  });
+
+  it("SPC-0005 input (limit 3) returns 3 rooms, identical on v2.1, v2 and v1", async () => {
+    const r = await searchThree({ check_in: "2026-12-11", nights: 1, guests: 2, limit: 3 });
+    expect(r.subj).toEqual(r.base);
+    expect(textOf(r.subj)).toBe(textOf(r.v1));
+    expect(JSON.parse(textOf(r.subj)).rooms).toHaveLength(3);
+  });
+
+  it("no limit with guests 8 (no matching room) returns 0 rooms, identical on v2.1 and v2", async () => {
+    const r = await searchThree({ check_in: "2026-12-04", nights: 2, guests: 8 });
+    expect(r.subj).toEqual(r.base);
+    expect(JSON.parse(textOf(r.subj)).rooms).toHaveLength(0);
+  });
+
+  it("property: for any explicit limit 1..50, v2.1 text equals v2 text", async () => {
+    const { base, subj, close } = await pair(false);
+    try {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.record({
+            check_in: isoDate,
+            nights: fc.integer({ min: 1, max: 30 }),
+            guests: fc.integer({ min: 1, max: 8 }),
+            limit: fc.integer({ min: 1, max: 50 }),
+          }),
+          async (a) => {
+            expect(await run(subj, "search_rooms", a)).toEqual(await run(base, "search_rooms", a));
+          },
+        ),
+        { numRuns: 100, seed: SEED },
+      );
+    } finally {
+      await close();
+    }
+  });
+
+  it("property: with no limit and 5 or fewer matching rooms (guests 4 to 8), v2.1 text equals v2 text", async () => {
+    const { base, subj, close } = await pair(false);
+    try {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.record({
+            check_in: isoDate,
+            nights: fc.integer({ min: 1, max: 30 }),
+            guests: fc.integer({ min: 4, max: 8 }),
+          }),
+          async (a) => {
+            expect(ROOMS.filter((r) => r.max_guests >= a.guests).length).toBeLessThanOrEqual(5);
+            expect(await run(subj, "search_rooms", a)).toEqual(await run(base, "search_rooms", a));
+          },
+        ),
+        { numRuns: 100, seed: SEED },
+      );
+    } finally {
+      await close();
+    }
+  });
+
+  it("v2.1 lists the six tools, and the search_rooms limit is optional, integer, min 1, max 50", async () => {
+    const { client } = await open();
+    const tools = (await client.listTools()).tools;
+    expect(tools.map((t) => t.name).sort()).toEqual(["book", "cancel_booking", "get_room", "list_bookings", "quote", "search_rooms"]);
+    const search = tools.find((t) => t.name === "search_rooms");
+    expect(search?.inputSchema.required).toEqual(["check_in", "nights", "guests"]);
+    expect(search?.inputSchema.properties?.limit).toEqual({ type: "integer", minimum: 1, maximum: 50 });
+  });
+});
+
+// ---- Bug condition (task 1, search_rooms default limit): with no `limit`, v2.1 must match v1's default of 20. ----
+// These tests are expected to FAIL on the unfixed v2_1.ts (it uses `limit ?? 5`). See .kiro/specs/search-rooms-rooms-rooms-r-08-rooms-r-09.
+describe("bug condition: search_rooms without limit uses the v1 default of 20 (v2.1)", () => {
+  it("SPC-0010 input with no limit returns r-02, r-03, r-04, r-06, r-07, r-08, r-09", async () => {
+    const { call } = await open();
+    const r = await call("search_rooms", { check_in: "2026-12-04", nights: 2, guests: 3 });
+    expect(r.json.rooms.map((x: { id: string }) => x.id)).toEqual(["r-02", "r-03", "r-04", "r-06", "r-07", "r-08", "r-09"]);
+  });
+
+  it("the search_rooms description says default 20", async () => {
+    const { client } = await open();
+    const tool = (await client.listTools()).tools.find((t) => t.name === "search_rooms");
+    expect(tool?.description).toContain("default 20");
+  });
+
+  it("property: with no limit, v2.1 text equals v1 text, and the room count is min(20, matching)", async () => {
+    const v1 = await connect("v1");
+    const v21 = await connect("v2.1");
+    try {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.record({
+            check_in: isoDate,
+            nights: fc.integer({ min: 1, max: 30 }),
+            guests: fc.integer({ min: 1, max: 8 }),
+          }),
+          async (a) => {
+            const expected = await v1.call("search_rooms", a);
+            const actual = await v21.call("search_rooms", a);
+            expect(actual.text).toBe(expected.text);
+            const matching = ROOMS.filter((r) => r.max_guests >= a.guests).length;
+            expect(actual.json.rooms).toHaveLength(Math.min(20, matching));
+          },
+        ),
+        { numRuns: 100, seed: 2101 },
+      );
+    } finally {
+      await v1.close();
+      await v21.close();
+    }
+  });
+});
+
+// ---- Bug condition (task 1, cancel_booking): v2.1 must expose cancel_booking with the v1 behaviour. ----
+// Expected to FAIL on the unfixed v2_1.ts, which registered the cancel tool as booking_cancel. Passes now (task 3.2).
+// See .kiro/specs/cancel-booking-missing-tool/bugfix.md (SPC-0009).
+describe("bug condition: cancel_booking is available on v2.1 (SPC-0009)", () => {
+  it("tools/list contains cancel_booking and does not contain booking_cancel", async () => {
+    const { client } = await open();
+    const names = (await client.listTools()).tools.map((t) => t.name);
+    expect(names).toContain("cancel_booking");
+    expect(names).not.toContain("booking_cancel");
+  });
+
+  it("SPC-0009: book BK-0001 then cancel_booking returns exactly {\"booking_id\":\"BK-0001\",\"status\":\"cancelled\"}", async () => {
+    const { call } = await open();
+    const booked = await call("book", { room_id: "r-01", check_in: "2026-12-11", nights: 1, guest: "Guest" });
+    expect(booked.json.booking_id).toBe("BK-0001");
+    const r = await call("cancel_booking", { booking_id: "BK-0001" });
+    expect(r.isError).toBe(false);
+    expect(r.text).toBe('{"booking_id":"BK-0001","status":"cancelled"}');
+  });
+
+  it("a second cancel_booking on BK-0001 is isError with BK-0001 is already cancelled", async () => {
+    const { call } = await open();
+    await call("book", { room_id: "r-01", check_in: "2026-12-11", nights: 1, guest: "Guest" });
+    await call("cancel_booking", { booking_id: "BK-0001" });
+    const r = await call("cancel_booking", { booking_id: "BK-0001" });
+    expect(r.isError).toBe(true);
+    expect(r.text).toContain("BK-0001 is already cancelled");
+  });
+
+  it("cancel_booking BK-9999 is isError with unknown booking BK-9999", async () => {
+    const { call } = await open();
+    const r = await call("cancel_booking", { booking_id: "BK-9999" });
+    expect(r.isError).toBe(true);
+    expect(r.text).toContain("unknown booking BK-9999");
+  });
+});
+
+// ---- Preservation (task 2, cancel): v2.1's cancel tool matches v1's cancel_booking apart from its name. ----
+// v2.1 registers the cancel tool as cancel_booking, the same name, description, inputSchema and handler as v1.
+// Unknown BK-9999 gives isError with {"error":"unknown booking BK-9999"}, and a second cancel of BK-0001 gives isError
+// with {"error":"BK-0001 is already cancelled"}. v1 gives the same text for both.
+const V21_CANCEL_NAME = "cancel_booking";
+
+describe("preservation (task 2, cancel): v2.1 cancel tool matches v1 cancel_booking", () => {
+  it("the cancel tool on v2.1 has the same description and inputSchema as v1 cancel_booking", async () => {
+    const v1 = await connect("v1");
+    const subj = await open();
+    try {
+      const v1Tool = (await v1.client.listTools()).tools.find((t) => t.name === "cancel_booking");
+      const subjTool = (await subj.client.listTools()).tools.find((t) => t.name === V21_CANCEL_NAME);
+      expect(v1Tool?.inputSchema).toEqual(EXPECTED_SCHEMAS.cancel_booking);
+      expect(subjTool?.inputSchema).toEqual(v1Tool?.inputSchema);
+      expect(subjTool?.description).toBe(v1Tool?.description);
+    } finally {
+      await v1.close();
+    }
+  });
+
+  it("unknown id and double cancel give the same isError results on v2.1 as on v1", async () => {
+    const v1 = await connect("v1");
+    const subj = await open();
+    try {
+      const unknown = await run(v1, "cancel_booking", { booking_id: "BK-9999" });
+      expect(unknown).toEqual({ isError: true, text: '{"error":"unknown booking BK-9999"}' });
+      expect(await run(subj, V21_CANCEL_NAME, { booking_id: "BK-9999" })).toEqual(unknown);
+
+      const book = { room_id: "r-01", check_in: "2026-12-11", nights: 1, guest: "E. Lavenza" };
+      await run(v1, "book", book);
+      await run(subj, "book", book);
+      const first = await run(v1, "cancel_booking", { booking_id: "BK-0001" });
+      expect(first).toEqual({ isError: false, text: '{"booking_id":"BK-0001","status":"cancelled"}' });
+      expect(await run(subj, V21_CANCEL_NAME, { booking_id: "BK-0001" })).toEqual(first);
+
+      const again = await run(v1, "cancel_booking", { booking_id: "BK-0001" });
+      expect(again).toEqual({ isError: true, text: '{"error":"BK-0001 is already cancelled"}' });
+      expect(await run(subj, V21_CANCEL_NAME, { booking_id: "BK-0001" })).toEqual(again);
+    } finally {
+      await v1.close();
+    }
+  });
+
+  it("property: for any sequence of book, cancel and list_bookings calls, v2.1 equals v1 call by call", async () => {
+    const bookArb = fc.record({
+      room_id: fc.constantFrom(...roomIds),
+      check_in: isoDate,
+      nights: fc.integer({ min: 1, max: 30 }),
+      guest: fc.string({ minLength: 1, maxLength: 12 }),
+    });
+    const cancelId = fc.oneof(
+      fc.integer({ min: 1, max: 4 }).map((n) => `BK-${String(n).padStart(4, "0")}`),
+      fc.string({ maxLength: 8 }),
+    );
+    const step = fc.oneof(
+      bookArb.map((a) => ({ tool: "book", args: a as Record<string, unknown> })),
+      cancelId.map((id) => ({ tool: "cancel", args: { booking_id: id } as Record<string, unknown> })),
+      fc.constant({ tool: "list_bookings", args: {} as Record<string, unknown> }),
+    );
+    await fc.assert(
+      fc.asyncProperty(fc.array(step, { maxLength: 8 }), async (steps) => {
+        const v1 = await connect("v1");
+        const subj = await connect("v2.1");
+        try {
+          for (const s of steps) {
+            const v1Name = s.tool === "cancel" ? "cancel_booking" : s.tool;
+            const subjName = s.tool === "cancel" ? V21_CANCEL_NAME : s.tool;
+            expect(await run(subj, subjName, s.args)).toEqual(await run(v1, v1Name, s.args));
+          }
+        } finally {
+          await v1.close();
+          await subj.close();
+        }
+      }),
+      { numRuns: 30, seed: SEED },
+    );
+  });
+
+  it("property: for any sequence of book, cancel_booking (BK-0001 to BK-0004) and list_bookings, v2.1 text equals v1 text call by call", async () => {
+    const bookArb = fc.record({
+      room_id: fc.constantFrom(...roomIds),
+      check_in: isoDate,
+      nights: fc.integer({ min: 1, max: 30 }),
+      guest: fc.string({ minLength: 1, maxLength: 12 }),
+    });
+    const step = fc.oneof(
+      bookArb.map((a) => ({ tool: "book", args: a as Record<string, unknown> })),
+      fc.integer({ min: 1, max: 4 }).map((n) => ({ tool: "cancel_booking", args: { booking_id: `BK-${String(n).padStart(4, "0")}` } })),
+      fc.constant({ tool: "list_bookings", args: {} as Record<string, unknown> }),
+    );
+    await fc.assert(
+      fc.asyncProperty(fc.array(step, { maxLength: 10 }), async (steps) => {
+        const v1 = await connect("v1");
+        const subj = await connect("v2.1");
+        try {
+          for (const s of steps) {
+            expect(await run(subj, s.tool, s.args)).toEqual(await run(v1, s.tool, s.args));
+          }
+        } finally {
+          await v1.close();
+          await subj.close();
         }
       }),
       { numRuns: 30, seed: SEED },

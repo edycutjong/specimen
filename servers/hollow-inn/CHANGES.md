@@ -1,12 +1,10 @@
 # hollow-inn — changes
 
-## v2.1.0 — `quote` returns `total` again
+## v2.1.0 — `quote` returns `total` again, `search_rooms` default limit is 20 again, `cancel_booking` is back
 
 - `quote` returns `total` (dollars, `425.00`) again, alongside `total_cents` (integer, `42500`). This reverses change (a) from v2.0.0.
-- Not changed in v2.1:
-  - (b) `search_rooms` default limit stays at 5.
-  - (c) `cancel_booking` stays renamed to `booking_cancel`.
-  - No bugfix spec has been filed for (b) or (c) yet.
+- `search_rooms` default limit is 20 again when the caller sends no `limit`, and the tool description says `default 20`. This reverses change (b) from v2.0.0.
+- The cancel tool is registered as `cancel_booking` again, with the v1 input schema and response, and `booking_cancel` is no longer listed. This reverses change (c) from v2.0.0.
 - All other tools behave as in v2.0.0.
 
 ## v2.0.0 — "cleanup" release (author-made changes; this is the demo's planted break set)

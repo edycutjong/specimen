@@ -66,16 +66,16 @@ describe("CountsPair with real replays", () => {
     );
   });
 
-  it("reads the v2.1 connector with its own numbers: 1 call used it, 2 broken, 1 in unchanged tools", () => {
+  it("reads the v2.1 connector with its own numbers: no schema change, no call came back different", () => {
     render(<CountsPair counts={countsOf(replays["v2.1"])} replayed />);
 
     expect(halfText(".counts-pair__schema")).toBe(
-      "input-schema diff: 1 of 6 tools changed",
+      "input-schema diff: 0 of 6 tools changed",
     );
     expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
-      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. 2 calls came back different — 1 in tools whose inputs never changed.",
+      "Nothing changed — every recorded call came back the same.",
     );
-    expect(halfText(".counts-pair__replay")).toBe("replay: 2 tools · 2 jars changed");
+    expect(halfText(".counts-pair__replay")).toBe("replay: 0 tools · 0 jars changed");
   });
 
   it("names removed and added tools separately when the diff does not pair them as one rename", () => {
