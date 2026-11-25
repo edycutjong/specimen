@@ -114,8 +114,9 @@ code, kbd, samp, pre, .data { font-family: var(--font-data); font-variant-ligatu
 .btn--link.is-private { text-decoration: none; color: var(--muted); font-weight: 400; font-size: 15px; transform: none; }
 
 /* ---------- hero ---------- */
-.hero { padding: clamp(22px, 2.4vw, 34px) 0 clamp(40px, 5vw, 72px); }
-.hero .wrap { display: grid; grid-template-columns: minmax(0, 4.5fr) minmax(0, 6.5fr); gap: clamp(28px, 3.4vw, 56px); align-items: center; }
+.hero { padding: clamp(22px, 2.4vw, 34px) 0 clamp(40px, 5vw, 72px); overflow-x: clip; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 4.5fr) minmax(0, 6.5fr); gap: clamp(28px, 3.4vw, 56px); align-items: start; }
+.hero__copy { padding-top: clamp(8px, 2.4vw, 34px); }
 .plate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
 .stampline { font: 900 19px/1 var(--font-display); color: var(--tag); border: 2px solid var(--tag); padding: 7px 12px 8px; transform: rotate(-1.4deg); letter-spacing: .02em; box-shadow: inset 0 0 0 1px rgba(217, 196, 154, .25); }
 .code { font: 500 14px/1 var(--font-data); letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
@@ -125,12 +126,14 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .lede { font-size: 19.5px; line-height: 1.55; color: var(--bone-2); max-width: 33em; }
 .lede b { color: var(--ink); }
 .lede .r { color: var(--after); }
-.lede--a { margin-bottom: 12px; color: var(--ink); }
+.ledes { max-width: 33em; }
+.ledes .lede { display: inline; }
+.lede--a { color: var(--ink); }
 .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 24px; }
-.seams { display: flex; align-items: flex-start; max-width: 600px; margin: 0 0 22px; }
+.seams { position: relative; z-index: 2; display: flex; align-items: flex-start; margin: 14px 4px 0; padding: 14px 18px 12px; border: 1px solid var(--rule); border-top: 3px solid var(--iron-hi); background: linear-gradient(180deg, rgba(25, 34, 25, .9), rgba(11, 15, 10, .9)); }
 .seam { flex: none; display: grid; justify-items: center; gap: 5px; }
-.seam b { font: 900 clamp(22px, 1.9vw, 27px)/1 var(--font-display); letter-spacing: .02em; color: var(--ink); }
-.seam small { font: 500 11.5px/1 var(--font-data); letter-spacing: .04em; color: var(--muted); white-space: nowrap; }
+.seam b { font: 900 clamp(22px, 2.1vw, 31px)/1 var(--font-display); letter-spacing: .02em; color: var(--ink); }
+.seam small { font: 500 12.5px/1 var(--font-data); letter-spacing: .03em; color: var(--bone-2); white-space: nowrap; }
 .seams > svg { flex: 1 1 0; min-width: 18px; height: 16px; margin: 4px 6px 0; }
 .proof { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 15px; color: var(--muted); }
 .cmd { display: inline-flex; align-items: stretch; border: 1px solid var(--rule); background: var(--stone); max-width: 100%; }
@@ -160,10 +163,9 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .plate-v[data-verdict="SHIP"] .plate-v__word { color: var(--before); }
 .plate-v[data-verdict="pending"] .plate-v__word { color: var(--muted); }
 .plate-v__counts { font: 500 14px/1.35 var(--font-data); color: var(--bone-2); margin-top: 6px; }
-.plate-v__cov { font: 500 13px/1.35 var(--font-data); color: var(--muted); }
-.plate-v.is-stamped { animation: stampin .42s cubic-bezier(.2, 1.6, .4, 1) both; }
+.plate-v.is-stamped .plate-v__word { animation: stampin .42s cubic-bezier(.2, 1.6, .4, 1) both; transform-origin: 100% 60%; }
 
-.plate-v__top { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.plate-v__top { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; margin-bottom: 8px; }
 .lamp { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 10px; row-gap: 3px; padding: 8px 13px 8px 11px; border: 2px solid var(--iron-hi); border-radius: 3px; background: #0A0D09; text-align: left; transition: border-color .3s, box-shadow .3s; }
 .lamp i { grid-row: span 2; width: 13px; height: 13px; border-radius: 50%; background: var(--muted); }
 .lamp b { font: 700 18px/1 var(--font-data); letter-spacing: .2em; text-transform: uppercase; color: var(--bone-2); }
@@ -172,14 +174,13 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .lamp[data-kind="live"] i { background: #F4F7FF; box-shadow: 0 0 12px var(--storm), 0 0 2px #fff; animation: lamp 1.5s ease-in-out infinite; }
 .lamp[data-kind="live"] b { color: #F4F7FF; text-shadow: 0 0 14px rgba(201, 214, 242, .7); }
 .lamp[data-kind="live"] small { color: var(--bone-2); }
-.plate-v__delta { font: 700 14px/1.3 var(--font-data); min-height: 0; }
-.plate-v__delta:empty { display: none; }
+.plate-v__delta { font: 700 15px/1.25 var(--font-data); text-align: right; }
 .plate-v__delta[data-tone="g"] { color: var(--before); } .plate-v__delta[data-tone="r"] { color: var(--after); }
 .tick { display: grid; gap: 2px; margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--rule); font: 500 13px/1.35 var(--font-data); color: var(--bone-2); text-align: right; min-height: calc(2.7em + 9px); }
 .tick__sum { color: var(--ink); font-weight: 700; }
 .plate-v.is-slam .plate-v__word { animation: verdictslam .55s cubic-bezier(.2, 1.7, .4, 1) both; transform-origin: 100% 60%; }
 
-.room { position: relative; padding-top: 4px; isolation: isolate; }
+.room { position: relative; padding-top: 4px; margin-top: -26px; isolation: isolate; }
 /* the wall-sized storm window behind both racks: stone reveal, iron bars between the jars, the planks are its transoms */
 .wall { position: absolute; z-index: 0; left: -14px; right: -14px; top: 0; bottom: 34px; border-radius: 50% 50% 0 0 / 118px 118px 0 0; background: linear-gradient(180deg, #232C22, #161C15 70%); box-shadow: inset 0 0 0 2px #313A2F, inset 0 0 0 10px #1A2018, inset 0 0 0 12px #080B07, 0 -20px 90px -40px rgba(201, 214, 242, .35); }
 .wall__glass { position: absolute; inset: 12px 12px 0; border-radius: 50% 50% 0 0 / 108px 108px 0 0; overflow: hidden; background: radial-gradient(60% 46% at 62% 14%, rgba(201, 214, 242, .2), transparent 72%), linear-gradient(180deg, #2A3953 0%, #1B2740 36%, #121A2C 70%, #0C111D 100%); box-shadow: inset 0 18px 40px rgba(0, 0, 0, .45); }
@@ -190,8 +191,8 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .rim { opacity: .5; }
 .room.is-flash .rim { animation: rim .95s ease-out 1; }
 .room.is-flash .jar__svg { animation: jarlit .95s ease-out 1; }
-.wash { position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(90% 75% at 70% 24%, rgba(201, 214, 242, .5), rgba(201, 214, 242, .16) 55%, rgba(201, 214, 242, .05)); }
-.wash.is-on { animation: wash .95s ease-out 1; }
+.wash { display: none; position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(90% 75% at 70% 24%, rgba(201, 214, 242, .5), rgba(201, 214, 242, .16) 55%, rgba(201, 214, 242, .05)); }
+.wash.is-on { display: block; animation: wash .95s ease-out 1; }
 .wash.is-ship { background: radial-gradient(90% 75% at 66% 46%, rgba(168, 227, 95, .42), rgba(168, 227, 95, .12) 55%, rgba(168, 227, 95, .03)); animation-duration: 1.2s; }
 .sweep { position: absolute; z-index: 3; left: 0; top: 0; bottom: 34px; width: 34%; pointer-events: none; opacity: 0; transform: translateX(-100%); mix-blend-mode: screen; background: linear-gradient(90deg, transparent, rgba(168, 227, 95, .2) 40%, rgba(214, 255, 154, .42) 50%, rgba(168, 227, 95, .2) 60%, transparent); }
 .room.is-ship .sweep { animation: sweepx 1.15s cubic-bezier(.3, .1, .25, 1) 1; }
@@ -259,6 +260,7 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .jar[data-plus] .tag__plus { display: block; }
 
 .stamp { position: absolute; z-index: 5; font: 900 clamp(20px, 2vw, 28px)/1 var(--font-display); color: var(--after); border: 3px solid var(--after); padding: 6px 12px 7px; background: rgba(16, 21, 15, .72); transform: rotate(-7deg); white-space: nowrap; pointer-events: none; opacity: 0; letter-spacing: .02em; }
+.stamp.is-good { color: var(--before); border-color: var(--before); text-shadow: 0 0 18px rgba(168, 227, 95, .45); }
 .stamp.is-on { opacity: 1; animation: slam .38s cubic-bezier(.2, 1.8, .4, 1) both; }
 .no-js .stamp.is-on, .stamp.is-static { opacity: 1; }
 
@@ -453,6 +455,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 @keyframes wash { 0% { opacity: 0; } 5% { opacity: .8; } 12% { opacity: .1; } 21% { opacity: .6; } 100% { opacity: 0; } }
 @keyframes sweepx { 0% { transform: translateX(-100%); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(300%); opacity: 0; } }
 @keyframes verdictslam { 0% { transform: scale(2.2) rotate(-5deg); opacity: 0; } 55% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes verdictslam-sm { 0% { transform: scale(1.4) rotate(-3deg); opacity: 0; } 55% { opacity: 1; } 100% { transform: none; opacity: 1; } }
 @keyframes lamp { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @keyframes hero-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .js .hero .anim { animation: hero-in .7s cubic-bezier(.2, .7, .2, 1) both; }
@@ -500,34 +503,43 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   /* phones: the plain sentence, then the shelf, then the rest (the wow above the fold) */
   .hero .wrap { row-gap: 0; }
   .hero__copy { display: contents; }
-  .hero .plate { order: 1; } .hero h1 { order: 2; } .lede--a { order: 3; margin-bottom: 0; }
+  .hero .plate { order: 1; } .hero h1 { order: 2; } .ledes { display: contents; }
+  .ledes .lede { display: block; }
+  .lede--a { order: 3; }
   .lab { order: 4; margin: 16px 0 22px; display: flex; flex-direction: column; }
-  .lede--b { order: 5; } .hero .ctas { order: 6; } .seams { order: 7; } .proof { order: 8; }
+  .lede--b { order: 5; } .hero .ctas { order: 6; } .proof { order: 7; }
   .hero .code { display: none; }
   .lab__bar { display: contents; }
   .switch { order: 1; margin-bottom: 8px; }
-  .switch__label { display: none; }
-  .switch__hint { font-size: 13px; }
-  .room { order: 2; }
-  .lab .plate-v { order: 3; margin-top: 10px; max-width: none; }
-  .lab .notebook { order: 4; }
+  .switch__label, .switch__hint { display: none; }
+  .lab .plate-v { order: 2; margin: 0 0 12px; max-width: none; }
+  .room { order: 3; margin-top: 0; }
+  .lab .seams { order: 4; }
+  .lab .notebook { order: 5; }
   .plate-v__top { justify-content: space-between; }
   .lamp b { font-size: 16px; } .lamp small { font-size: 11px; }
   .plate-v__top { flex-wrap: wrap; gap: 8px 12px; }
   .lab .plate-v__word { font-size: 36px; min-height: 36px; }
   .lab .plate-v__word i { font-size: 24px; }
-  .tick { text-align: left; }
+  .tick { text-align: left; min-height: 0; margin-top: 6px; padding-top: 6px; }
+  .tick__jar { display: none; }
+  .plate-v.is-stamped .plate-v__word, .plate-v.is-slam .plate-v__word { transform-origin: 0 60%; }
+  .plate-v.is-slam .plate-v__word { animation-name: verdictslam-sm; }
+  .lab .plate-v { padding: 8px 12px 10px; }
+  .plate-v__top { min-height: 0; margin-bottom: 4px; }
+  .lamp { padding: 6px 10px 6px 9px; }
+  .plate-v__counts { font-size: 13px; margin-top: 2px; }
   .wall { left: -8px; right: -8px; border-radius: 50% 50% 0 0 / 60px 60px 0 0; }
   .wall__glass { border-radius: 50% 50% 0 0 / 54px 54px 0 0; }
-  .shelf--a { padding-top: 70px; }
+  .shelf--a { padding-top: 58px; }
   .seams { max-width: none; }
   .seam b { font-size: 18px; } .seam small { font-size: 10px; letter-spacing: 0; }
   .seams > svg { min-width: 8px; margin: 3px 3px 0; }
-  .tag { left: 4%; right: -2%; padding: 3px 2px 3px 10px; }
+  .tag { left: 4%; right: 0; padding: 3px 2px 3px 10px; }
   .tag::before { left: 4px; width: 5px; height: 5px; margin-top: -2.5px; }
   .tag__tool { display: none; }
   .tag__acc { font-size: 8.5px; letter-spacing: -.03em; white-space: nowrap; }
-  .tag__flag { font-size: 10.5px; margin: 3px -3px -4px -12px; letter-spacing: 0; }
+  .tag__flag { font-size: 8.5px; margin: 3px -2px -4px -10px; letter-spacing: -.02em; }
   .stamp { font-size: 17px; padding: 4px 8px; }
   .plank__codes { font-size: 11px; letter-spacing: .12em; }
   .notebook { padding-left: 46px; }
@@ -589,16 +601,14 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="hero__copy">
 <div class="plate anim"><span class="stampline">Kiroween 2026 · Frankenstein</span><span class="code"><span class="dot" aria-hidden="true"></span>Rack A · Rack B · 10 jars</span></div>
 <h1 id="h1" class="anim">The jars remember what your server <span class="hl">used to say.</span></h1>
-<p class="lede lede--a anim">Kiro hooks seal each call your agent makes to a hooked MCP server in a jar, the response text byte for byte.</p>
-<p class="lede lede--b anim">Swap in the next server and replay them: under v2, <b class="r">5 of 10 jars</b> came back different, where an input-schema diff saw <b>2 changes</b>.</p>
+<div class="ledes anim"><p class="lede lede--a">Kiro hooks seal each call your agent makes to a hooked MCP server in a jar, byte for byte.</p> <p class="lede lede--b">Swap in v2 and replay: <b class="r">5 of 10 jars</b> came back different, while a diff of the tool schemas flagged only <b>one renamed tool</b>.</p></div>
 <div class="ctas anim"><a class="btn btn--main" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open the cabinet</a><a class="btn" href="/deck/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>Pitch deck</a><span class="btn btn--lock is-private" aria-disabled="true" title="The repository is private until the Devpost submission, then public" data-repo="https://github.com/edycutjong/specimen" data-repo-label="&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M8 6l-5 6 5 6M16 6l5 6-5 6&quot;/&gt;&lt;/svg&gt;Source on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source · opens at submission</span></div>
-<div class="seams anim" role="img" aria-label="Four parts stitched into one loop: the MCP server, Kiro hooks, the replay, a Kiro bugfix spec"><span class="seam"><b>MCP</b><small>the server</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>HOOKS</b><small>Kiro, per call</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>REPLAY</b><small>in this tab</small></span><svg viewBox="0 0 60 24" width="60" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q30 14.5 56 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.1" y1="4.5" x2="24.5" y2="19.5"/><line x1="37.9" y1="4.5" x2="35.5" y2="19.5"/><line x1="48.8" y1="4.5" x2="51.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.1" cy="4.5" r="1.3"/><circle cx="24.5" cy="19.5" r="1.3"/><circle cx="37.9" cy="4.5" r="1.3"/><circle cx="35.5" cy="19.5" r="1.3"/><circle cx="48.8" cy="4.5" r="1.3"/><circle cx="51.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="56.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>SPEC</b><small>Kiro bugfix</small></span></div>
-<div class="proof anim"><span>In a terminal:</span><span class="cmd"><code>npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"</code><button class="copy" type="button">copy</button></span></div>
+<div class="proof anim"><span>In a clone, after <code>npm ci</code>:</span><span class="cmd"><code>npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"</code><button class="copy" type="button">copy</button></span></div>
 </div>
 <div class="lab" data-lab aria-label="The specimen shelf: ten recorded calls, replayed against the server you pick">
 <div class="lab__bar">
-<div class="switch"><span class="switch__label" id="sw">Server under replay</span><div class="switch__seg" role="group" aria-labelledby="sw"><button type="button" data-ver="v1" aria-pressed="false">v1<small>recorded</small></button><button type="button" data-ver="v2" aria-pressed="true">v2<small>3 breaks</small></button><button type="button" data-ver="v2.1" aria-pressed="false">v2.1<small>Kiro's fix</small></button></div><span class="switch__hint">Throw the switch: the jars replay here, in the cabinet's own code (<span class="path" data-gh="apps/cabinet/src/browser-replay.ts">browser-replay.ts</span>). DevTools → Network stays quiet.</span></div>
-<div class="plate-v" data-verdict="HOLD"><div class="plate-v__top"><p class="lamp" data-kind="recorded" title="The committed CLI replay (replays/)"><i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small></p><p class="plate-v__word">HOLD <i>v2</i></p></div><p class="plate-v__counts">5 preserved · 4 rattled · 1 cracked</p><p class="plate-v__cov">10 jars compared · 4 of 6 tools</p><p class="plate-v__delta" data-tone=""></p><p class="tick"><span class="tick__jar">CLI run · 2026-11-25 12:38 UTC</span><span class="tick__sum"></span></p></div>
+<div class="switch"><span class="switch__label" id="sw">Server under replay</span><div class="switch__seg" role="group" aria-labelledby="sw"><button type="button" data-ver="v1" aria-pressed="false">v1<small>recorded</small></button><button type="button" data-ver="v2" aria-pressed="true">v2<small>3 breaks</small></button><button type="button" data-ver="v2.1" aria-pressed="false">v2.1<small>Kiro's fix</small></button></div><span class="switch__hint">Throw the switch: the jars replay here, in the cabinet's own code (<span class="path" data-gh="apps/cabinet/src/browser-replay.ts">browser-replay.ts</span>). After its one download, DevTools → Network stays quiet.</span></div>
+<div class="plate-v" data-verdict="HOLD"><div class="plate-v__top"><p class="lamp" data-kind="recorded" title="The committed CLI replay (replays/)"><i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small></p><p class="plate-v__delta" data-tone=""></p></div><p class="plate-v__word">HOLD <i>v2</i></p><p class="plate-v__counts">5 preserved · 4 rattled · 1 cracked</p><p class="tick"><span class="tick__jar">CLI run · 2026-11-25 12:38 UTC</span><span class="tick__sum">10 jars · 4 of 6 tools</span></p></div>
 </div>
 <div class="room">
 <div class="wall" aria-hidden="true"><div class="wall__glass"><canvas></canvas><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i></div></div>
@@ -738,12 +748,13 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="plank" aria-hidden="true"></div><div class="plank__codes" aria-hidden="true"><span>B1</span><span>B2</span><span>B3</span><span>B4</span><span>B5</span></div>
 <div class="sweep" aria-hidden="true"></div>
 </div>
+<div class="seams" role="img" aria-label="Four parts stitched into one loop: the MCP server, Kiro hooks, the replay, a Kiro bugfix spec"><span class="seam"><b>MCP</b><small>the server</small></span><svg viewBox="0 0 120 24" width="120" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q60 14.5 116 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/><line x1="71.3" y1="4.5" x2="73.7" y2="19.5"/><line x1="86.2" y1="4.5" x2="83.8" y2="19.5"/><line x1="96.3" y1="4.5" x2="98.7" y2="19.5"/><line x1="111.2" y1="4.5" x2="108.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/><circle cx="71.3" cy="4.5" r="1.3"/><circle cx="73.7" cy="19.5" r="1.3"/><circle cx="86.2" cy="4.5" r="1.3"/><circle cx="83.8" cy="19.5" r="1.3"/><circle cx="96.3" cy="4.5" r="1.3"/><circle cx="98.7" cy="19.5" r="1.3"/><circle cx="111.2" cy="4.5" r="1.3"/><circle cx="108.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="116.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>HOOKS</b><small>Kiro, per call</small></span><svg viewBox="0 0 120 24" width="120" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q60 14.5 116 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/><line x1="71.3" y1="4.5" x2="73.7" y2="19.5"/><line x1="86.2" y1="4.5" x2="83.8" y2="19.5"/><line x1="96.3" y1="4.5" x2="98.7" y2="19.5"/><line x1="111.2" y1="4.5" x2="108.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/><circle cx="71.3" cy="4.5" r="1.3"/><circle cx="73.7" cy="19.5" r="1.3"/><circle cx="86.2" cy="4.5" r="1.3"/><circle cx="83.8" cy="19.5" r="1.3"/><circle cx="96.3" cy="4.5" r="1.3"/><circle cx="98.7" cy="19.5" r="1.3"/><circle cx="111.2" cy="4.5" r="1.3"/><circle cx="108.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="116.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>REPLAY</b><small>in this tab</small></span><svg viewBox="0 0 120 24" width="120" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q60 14.5 116 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/><line x1="71.3" y1="4.5" x2="73.7" y2="19.5"/><line x1="86.2" y1="4.5" x2="83.8" y2="19.5"/><line x1="96.3" y1="4.5" x2="98.7" y2="19.5"/><line x1="111.2" y1="4.5" x2="108.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/><circle cx="71.3" cy="4.5" r="1.3"/><circle cx="73.7" cy="19.5" r="1.3"/><circle cx="86.2" cy="4.5" r="1.3"/><circle cx="83.8" cy="19.5" r="1.3"/><circle cx="96.3" cy="4.5" r="1.3"/><circle cx="98.7" cy="19.5" r="1.3"/><circle cx="111.2" cy="4.5" r="1.3"/><circle cx="108.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="116.5" cy="12" r="3.5" fill="#8C948A"/></svg><span class="seam"><b>SPEC</b><small>Kiro bugfix</small></span></div>
 <div class="notebook" data-tone="red" aria-live="off"><p class="notebook__head">SPC-0002 · quote · A2 — replayed against hollow-inn v2</p>
 <ul class="notebook__rows"><li><span class="p">/total</span><s>425.00</s><span class="k">removed</span></li>
 <li><span class="p">/total_cents</span><span class="now">42500</span><span class="k">added</span><span class="note">suspected rename from /total ×100</span></li></ul>
 <span class="notebook__crack" aria-hidden="true"><svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#0A0D09" stroke-width="3" stroke-linejoin="round"/><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#ECE6D3" stroke-opacity="0.35" stroke-width="1" stroke-linejoin="round" transform="translate(1 1)"/><path d="M92 22 L80 14 M70 46 L58 40" fill="none" stroke="#0A0D09" stroke-width="2"/></svg></span></div>
 <p class="sr-only" aria-live="polite" data-say></p>
-<script>(function(){var l=document.querySelector("[data-lab]");l.querySelectorAll(".jar").forEach(function(j){j.dataset.state="preserved"});var s=l.querySelector(".stamp");s.classList.remove("is-static");var p=l.querySelector(".plate-v");p.dataset.verdict="pending";l.querySelector(".plate-v__word").innerHTML="… <i>v2</i>";l.querySelector(".plate-v__counts").textContent="storm in the window";l.querySelector(".tick__jar").textContent=" ";})()</script>
+<script>(function(){var l=document.querySelector("[data-lab]");l.querySelectorAll(".jar").forEach(function(j){j.dataset.state="preserved"});var s=l.querySelector(".stamp");s.classList.remove("is-static");var p=l.querySelector(".plate-v");p.dataset.verdict="pending";l.querySelector(".plate-v__word").innerHTML="… <i>v2</i>";l.querySelector(".plate-v__counts").textContent="storm in the window";l.querySelector(".tick__jar").textContent=" ";l.querySelector(".tick__sum").textContent=" ";})()</script>
 </div>
 <div class="wash" aria-hidden="true"></div>
 </div></section>
@@ -796,7 +807,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <h2 id="h-how">Five parts, <span class="hl--g">stitched into one loop.</span></h2>
 <div class="bento">
 <article class="organ organ--1"><svg class="organ__ico" viewBox="0 0 48 48" fill="none" stroke="#ECE6D3" stroke-width="2.2" aria-hidden="true"><rect x="13" y="6" width="22" height="6" rx="1.5"/><path d="M8 9h5M35 9h5"/><path d="M15 12c-4 1-5 4-5 7v19c0 3 2 5 5 5h18c3 0 5-2 5-5V19c0-3-1-6-5-7"/><path d="M14 24h20" stroke="#A8E35F"/></svg>
-<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on each call to the hooked server and seal a jar: request and response text, byte for byte, redacted on write. No proxy. The CLI's p50: 465 ms before a call, 474 ms after (Kiro's own hook launch not included).</p>
+<h3>Capture, inside the agent</h3><p>Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks run <code>specimen hook</code> on each call to the hooked server and seal a jar: request and response text, byte for byte, redacted on write. No proxy. The CLI's p50, measured at 82b5126: 465 ms before a call, 474 ms after (Kiro's own hook launch not included).</p>
 <pre><b>"trigger"</b>: "PostToolUse",
 <b>"matcher"</b>: "@hollowinn",
 <b>"command"</b>: "npx --no-install specimen hook post --server hollowinn"</pre></article>
@@ -821,25 +832,25 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="ledger__row ledger__row--bad"><b>v2</b><ul><li class="x">rooms offered: 5 (r-01 … r-05)</li><li class="x">charge for r-04, 2 nights: THREW TypeError: Cannot read properties of undefined (reading 'toFixed')</li><li class="x">cancel it: THREW Error: MCP error -32602: Tool cancel_booking not found</li></ul></div>
 <div class="ledger__row ledger__row--ok"><b>v2.1</b><ul><li>every line matches v1: 9 rooms, USD 425.00, cancelled</li></ul></div>
 </div>
-<div class="agent"><p class="station__k">The Kiro agent itself</p><p class="agent__n">$425.00</p><p>Its own answer did not change under v2: v2's tool description names <code>total_cents</code>, the likely reason (no ablation was run).</p><p>One agent run, with the new description loaded, coped. A client that reads <code>total</code> did not.</p><span class="path" data-gh="evidence/consequence-v2/consumer.md">evidence/consequence-v2/consumer.md</span></div>
+<div class="agent"><p class="station__k">The Kiro agent itself</p><p class="agent__n">$425.00</p><p>Its own answer did not change under v2: v2's tool description names <code>total_cents</code>, the likely reason (no ablation was run).</p><p>The Kiro agent, with the new description loaded, coped in both v2 runs (one per rack, n = 1 each). A client that reads <code>total</code> did not.</p><span class="path" data-gh="evidence/consequence-v2/consumer.md">evidence/consequence-v2/consumer.md</span></div>
 </div>
 </div></section>
 
 <section class="sec" id="kiro" aria-labelledby="h-kiro"><div class="wrap">
 <p class="eyebrow">C5 · Kiro</p>
 <h2 id="h-kiro">Stitched together <span class="hl--g">by Kiro.</span></h2>
-<p class="sub">Kiro is the builder: <b>95.6 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came in <code>kiro:</code> commits (38,564 of 40,333). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
+<p class="sub">Kiro is the builder: <b>95.5 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came from Kiro sessions (38,512 of 40,333, by commit prefix; one mixed commit counted as ours). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
 <div class="kiro">
 <ul class="inv">
 <li><b>49</b><div><strong>numbered Kiro prompts</strong><span class="path" data-gh="prompts/README.md">prompts/README.md</span></div></li>
-<li><b>7</b><div><strong>hook files</strong>: capture, the Stop gate, the jar firewall, the manifest check, tests<span class="path" data-gh=".kiro/hooks/">.kiro/hooks/</span></div></li>
+<li><b>7</b><div><strong>hook files</strong>: capture, the jar firewall, the manifest check and tests by Kiro; the Stop gate's two generated by <code>specimen init</code><span class="path" data-gh=".kiro/hooks/">.kiro/hooks/</span></div></li>
 <li><b>3</b><div><strong>feature specs</strong>, requirements → design → tasks, executed by Kiro<span class="path" data-gh=".kiro/specs/">cabinet-ui · jar-capture · replay-engine</span></div></li>
 <li><b>3</b><div><strong>bugfix specs</strong>, filed by the curator from the red jars<span class="path" data-gh=".kiro/specs/">.kiro/specs/*/bugfix.md</span></div></li>
 <li><b>4</b><div><strong>steering files</strong> and <strong>1 agent</strong>, the curator: no blanket trust, writes denied outside <code>.kiro/specs/</code><span class="path" data-gh=".kiro/agents/specimen-curator.json">.kiro/agents/specimen-curator.json</span></div></li>
 </ul>
 <div><div class="organs">
 <figure><a href="/static/img/architecture.png"><img src="/static/img/architecture.png" width="2000" height="2524" alt="The architecture figure, drawn from the code: a Kiro agent session calls the hollow-inn MCP server; Kiro hook events run specimen, which seals jars; specimen replay runs them against the next server; a red jar is filed as a Kiro bugfix spec; Kiro's Bug Fix workflow writes the fix; the cabinet runs the same replay in the browser." loading="lazy"></a><figcaption class="cap">The architecture figure, drawn from the code as built. Opens full size.</figcaption></figure></div>
-<p class="not-kiro">Kiro did not write the hollow-inn demo server v1 and v2 (the planted breaks are ours), the test harnesses and glue (commits marked <code>claude-direct:</code>), the docs, or this page and the deck.</p></div>
+<p class="not-kiro">Kiro did not write the hollow-inn demo server v1 and v2 (the planted breaks are ours), the test harnesses, glue and the fixes we made while reviewing Kiro's output (commits marked <code>claude-direct:</code>), the docs, or this page and the deck.</p></div>
 </div>
 </div></section>
 
@@ -873,7 +884,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <footer class="foot"><div class="wrap">
 <a class="mark" href="/landing/" aria-label="SPECIMEN JAR, top of the page"><img src="/static/img/icon.svg" alt="" width="34" height="34"><span>SPECIMEN <b>JAR</b></span></a>
 <nav aria-label="Footer"><a href="/">The cabinet</a><a href="/deck/">Pitch deck</a><a href="/static/img/architecture.png">Architecture</a><a href="https://kiroween.devpost.com/" rel="noopener">Kiroween 2026</a><span class="repo-text" data-repo="https://github.com/edycutjong/specimen" data-repo-label="Source on GitHub">Source: github.com/edycutjong/specimen, public at submission</span></nav>
-<p>Kiroween 2026 · Frankenstein · MIT · every number here comes from a file in the repository (public at submission), except the live replay time.</p>
+<p>Kiroween 2026 · Frankenstein · MIT · every number here comes from a file in the repository (public at submission), except the live replay figures (time, per-jar ms, request count).</p>
 </div></footer>
 <script type="application/json" id="rec">{"v1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-24T20:41:39.100Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}}]},"v2":{"verdict":"HOLD","counts":{"preserved":5,"rattled":4,"cracked":1,"unsealed":0,"skipped":0},"started_at":"2026-11-25T12:38:40.763Z","coverage":{"compared":10,"tools":4,"listed":6,"unrecorded":["booking_cancel","get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/total","kind":"removed","was":425,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":42500,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/rooms","kind":"length","was":7,"now":5,"note":null},{"path":"/rooms/r-08","kind":"removed","was":null,"now":null,"note":null},{"path":"/rooms/r-09","kind":"removed","was":null,"now":null,"note":null}],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"rattled","reason":null,"ms":1,"changes":[{"path":"/total","kind":"removed","was":98,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":9800,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"rattled","reason":null,"ms":0,"changes":[{"path":"/total","kind":"removed","was":142,"now":null,"note":null},{"path":"/total_cents","kind":"added","was":null,"now":14200,"note":"suspected rename from /total ×100"}],"compatible":[],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"cracked","reason":"tool not in tools/list","ms":0,"changes":[],"compatible":[],"raw":{}}]},"v2.1":{"verdict":"SHIP","counts":{"preserved":10,"rattled":0,"cracked":0,"unsealed":0,"skipped":0},"started_at":"2026-11-25T13:21:57.291Z","coverage":{"compared":10,"tools":5,"listed":6,"unrecorded":["get_room"]},"jars":[{"id":"SPC-0001","tool":"search_rooms","state":"preserved","reason":null,"ms":4,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0002","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":42500}],"raw":{"total":"425.00"}},{"id":"SPC-0003","tool":"book","state":"preserved","reason":null,"ms":3,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0004","tool":"list_bookings","state":"preserved","reason":null,"ms":0,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0010","tool":"search_rooms","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0005","tool":"search_rooms","state":"preserved","reason":null,"ms":4,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0006","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":9800}],"raw":{"total":"98.00"}},{"id":"SPC-0007","tool":"quote","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[{"path":"/total_cents","kind":"added","now":14200}],"raw":{"total":"142.00"}},{"id":"SPC-0008","tool":"book","state":"preserved","reason":null,"ms":2,"changes":[],"compatible":[],"raw":{}},{"id":"SPC-0009","tool":"cancel_booking","state":"preserved","reason":null,"ms":1,"changes":[],"compatible":[],"raw":{}}]}}</script>
 <script>
@@ -915,7 +926,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   if (lab) {
     const REC = JSON.parse($("#rec").textContent);
     const room = $(".room", lab), stamp = $(".stamp", lab), plate = $(".plate-v", lab);
-    const word = $(".plate-v__word", lab), counts = $(".plate-v__counts", lab), cov = $(".plate-v__cov", lab);
+    const word = $(".plate-v__word", lab), counts = $(".plate-v__counts", lab);
     const lamp = $(".lamp", lab), delta = $(".plate-v__delta", lab), tickJar = $(".tick__jar", lab), tickSum = $(".tick__sum", lab);
     const say = $("[data-say]", lab), wash = $(".wash");
     const nb = $(".notebook", lab), nbHead = $(".notebook__head", nb), nbRows = $(".notebook__rows", nb);
@@ -994,6 +1005,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       if (reduce || !wash) return;
       wash.className = "wash"; void wash.offsetWidth; wash.className = tone === "ship" ? "wash is-on is-ship" : "wash is-on";
     };
+    if (wash) wash.addEventListener("animationend", () => { wash.className = "wash"; });
 
     const engine = () => (engineP ||= import("/static/replay.js").catch(() => null));
     const raw = (text, key) => { const m = (text || "").match(new RegExp('"' + key + '":(-?[0-9.]+)')); return m ? m[1] : null; };
@@ -1050,7 +1062,11 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       if (j.compatible.length) { el.dataset.plus = ""; plus.textContent = `+${j.compatible.length} field`; } else el.removeAttribute("data-plus");
     }
 
-    function placeStamp(j) {
+    // red: IT'S MOVING over the first rattled jar; all preserved: a green stamp over the middle of rack A
+    function placeStamp(j, allGood) {
+      stamp.classList.toggle("is-good", !j && allGood);
+      stamp.textContent = !j && allGood ? "ALL PRESERVED" : "IT'S MOVING";
+      if (!j && allGood) j = last && last.jars.find((x) => byId[x.id] && byId[x.id].dataset.pos === "A2");
       if (!j) { stamp.classList.remove("is-on", "is-static"); return; }
       const el = byId[j.id], a = el.getBoundingClientRect(), r = room.getBoundingClientRect();
       stamp.style.left = Math.max(0, a.left - r.left - a.width * 0.15) + "px";
@@ -1067,7 +1083,9 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
         const el = byId[j.id]; if (!el) continue;
         const s = st(j), prev = el.dataset.state;
         if (n++) await sleep(s !== prev ? 150 : 80);
-        tickJar.textContent = `jar ${String(n).padStart(2, "0")}/${total} · ${j.id} · ${j.ms < 1 ? "<1" : j.ms} ms · ${s}`;
+        // the call's own time from the replay result; a jar that was never called (tool gone, not replayed) says so
+        const timed = s === "preserved" || s === "rattled" || (s === "cracked" && !/not in tools\/list/.test(j.reason || ""));
+        tickJar.textContent = `${String(n).padStart(2, "0")}/${total} · ${j.id} · ${timed ? `call ${j.ms < 1 ? "<1" : j.ms} ms` : "no call"} · ${s}`;
         label(el, j);
         if (s === "rattled" && !firstRed) firstRed = j;
         if (s !== prev) {
@@ -1084,7 +1102,6 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       plate.dataset.verdict = r.verdict;
       word.innerHTML = `${esc(r.verdict)} <i>${esc(ver)}</i>`;
       counts.textContent = bits.join(" · ");
-      cov.textContent = `${r.coverage.compared} jars compared · ${r.coverage.tools} of ${r.coverage.listed} tools`;
       delta.textContent = was !== null && was !== red ? `red jars ${was} → ${red}` : "";
       delta.dataset.tone = was !== null && red < was ? "g" : "r";
       plate.classList.remove("is-stamped", "is-slam"); void plate.offsetWidth; plate.classList.add(payoff ? "is-slam" : "is-stamped");
@@ -1094,10 +1111,11 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       lamp.innerHTML = live ? `<i aria-hidden="true"></i><b>Live</b><small>replayed in this tab</small>` : `<i aria-hidden="true"></i><b>Recorded</b><small>the committed CLI run</small>`;
       lamp.title = live ? "Replayed just now in this tab by the cabinet's own replay code (apps/cabinet/src/browser-replay.ts)" : "The committed CLI replay (replays/), shown because the replay module did not load";
       tickSum.textContent = live
-        ? `${total} jars in ${Math.max(1, Math.round(meta.ms))} ms${meta.req === null ? "" : ` · ${meta.req} network request${meta.req === 1 ? "" : "s"}`}`
-        : `CLI run · ${r.started_at.replace("T", " ").slice(0, 16)} UTC`;
+        ? `${r.coverage.tools} of ${r.coverage.listed} tools · ${Math.max(1, Math.round(meta.ms))} ms${meta.req === null ? "" : ` · ${meta.req} request${meta.req === 1 ? "" : "s"}`}`
+        : `${r.coverage.tools} of ${r.coverage.listed} tools · CLI run ${r.started_at.replace("T", " ").slice(0, 16)} UTC`;
       say.textContent = `${r.verdict} ${ver}: ${bits.join(", ")}.${live ? ` Replayed live in this tab in ${Math.max(1, Math.round(meta.ms))} milliseconds.` : " Recorded result."}`;
-      placeStamp(firstRed);
+      last = r;
+      placeStamp(firstRed, c.preserved === total);
       const show = (picked && r.jars.find((j) => j.id === picked)) || firstRed || r.jars.find((j) => j.compatible.length) || r.jars[0];
       notebook(show, ver);
       last = r; lastVer = ver;
@@ -1108,7 +1126,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
       busy = true;
       segs.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ver === ver)));
       plate.dataset.verdict = "pending"; word.innerHTML = `… <i>${esc(ver)}</i>`;
-      counts.textContent = "replaying 10 jars"; cov.textContent = " "; delta.textContent = ""; tickSum.textContent = " ";
+      counts.textContent = "replaying 10 jars"; delta.textContent = ""; tickSum.textContent = " ";
       room.classList.remove("is-flash", "is-ship"); void room.offsetWidth; room.classList.add("is-flash");
       storm.strike(); flashPage("storm");
       const t0 = performance.now();
@@ -1135,7 +1153,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
     jars.forEach((el) => $(".jar__btn", el).addEventListener("click", () => {
       picked = el.dataset.acc; const j = last && last.jars.find((x) => x.id === picked); if (j) notebook(j, lastVer);
     }));
-    addEventListener("resize", () => { if (stamp.classList.contains("is-on") && last) placeStamp(last.jars.find((j) => st(j) === "rattled")); });
+    addEventListener("resize", () => { if (stamp.classList.contains("is-on") && last) placeStamp(last.jars.find((j) => st(j) === "rattled"), last.counts.preserved === last.jars.length); });
 
     // arm: every jar calm, then the first storm replays v2 for real
     jars.forEach((el) => (el.dataset.state = "preserved"));

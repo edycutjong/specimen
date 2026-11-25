@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  SPECIMEN JAR — pitch deck (v1 · 2026-11-26 · from 5323e51). Kiroween 2026 · Frankenstein.
+  SPECIMEN JAR — pitch deck (v1 · 2026-11-26 · facts from df1a316). Kiroween 2026 · Frankenstein.
   Keys: ← / → or Space to move · Home / End · Esc: overview grid · P: presenter notes · C: contrast debug.
   Print: Cmd/Ctrl+P → Save as PDF; one 16×9 in page per slide (@page 16in 9in, margin 0), UI hidden.
   Images: /static/img/icon.svg (project icon), /static/img/cabinet-drawer-spc-0002.webp and /static/img/cabinet-v21-ship-plate.webp (screenshots
@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPECIMEN JAR — pitch deck</title>
 <meta name="description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 came back different; a schema diff saw 2.">
-<meta name="version" content="v1 · 2026-11-26 · from 5323e51">
+<meta name="version" content="v1 · 2026-11-26 · facts from df1a316">
 <meta name="theme-color" content="#10150F">
 <meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://specimen.edycu.dev/deck/">
@@ -83,11 +83,11 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .83 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .slide.is-on { opacity: 1; visibility: visible; transition: opacity .35s ease; }
 .slide__in { position: absolute; inset: 88px 112px 104px; }
-.slide__foot { position: absolute; left: 112px; right: 112px; bottom: 34px; display: flex; justify-content: space-between; gap: 40px; font: 500 17px/1.3 var(--font-data); color: #A9B1A5; }
-.slide__foot code { color: var(--bone-2); }
+.slide__foot { position: absolute; left: 112px; right: 112px; bottom: 34px; display: flex; justify-content: space-between; gap: 40px; font: 500 18px/1.3 var(--font-data); color: var(--bone-2); }
+.slide__foot code { color: var(--ink); }
 /* the world, on every inner slide: a barred storm window high on the wall, and the shelf plank the footer sits under */
 .slide:not(.s-cover) .slide__foot::before { content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 9px; border-radius: 2px; background: linear-gradient(180deg, #4C534A, #2A3128 60%, #161A15); box-shadow: 0 10px 14px -8px rgba(0, 0, 0, .8); }
-.world { position: absolute; right: 96px; top: -60px; width: 270px; height: 360px; border-radius: 135px 135px 0 0; border: 10px solid #1C231B; box-shadow: inset 0 0 0 2px #2C352A; background: radial-gradient(70% 40% at 60% 20%, rgba(201, 214, 242, .14), transparent 70%), linear-gradient(180deg, #1E2A40, #111827 70%, #0C111D); opacity: .55; pointer-events: none; }
+.world { position: absolute; right: 96px; top: -60px; width: 270px; height: 360px; border-radius: 135px 135px 0 0; border: 10px solid #1C231B; box-shadow: inset 0 0 0 2px #2C352A; background: repeating-linear-gradient(104deg, transparent 0 22px, rgba(201, 214, 242, .16) 22px 23px, transparent 23px 47px), radial-gradient(70% 40% at 60% 20%, rgba(201, 214, 242, .2), transparent 70%), linear-gradient(180deg, #24324C, #141C2E 70%, #0C111D); opacity: .5; pointer-events: none; }
 .world i { position: absolute; top: 0; bottom: 0; width: 9px; margin-left: -4.5px; background: #080B07; }
 .world i:nth-child(1) { left: 25%; } .world i:nth-child(2) { left: 50%; } .world i:nth-child(3) { left: 75%; }
 .slide.is-on .world { animation: worldflash 1s ease-out .35s 1; }
@@ -235,6 +235,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 
 /* ---------- 4 the replay, live ---------- */
 .s-storm .side { position: absolute; left: 0; top: 0; width: 520px; }
+.s-storm .dplate { min-height: 290px; }
 .s-storm .h { font-size: 86px; }
 .dswitch { display: inline-flex; margin-top: 40px; border: 3px solid var(--iron-hi); background: var(--stone); }
 .dswitch button { font: 700 30px/1 var(--font-data); color: var(--bone-2); background: none; border: 0; padding: 18px 26px; cursor: pointer; transition: background-color .2s, color .2s; }
@@ -248,21 +249,22 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 .dplate[data-verdict="pending"] .dplate__v { color: var(--muted); }
 .dplate__c { margin-top: 10px; font: 500 22px/1.3 var(--font-data); color: var(--bone-2); }
 .dplate__t { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--rule); font: 500 20px/1.3 var(--font-data); color: var(--ink); }
-.s-storm .shelf2 { position: absolute; left: 590px; right: 0; top: -40px; bottom: -6px; }
+.s-storm .shelf2 { position: absolute; left: 590px; right: 0; top: -10px; padding-bottom: 6px; }
 .s-storm .wall { left: -14px; right: -14px; top: 0; bottom: 44px; }
 .s-storm .rack { position: relative; z-index: 1; }
-.s-storm .rack--a { padding-top: 118px; }
+.s-storm .rack--a { padding-top: 104px; }
 .s-storm .rack--b { padding-top: 16px; }
 .s-storm .rack ol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 0; margin: 0 26px; }
-.s-storm .rack .jar__svg { width: 94%; margin: 0 auto; }
+.s-storm .rack .jar__svg { width: 100%; margin: 0 auto; }
 .s-storm .rack .tag { left: 6%; right: 2%; }
 .s-storm .plank { margin-top: -10px; }
-.s-storm .stamp { left: 210px; top: 54px; font-size: 40px; }
+.s-storm .stamp { left: 190px; top: 22px; font-size: 38px; }
 .s-storm .jar[data-state="preserved"] .tag__flag { display: none; }
 .s-storm .jar .fluid, .s-storm .jar .glow { transition-duration: .6s; }
 
 /* ---------- 5 the notebook ---------- */
-.s-notebook .book { position: absolute; left: 0; right: 470px; top: 250px; bottom: 0; border: 1px solid var(--rule); border-left: 8px solid var(--after);
+.s-notebook .solo { position: absolute; left: -10px; top: 290px; width: 330px; }
+.s-notebook .book { position: absolute; left: 360px; right: 0; top: 250px; bottom: 0; border: 1px solid var(--rule); border-left: 8px solid var(--after);
   background: linear-gradient(90deg, transparent 0 96px, rgba(255, 74, 46, .45) 96px 98px, transparent 98px), repeating-linear-gradient(180deg, transparent 0 63px, rgba(51, 61, 49, .55) 63px 64px), rgba(25, 34, 25, .92);
   padding: 34px 60px 30px 140px; }
 .book__head { font: 700 22px/1.2 var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
@@ -278,8 +280,9 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 .s-notebook .drawer { position: absolute; right: 0; top: 150px; bottom: 0; width: 420px; margin: 0; }
 .s-notebook .drawer .browser { max-height: 100%; overflow: hidden; }
 .s-notebook .drawer img { width: 100%; height: auto; }
-.s-notebook .book__hero { font-size: 56px; }
-.s-notebook .book__hero .now { font-size: 100px; }
+.s-notebook .book__hero { font-size: 60px; }
+.s-notebook .book__hero .now { font-size: 108px; }
+.book__hero .brk { flex-basis: 100%; height: 0; }
 
 /* ---------- 6 consequence ---------- */
 .s-cons .ledger { position: absolute; left: 0; top: 250px; width: 1100px; border: 1px solid var(--rule); background: var(--stone); }
@@ -360,7 +363,15 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 .qr a:hover { text-decoration: underline; }
 .qr .small { font: 500 19px/1.3 var(--font-data); color: var(--muted); }
 
+.s-end .endstamp { position: absolute; left: 0; bottom: 6px; z-index: 2; font: 900 44px/1 var(--font-display); color: var(--before); border: 4px solid var(--before); padding: 10px 20px 12px; transform: rotate(-4deg); background: rgba(16, 21, 15, .7); text-shadow: 0 0 22px rgba(168, 227, 95, .4); box-shadow: 0 0 40px -10px rgba(168, 227, 95, .45); }
+.slide.is-on .endstamp { animation: slam .38s cubic-bezier(.2, 1.8, .4, 1) .7s both; }
+
 /* ---------- deck UI (outside the stage) ---------- */
+.rotate { display: none; }
+@media (orientation: portrait) and (max-width: 700px) {
+  .rotate { display: block; position: fixed; left: 12px; right: 12px; top: 12px; z-index: 6; margin: 0; padding: 12px 14px; font: 500 15px/1.4 var(--font-body); color: var(--ink); background: #0B0F0A; border: 1px solid var(--iron-hi); }
+  .rotate a { color: var(--before); }
+}
 .nav { position: fixed; left: 0; right: 0; bottom: 0; height: var(--navh, 56px); display: flex; align-items: center; gap: 10px; padding: 0 18px; background: #0B0F0A; border-top: 1px solid var(--rule); font: 700 15px/1 var(--font-data); z-index: 5; }
 .nav a, .nav button { color: var(--ink); background: none; border: 1px solid var(--iron-hi); padding: 9px 12px; font: inherit; text-decoration: none; cursor: pointer; transition: background-color .2s, border-color .2s; white-space: nowrap; }
 .nav a:hover, .nav button:hover { background: var(--glass); border-color: var(--ink); }
@@ -432,7 +443,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <div class="brand"><img src="/static/img/icon.svg" alt="" width="64" height="64"><b>SPECIMEN <span>JAR</span></b></div>
 <span class="stampline">Kiroween 2026 · Frankenstein</span>
 <h1 class="h">The jars remember what your server <span class="hl--g">used to say.</span></h1>
-<p class="lede">Kiro hooks seal your agent's calls to a hooked MCP server. Swap the server, replay the jars: what came back different rattles red.</p>
+<p class="lede">Kiro hooks seal each call to a hooked MCP server. Swap the server, replay: a call whose old answer no longer holds rattles red.</p>
 <div class="seams" role="img" aria-label="MCP, hooks, replay and spec, stitched into one loop"><b>MCP</b><svg viewBox="0 0 86 24" width="86" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q43 14.5 82 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.0" y1="4.5" x2="24.4" y2="19.5"/><line x1="37.6" y1="4.5" x2="35.2" y2="19.5"/><line x1="48.4" y1="4.5" x2="50.8" y2="19.5"/><line x1="64.0" y1="4.5" x2="61.6" y2="19.5"/><line x1="74.8" y1="4.5" x2="77.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.0" cy="4.5" r="1.3"/><circle cx="24.4" cy="19.5" r="1.3"/><circle cx="37.6" cy="4.5" r="1.3"/><circle cx="35.2" cy="19.5" r="1.3"/><circle cx="48.4" cy="4.5" r="1.3"/><circle cx="50.8" cy="19.5" r="1.3"/><circle cx="64.0" cy="4.5" r="1.3"/><circle cx="61.6" cy="19.5" r="1.3"/><circle cx="74.8" cy="4.5" r="1.3"/><circle cx="77.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="82.5" cy="12" r="3.5" fill="#8C948A"/></svg><b>HOOKS</b><svg viewBox="0 0 86 24" width="86" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q43 14.5 82 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.0" y1="4.5" x2="24.4" y2="19.5"/><line x1="37.6" y1="4.5" x2="35.2" y2="19.5"/><line x1="48.4" y1="4.5" x2="50.8" y2="19.5"/><line x1="64.0" y1="4.5" x2="61.6" y2="19.5"/><line x1="74.8" y1="4.5" x2="77.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.0" cy="4.5" r="1.3"/><circle cx="24.4" cy="19.5" r="1.3"/><circle cx="37.6" cy="4.5" r="1.3"/><circle cx="35.2" cy="19.5" r="1.3"/><circle cx="48.4" cy="4.5" r="1.3"/><circle cx="50.8" cy="19.5" r="1.3"/><circle cx="64.0" cy="4.5" r="1.3"/><circle cx="61.6" cy="19.5" r="1.3"/><circle cx="74.8" cy="4.5" r="1.3"/><circle cx="77.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="82.5" cy="12" r="3.5" fill="#8C948A"/></svg><b>REPLAY</b><svg viewBox="0 0 86 24" width="86" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q43 14.5 82 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="22.0" y1="4.5" x2="24.4" y2="19.5"/><line x1="37.6" y1="4.5" x2="35.2" y2="19.5"/><line x1="48.4" y1="4.5" x2="50.8" y2="19.5"/><line x1="64.0" y1="4.5" x2="61.6" y2="19.5"/><line x1="74.8" y1="4.5" x2="77.2" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="22.0" cy="4.5" r="1.3"/><circle cx="24.4" cy="19.5" r="1.3"/><circle cx="37.6" cy="4.5" r="1.3"/><circle cx="35.2" cy="19.5" r="1.3"/><circle cx="48.4" cy="4.5" r="1.3"/><circle cx="50.8" cy="19.5" r="1.3"/><circle cx="64.0" cy="4.5" r="1.3"/><circle cx="61.6" cy="19.5" r="1.3"/><circle cx="74.8" cy="4.5" r="1.3"/><circle cx="77.2" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="82.5" cy="12" r="3.5" fill="#8C948A"/></svg><b>SPEC</b></div>
 <div class="lab" data-exhibit>
 <div class="wall" aria-hidden="true"><div class="wall__glass"><svg class="zap" viewBox="0 0 400 300" preserveAspectRatio="none"><path d="M236 0 L214 46 L229 52 L196 112 L212 118 L171 196 M212 118 L250 150 M196 112 L160 136" fill="none" stroke="#C9D6F2" stroke-width="10" stroke-opacity=".3" stroke-linejoin="round" stroke-linecap="round"/><path d="M236 0 L214 46 L229 52 L196 112 L212 118 L171 196 M212 118 L250 150 M196 112 L160 136" fill="none" stroke="#F4F7FF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i></div></div>
@@ -494,13 +505,13 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0010</span><span class="tag__tool">search_rooms</span><span class="tag__flag">ABNORMAL</span></span></li></ol>
 <div class="plank" aria-hidden="true"></div><div class="codes" aria-hidden="true"><span>A1</span><span>A2</span><span>A3</span><span>A4</span><span>A5</span></div></div>
-<p class="plate" aria-label="Verdict: HOLD v2, 5 preserved, 4 rattled, 1 cracked"><b>HOLD<i>v2</i></b><span>5 preserved · 4 rattled · 1 cracked</span></p>
-<div class="term" role="img" aria-label="Terminal: npx specimen replay against hollow-inn v2 prints HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room"><div class="term__bar"><i></i><i></i><i></i><span>specimen · real output</span></div><pre><span class="c">npx specimen replay --server "…v2"</span>
+<p class="plate" aria-label="Verdict: HOLD v2, 5 preserved, 4 rattled, 1 cracked"><b>HOLD<i>v2</i></b><span>10 jars · 5 preserved · 4 rattled · 1 cracked</span></p>
+<div class="term" role="img" aria-label="Terminal: npx specimen replay against hollow-inn v2 prints HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room"><div class="term__bar"><i></i><i></i><i></i><span>in a clone, after npm ci · real output</span></div><pre><span class="c">npx specimen replay --server "…v2"</span>
 <span class="hd">HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room</span> <span class="caret"></span></pre></div>
 </div>
 </div>
 <footer class="slide__foot"><span><code>evidence/replay/racks-vs-v2.txt</code> · rack A of 2, replayed against hollow-inn v2 · specimen.edycu.dev</span><span class="pg">01 / 10</span></footer>
-<aside class="speaker-notes">Every jar on this shelf is one real MCP call a Kiro agent made, sealed by Kiro hooks. We swapped in v2 of the server and replayed: two of rack A's five jars came back wrong. That is the whole idea; the rest of the deck is proof.</aside>
+<aside class="speaker-notes">Every jar on this shelf is one real MCP call a Kiro agent made, sealed by Kiro hooks. We swapped in v2 of the server and replayed: two of rack A's five jars came back different. That is the whole idea; the rest of the deck is proof.</aside>
 </section>
 <section class="slide s-problem" data-n="2" aria-roledescription="slide" aria-label="2 of 10: The problem"><div class="world" aria-hidden="true"><i></i><i></i><i></i></div>
 <div class="slide__in">
@@ -547,7 +558,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
   <span class="key">"redacted"</span>: <span class="val">[]</span> <span class="dim">}</span></pre></div>
 <div class="stat-row" style="position:absolute;left:420px;bottom:0"><span class="statc">specimen hook p50: pre-call <b>465 ms</b></span><span class="statc">post-call <b>474 ms</b></span></div>
 </div>
-<footer class="slide__foot"><span><code>jars/sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8.jsonl</code> · <code>evidence/bench/hook.md</code>: the specimen CLI process only, Kiro's own hook launch not included (30 fresh npx processes each, one laptop)</span><span class="pg">03 / 10</span></footer>
+<footer class="slide__foot"><span><code>jars/sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8.jsonl</code> · <code>evidence/bench/hook.md</code>, measured at 82b5126: the specimen CLI process only, Kiro's own hook launch not included (30 fresh npx processes each, one laptop)</span><span class="pg">03 / 10</span></footer>
 <aside class="speaker-notes">This is the actual line the capture hook wrote for the quote call: the input, and the server's response text byte for byte, including total 425.00 with both decimals. Nothing sits between the agent and the server; the hooks run inside Kiro.</aside>
 </section>
 <section class="slide s-storm" data-n="4" aria-roledescription="slide" aria-label="4 of 10: The replay, live">
@@ -679,14 +690,26 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 
 <p class="k">The lab notebook</p>
 <h2 class="h">It names <span class="hl">what broke.</span></h2>
+<div class="solo solo--r" data-exhibit><div class="jar" data-state="rattled" style="--tilt:-2deg;--tag-tilt:-4deg"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="85.8" cy="105.0" r="0.9" fill="#ECE6D3" opacity="0.10"/><circle cx="60.6" cy="107.8" r="1.2" fill="#ECE6D3" opacity="0.24"/><circle cx="28.2" cy="102.8" r="0.9" fill="#ECE6D3" opacity="0.25"/><circle cx="49.8" cy="123.6" r="1.5" fill="#ECE6D3" opacity="0.28"/><circle cx="32.5" cy="81.2" r="0.8" fill="#ECE6D3" opacity="0.20"/><circle cx="93.9" cy="144.8" r="1.9" fill="#ECE6D3" opacity="0.15"/><circle cx="99.7" cy="137.8" r="1.4" fill="#ECE6D3" opacity="0.18"/><circle cx="54.7" cy="76.6" r="1.1" fill="#ECE6D3" opacity="0.22"/><circle cx="67.7" cy="77.4" r="1.2" fill="#ECE6D3" opacity="0.16"/><circle cx="48.8" cy="108.4" r="1.5" fill="#ECE6D3" opacity="0.18"/><circle cx="20.7" cy="172.4" r="1.4" fill="#ECE6D3" opacity="0.23"/><circle cx="83.1" cy="97.5" r="1.6" fill="#ECE6D3" opacity="0.21"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0002</span><span class="tag__tool">quote</span><span class="tag__flag">ABNORMAL</span></span></div></div>
 <div class="book">
 <p class="book__head" data-exhibit>SPC-0002 · quote · replayed against hollow-inn v2</p>
-<p class="book__hero" data-exhibit><span>/total</span><s>425.00</s><span>→ /total_cents</span><span class="now">42500</span><span class="x100">×100</span></p>
+<p class="book__hero" data-exhibit><span>/total</span><s>425.00</s><span class="brk"></span><span>→ /total_cents</span><span class="now">42500</span><span class="x100">×100</span></p>
 <p class="book__note">suspected rename from /total ×100</p>
 <div class="book__rows" data-exhibit><p><span class="f">ABNORMAL</span>SPC-0010 · search_rooms · /rooms 7 → 5 · /rooms/r-08, /rooms/r-09 removed</p><p><span class="f c">CRACKED</span>SPC-0009 · cancel_booking · tool not in tools/list</p></div>
 <span class="crackc" aria-hidden="true"><svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#0A0D09" stroke-width="3" stroke-linejoin="round"/><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#ECE6D3" stroke-opacity="0.35" stroke-width="1" stroke-linejoin="round" transform="translate(1 1)"/><path d="M92 22 L80 14 M70 46 L58 40" fill="none" stroke="#0A0D09" stroke-width="2"/></svg></span>
 </div>
-<figure class="drawer" data-exhibit><div class="browser"><div class="browser__bar"><i></i><i></i><i></i><span>the cabinet · SPC-0002</span></div><img src="/static/img/cabinet-drawer-spc-0002.webp" width="960" height="1484" alt="Screenshot of the cabinet's drawer for SPC-0002 quote, ABNORMAL: /total 425.00 replaced by /total_cents 42500, ×100, and the bugfix spec filed for it with check-spec PASS."></div></figure>
+
 </div>
 <footer class="slide__foot"><span><code>replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-25T12-38-40.763Z.json</code> · the CLI prints the same note in <code>evidence/replay/racks-vs-v2.txt</code></span><span class="pg">05 / 10</span></footer>
 <aside class="speaker-notes">The replay does not just say different. It reads the jarred value 425.00 next to the new 42500 and names a likely rename with a unit change, times one hundred. That sentence is what the bugfix spec is written from.</aside>
@@ -695,18 +718,18 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <div class="slide__in">
 
 <p class="k">The consequence</p>
-<h2 class="h">One client breaks. One agent run <span class="hl--g">copes.</span></h2>
+<h2 class="h">One client breaks. The agent <span class="hl--g">copes.</span></h2>
 <div class="ledger" data-exhibit>
 <div class="lrow ok"><b>v1</b><ul><li>rooms offered: 9 rooms</li><li>charge for r-04, 2 nights: USD 425.00</li><li>cancel it: cancelled</li></ul></div>
 <div class="lrow bad"><b>v2</b><ul><li>rooms offered: 5 rooms (r-01, r-02, r-03, r-04, r-05)</li><li>charge for r-04, 2 nights: THREW TypeError: Cannot read properties of undefined (reading 'toFixed')</li><li>cancel it: THREW Error: MCP error -32602: Tool cancel_booking not found</li></ul></div>
 <div class="lrow ok"><b>v2.1</b><ul><li>every line matches v1: 9 rooms · USD 425.00 · cancelled</li></ul></div>
 </div>
-<div class="agent"><p class="k k--plain">The Kiro agent, under v2</p><p class="agent__n">$425.00</p><p>Its own answer did not change.</p><p class="muted">Likely reason: v2's tool description names <code>total_cents</code>. No ablation was run.</p></div>
+<div class="agent"><p class="k k--plain">The Kiro agent, under v2</p><p class="agent__n">$425.00</p><p>Its answer did not change, in both v2 runs (one per rack).</p><p class="muted">Likely reason: v2's tool description names <code>total_cents</code>. No ablation was run.</p></div>
 </div>
 <footer class="slide__foot"><span><code>evidence/consequence-v2/consumer.md</code> (a 56-line client written for v1, no tool descriptions to read) · <code>evidence/consequence-v2/README.md</code></span><span class="pg">06 / 10</span></footer>
 <aside class="speaker-notes">We checked whether a red jar matters. Code written against v1 throws on the missing total and loses rooms and the cancel call. The Kiro agent itself still answered 425 dollars, most likely because v2's tool description told it about total_cents. We say both.</aside>
 </section>
-<section class="slide s-loop" data-n="7" aria-roledescription="slide" aria-label="7 of 10: The loop"><div class="world" aria-hidden="true"><i></i><i></i><i></i></div>
+<section class="slide s-loop" data-n="7" aria-roledescription="slide" aria-label="7 of 10: The loop">
 <div class="slide__in">
 
 <p class="k">The loop</p>
@@ -740,43 +763,45 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <footer class="slide__foot"><span>Scripted evals through the real hooks, scratch copy, 2026-11-25T14:13:55Z (<code>evidence/stop-gate/eval.md</code>) · at most 3 blocks a session, fails open on any error or timeout · the committed hook targets v2.1, so it allows every stop</span><span class="pg">08 / 10</span></footer>
 <aside class="speaker-notes">The Stop hook replays when a turn changed the server, and while a red jar has no filed spec it returns block with the jar ids as the reason, so the agent goes back to work. It gives up after three blocks and never blocks on its own errors.</aside>
 </section>
-<section class="slide s-kiro" data-n="9" aria-roledescription="slide" aria-label="9 of 10: Built with Kiro"><div class="world" aria-hidden="true"><i></i><i></i><i></i></div>
+<section class="slide s-kiro" data-n="9" aria-roledescription="slide" aria-label="9 of 10: Built with Kiro">
 <div class="slide__in">
 
 <h2 class="h" style="margin-top:0">Stitched together <span class="hl--g">by Kiro.</span></h2>
 <ul class="inv">
-<li class="g wide"><b>95.6 %</b><span>of product lines added in <code>kiro:</code> commits</span><code data-exhibit>evidence/authorship.md · 38,564 of 40,333 lines</code></li>
+<li class="g wide"><b>95.5 %</b><span>of product lines added came from Kiro sessions</span><code data-exhibit>evidence/authorship.md · 38,512 of 40,333 lines, by commit prefix</code></li>
 <li><b>49</b><span>numbered prompts, verbatim</span><code data-exhibit>prompts/</code></li>
-<li><b>7</b><span>hook files</span><code data-exhibit>.kiro/hooks/</code></li>
+<li><b>7</b><span>hook files</span><code data-exhibit>.kiro/hooks/ · 2 generated by specimen init</code></li>
 <li><b>3</b><span>feature specs</span><code data-exhibit>cabinet-ui · jar-capture · replay-engine</code></li>
 <li><b>3</b><span>bugfix specs</span><code data-exhibit>.kiro/specs/*/bugfix.md</code></li>
 <li><b>4</b><span>steering files</span><code data-exhibit>.kiro/steering/</code></li>
 <li><b>1</b><span>curator agent</span><code data-exhibit>.kiro/agents/specimen-curator.json</code></li>
 
 </ul>
-<p class="not">Not Kiro: demo server v1 and v2, glue and harnesses (<code>claude-direct:</code>), docs, landing, deck.</p>
+<p class="not">Not Kiro: demo server v1/v2, glue, harnesses, review fixes (<code>claude-direct:</code>), docs, landing, deck.</p>
 </div>
 <footer class="slide__foot"><span><code>evidence/authorship.md</code>: lines added to <code>packages/ apps/ servers/</code>, by commit prefix · <code>prompts/README.md</code>: each prompt's measured credits and the exceptions · the Power (<code>power/specimen/</code>, Kiro turn 49) is not imported in the Kiro IDE</span><span class="pg">09 / 10</span></footer>
-<aside class="speaker-notes">Kiro is the builder: ninety-five point six percent of the lines added to the product code came in commits labelled kiro. Feature specs went requirements, Analyze Requirements, design, tasks, and Kiro executed them. Every prompt sent to Kiro is in the repo, with measured credits where Kiro reported them; the exceptions are listed. What Kiro did not write is listed just as plainly.</aside>
+<aside class="speaker-notes">Kiro is the builder: ninety-five point five percent of the lines added to the product code came from Kiro sessions, counted by commit prefix with one mixed commit counted as ours. Feature specs went requirements, Analyze Requirements, design, tasks, and Kiro executed them. Every prompt sent to Kiro is in the repo, with measured credits where Kiro reported them; the exceptions are listed. What Kiro did not write is listed just as plainly.</aside>
 </section>
-<section class="slide s-end" data-n="10" aria-roledescription="slide" aria-label="10 of 10: Try it"><div class="world" aria-hidden="true"><i></i><i></i><i></i></div>
+<section class="slide s-end" data-n="10" aria-roledescription="slide" aria-label="10 of 10: Try it">
 <div class="slide__in">
 
 <h2 class="h" style="margin-top:0">Throw the switch <span class="hl">yourself.</span></h2>
+<span class="endstamp" data-exhibit aria-hidden="true">ALL PRESERVED · v2.1</span>
 <div class="cols">
 <div class="left"><div class="rc"><div><b>1,082</b><span>tests passing in 121 files</span></div></div>
 <ul class="lims"><li class="lim">Ten jars from two racks, five of six hollow-inn tools. &quot;SHIP&quot; means <em>replay clean on the recorded set</em>, nothing more.<cite data-exhibit>README · Honest limits, 2</cite></li><li class="lim">No outside user has run it yet.<cite data-exhibit>README · Honest limits, 6</cite></li></ul></div>
 <div class="qr"><div class="qr__box" role="img" aria-label="QR code for https://specimen.edycu.dev/"><svg viewBox="0 0 33 33" class="segno"><path fill="#ece6d3" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#10150f" d="M2 2.5h7m2 0h1m4 0h1m1 0h1m1 0h1m3 0h7m-29 1h1m5 0h1m1 0h1m2 0h3m1 0h1m1 0h2m3 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m2 0h3m4 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m6 0h2m1 0h2m1 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m1 0h5m3 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h3m1 0h1m1 0h3m2 0h1m-20 1h3m1 0h2m3 0h2m1 0h2m4 0h1m6 0h2m-25 1h3m2 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m2 0h1m-29 1h1m5 0h1m3 0h1m3 0h1m5 0h1m1 0h1m2 0h3m-26 1h2m4 0h1m1 0h3m1 0h2m2 0h1m1 0h1m2 0h1m4 0h1m-28 1h2m1 0h3m1 0h1m3 0h2m2 0h2m2 0h2m1 0h1m2 0h3m-27 1h4m1 0h2m1 0h1m3 0h2m3 0h1m2 0h2m1 0h2m1 0h1m-29 1h2m2 0h4m2 0h1m2 0h2m2 0h5m1 0h3m1 0h2m-29 1h3m4 0h4m1 0h1m2 0h5m1 0h2m1 0h2m1 0h2m-26 1h2m1 0h2m2 0h2m3 0h4m2 0h1m2 0h2m1 0h2m-27 1h2m1 0h1m2 0h1m7 0h2m2 0h1m2 0h1m-24 1h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m1 0h2m-22 1h1m1 0h2m4 0h1m6 0h2m2 0h3m1 0h4m-28 1h1m1 0h1m1 0h2m4 0h1m2 0h1m1 0h9m1 0h1m-19 1h6m2 0h1m1 0h3m3 0h2m1 0h2m-29 1h7m3 0h1m1 0h3m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m-27 1h1m5 0h1m1 0h1m1 0h1m1 0h3m3 0h1m1 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m2 0h1m2 0h1m1 0h7m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h2m4 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h7m1 0h1m1 0h1m2 0h1m4 0h1m-29 1h1m5 0h1m1 0h5m3 0h1m3 0h1m3 0h2m1 0h1m-28 1h7m2 0h1m2 0h1m2 0h1m2 0h3m2 0h1m3 0h1"/></svg></div><a href="/">specimen.edycu.dev</a></div>
 </div>
 </div>
-<footer class="slide__foot"><span><code>evidence/tests.txt</code> · field shelf: <code>server-memory</code> 1.0.0 → 2.2.1, HOLD · 3 preserved · 2 unsealed (<code>evidence/field/server-memory.md</code>) · landing: <code>/landing/</code></span><span class="pg">10 / 10</span></footer>
+<footer class="slide__foot"><span><code>evidence/tests.txt</code> · <code>README.md</code>, Honest limits · the field shelf: <code>evidence/field/server-memory.md</code></span><span class="pg">10 / 10</span></footer>
 <aside class="speaker-notes">The cabinet is live at specimen.edycu.dev and replays in your browser. Every number in this deck is in the repo, public at submission. And here is what it does not prove: SHIP means clean on ten recorded calls, and no outside user has run it yet.</aside>
 </section>
 </div></main>
+<p class="rotate">Turn your phone sideways for the deck, or <a href="/landing/">read the landing page</a>.</p>
 <div class="notes-panel" aria-live="polite"></div>
 <nav class="nav" aria-label="Deck">
 <a href="/landing/" class="to-landing">← Landing</a><a href="/"><span class="lg">Open the </span>cabinet</a><span class="repo-text" data-repo="https://github.com/edycutjong/specimen" data-repo-label="Source on GitHub"></span>
-<span class="sp"></span><span class="ver">v1 · 2026-11-26 · from 5323e51</span>
+<span class="sp"></span><span class="ver">v1 · 2026-11-26 · facts from df1a316</span>
 <button type="button" data-go="prev" aria-label="Previous slide">←</button><button type="button" data-go="next" aria-label="Next slide">→</button>
 <span class="count" aria-live="polite">01 / 10</span>
 </nav>
