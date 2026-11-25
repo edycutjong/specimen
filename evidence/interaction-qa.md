@@ -21,3 +21,10 @@ first run (the accessible name did not start with the visible label) and was fix
 (first jar 453 px). The `Details` fold is closed by default, so the gate opens it before it measures the version-notes disclosure.
 
 The numbers are the recorded output of a Puppeteer + axe-core script that is not part of this repository (a recorded run, not a reproducible test); the mechanism described for the axe result is our reading of it.
+
+## Run 4 — 2026-11-25 21:55 UTC+7 (14:54Z), after the footer link was hidden and the cabinet redeployed
+
+Raw result: `ux-r4.json` (copied unchanged). The `.kiro` footer link and the spec-viewer "View … on GitHub" link now render as plain text (`<code>`) while the repository is private; a build with `VITE_REPO_PUBLIC=1` turns both back into links after the public flip (HUMAN-TODO row 17). Result: 0 `<a href>` on the page, so no dead link; hover feedback 6 of 6 classes changed (the footer link class no longer exists), focus ring 6 of 6, no horizontal scroll at 1440 / 375 / 320, own host only, 0 console errors. axe: the same single `color-contrast` rule, 28 / 27 / 25 nodes.
+
+**Further axe attempts (diagnosis in a page-injected stylesheet, not a code change).** axe's own message for these nodes is foreground `#1e1912` on background `#1b2012` (ratio 1.04), i.e. it samples the dark jar art, not the tag; it affects the accession, tool name and SPEC stub text (10, 10 and 5 nodes at 1440) plus the 4 jar flag strips and 1 legend item. Injecting `transform: none` on the tag, `clip-path: none` on the tag, or `pointer-events: auto` on the whole tag left the count at 28 to 30. So the rotation and the clip-path are not the cause, and we have not found the cause. The page still reads correctly in the screenshots, and the tag-ink measurement (10.24:1) is ours, not axe's. We do not claim "0 axe violations"; the open item is a re-check with the axe browser extension in a real browser.
+

@@ -1,0 +1,123 @@
+{
+  "url": "https://specimen.edycu.dev/",
+  "at": "2026-11-25T14:54:55.830Z",
+  "viewports": {
+    "1440x900": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "firstJarTop": 449
+    },
+    "375x812": {
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "firstJarTop": 453
+    },
+    "320x640": {
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "firstJarTop": 498
+    }
+  },
+  "axe": {
+    "1440x900": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": 28,
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "sample": "<span class=\"jar__accession\">SPC-0001</span>"
+      }
+    ],
+    "375x812": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": 27,
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "sample": "<span class=\"jar__accession\">SPC-0001</span>"
+      }
+    ],
+    "320x640": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": 25,
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "sample": "<span class=\"jar__accession\">SPC-0001</span>"
+      }
+    ]
+  },
+  "links": [],
+  "hover": [
+    {
+      "cls": "button.server-switch__segment[radio]",
+      "changed": true,
+      "disabled": false,
+      "w": 56,
+      "h": 44
+    },
+    {
+      "cls": "button.replay-button__control",
+      "changed": true,
+      "disabled": false,
+      "w": 271,
+      "h": 46
+    },
+    {
+      "cls": "button.jar__button",
+      "changed": true,
+      "disabled": false,
+      "w": 195,
+      "h": 217
+    },
+    {
+      "cls": "summary.cabinet-details__summary",
+      "changed": true,
+      "disabled": false,
+      "w": 85,
+      "h": 44
+    },
+    {
+      "cls": "summary.version-notes__summary",
+      "changed": true,
+      "disabled": false,
+      "w": 180,
+      "h": 44
+    },
+    {
+      "cls": "summary.how-made__summary",
+      "changed": true,
+      "disabled": false,
+      "w": 212,
+      "h": 44
+    }
+  ],
+  "focus": [
+    {
+      "k": "button.server-switch__segment",
+      "ring": true
+    },
+    {
+      "k": "button.replay-button__control",
+      "ring": true
+    },
+    {
+      "k": "button.jar__button",
+      "ring": true
+    },
+    {
+      "k": "summary.cabinet-details__summary",
+      "ring": true
+    },
+    {
+      "k": "summary.version-notes__summary",
+      "ring": true
+    },
+    {
+      "k": "summary.how-made__summary",
+      "ring": true
+    }
+  ],
+  "consoleErrors": [],
+  "thirdPartyHosts": []
+}
