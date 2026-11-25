@@ -1,0 +1,694 @@
+<!doctype html>
+<!--
+  SPECIMEN JAR — pitch deck (v1 · 2026-11-26 · from eee1ccd). Kiroween 2026 · Frankenstein.
+  Keys: ← / → or Space to move · Home / End · Esc: overview grid · P: presenter notes · C: contrast debug.
+  Print: Cmd/Ctrl+P → Save as PDF; one 16×9 in page per slide (@page 16in 9in, margin 0), UI hidden.
+  Images: /static/img/icon.svg (project icon), /static/img/cabinet-v2-hold.webp and /static/img/cabinet-v21-ship.webp (screenshots
+  of the live cabinet at https://specimen.edycu.dev/, captured 2026-11-26 WIB, cropped), QR generated for https://specimen.edycu.dev/.
+  Every figure comes from a committed file: evidence/, replays/, jars/, prompts/, .kiro/, README.md.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPECIMEN JAR — pitch deck</title>
+<meta name="description" content="Kiro hooks seal every MCP call your agent makes. Replay them against the next server: 5 of 10 came back different where a schema diff saw 2 changes.">
+<meta name="version" content="v1 · 2026-11-26 · from eee1ccd">
+<meta name="theme-color" content="#10150F">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://specimen.edycu.dev/deck/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SPECIMEN JAR">
+<meta property="og:title" content="SPECIMEN JAR — pitch deck">
+<meta property="og:description" content="Kiro hooks seal every MCP call your agent makes. Replay them against the next server: 5 of 10 came back different where a schema diff saw 2 changes.">
+<meta property="og:url" content="https://specimen.edycu.dev/deck/">
+<meta property="og:image" content="https://specimen.edycu.dev/static/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/static/fonts/grenze-gotisch-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/static/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+:root {
+  --bg:        #10150F;
+  --glass:     #192219;
+  --ink:       #ECE6D3;
+  --tag:       #D9C49A;
+  --label-ink: #1E1912;
+  --muted:     #8E978A;
+  --before:    #A8E35F;
+  --after:     #FF4A2E;
+  --cracked:   #7A3B31;
+  --rule:      #333D31;
+  --storm:     #C9D6F2;
+  --font-display: "Grenze Gotisch", "UnifrakturMaguntia", Georgia, serif;
+  --font-body:    "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-data:    "Azeret Mono", "IBM Plex Mono", ui-monospace, monospace;
+  /* derived, never a state: the stone in shadow, iron, bone at reading weight */
+  --stone: #0B0F0A;
+  --iron: #2A3128;
+  --iron-hi: #4C534A;
+  --bone-2: #CFC9B8;
+  --wrap: 1320px;
+  --pad: clamp(20px, 4vw, 48px);
+}
+@font-face { font-family: "Grenze Gotisch"; src: url(/static/fonts/grenze-gotisch-latin-900-normal.woff2) format("woff2"); font-weight: 900; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url(/static/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url(/static/fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Azeret Mono"; src: url(/static/fonts/azeret-mono-latin-500-normal.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Azeret Mono"; src: url(/static/fonts/azeret-mono-latin-700-normal.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+/* SPECIMEN JAR deck — the landing's pair (night-lab-specimen, design.md §3–§5). Inlined by deck.mjs after the
+   :root block and @font-face rules it copies verbatim from landing.css.
+   Press C to toggle contrast debug mode. */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html, body { height: 100%; }
+html { background: var(--stone); color: var(--ink); font: 400 28px/1.45 var(--font-body); overflow: hidden; -webkit-text-size-adjust: 100%; }
+body { overflow: hidden; }
+::selection { background: var(--tag); color: var(--label-ink); }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+a { color: inherit; }
+img, svg { display: block; max-width: 100%; }
+code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---------- viewport + stage (letterbox the browser, never the slide) ---------- */
+.viewport { position: fixed; inset: 0 0 var(--navh, 56px) 0; overflow: hidden; background: var(--stone); }
+.stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform: translate(-50%, -50%) scale(var(--s, .5)); transform-origin: 50% 50%; }
+.slide { position: absolute; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility 0s linear .35s;
+  background:
+    radial-gradient(48% 42% at 82% 18%, rgba(201, 214, 242, .07), transparent 70%),
+    radial-gradient(60% 55% at 70% 62%, rgba(168, 227, 95, .06), transparent 72%),
+    repeating-linear-gradient(180deg, rgba(51, 61, 49, .22) 0 1px, transparent 1px 96px), var(--bg); }
+.slide::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .83 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.slide.is-on { opacity: 1; visibility: visible; transition: opacity .35s ease; }
+.slide__in { position: absolute; inset: 88px 112px 104px; }
+.slide__foot { position: absolute; left: 112px; right: 112px; bottom: 38px; display: flex; justify-content: space-between; gap: 40px; font: 500 17px/1.3 var(--font-data); color: var(--muted); }
+.slide__foot .pg { color: var(--bone-2); white-space: nowrap; }
+.speaker-notes { display: none; }
+
+/* ---------- type ---------- */
+.k { font: 700 20px/1 var(--font-data); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 16px; }
+.k::before { content: ""; width: 34px; height: 3px; background: var(--after); }
+.k--plain::before { display: none; }
+.h { font: 900 92px/1 var(--font-display); letter-spacing: .004em; margin-top: 22px; }
+.h .hl { color: var(--after); }
+.h .hl--g { color: var(--before); text-shadow: 0 0 40px rgba(168, 227, 95, .4); }
+.lede { margin-top: 26px; font-size: 32px; line-height: 1.4; color: var(--bone-2); max-width: 30em; }
+.lede b { color: var(--ink); }
+.muted { color: var(--muted); }
+.r { color: var(--after); } .g { color: var(--before); }
+
+/* frames */
+.term { border: 1px solid var(--rule); background: var(--stone); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8); }
+.term__bar { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--rule); font: 500 18px/1 var(--font-data); color: var(--muted); }
+.term__bar i { width: 14px; height: 14px; border-radius: 50%; background: var(--iron-hi); }
+.term pre { margin: 0; padding: 22px 26px 26px; font: 500 22px/1.55 var(--font-data); color: var(--bone-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.term .c { color: var(--ink); font-weight: 700; } .term .c::before { content: "$ "; color: var(--before); }
+.term .hd { color: var(--after); font-weight: 700; } .term .ok { color: var(--before); font-weight: 700; }
+.term .x { color: var(--after); } .term .dim { color: var(--muted); }
+.caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -3px; background: var(--ink); animation: caret 1s steps(1) infinite; }
+.browser { border: 1px solid var(--rule); background: var(--stone); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8); }
+.browser__bar { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--rule); }
+.browser__bar i { width: 13px; height: 13px; border-radius: 50%; background: var(--iron-hi); }
+.browser__bar span { margin-left: 8px; flex: 1; font: 500 18px/1 var(--font-data); color: var(--bone-2); background: var(--glass); padding: 8px 12px; border: 1px solid var(--rule); }
+.browser img { width: 100%; height: auto; }
+
+/* ---------- jars (same layers as the landing) ---------- */
+.glow { transition: opacity .9s ease; }
+.glow--r, .glow--d { opacity: 0; }
+.fluid { transition: transform .95s cubic-bezier(.55, .05, .35, 1), opacity .6s ease; transform-box: fill-box; transform-origin: 50% 100%; }
+.fluid--r { transform: translateY(101%); }
+.fluid--d { opacity: 0; }
+.arcs { opacity: 0; }
+.crack { stroke-dasharray: 80; stroke-dashoffset: 80; }
+.specimen { transform-box: fill-box; transform-origin: 50% 50%; animation: drift 7s ease-in-out infinite alternate; }
+.specimen__pose { transform-box: fill-box; transform-origin: 50% 50%; }
+.bubble { transform-box: fill-box; animation: rise 4.8s linear infinite; }
+.bubble--2 { animation-duration: 6.2s; animation-delay: -2.4s; }
+.jar[data-state="rattled"] .glow--g { opacity: 0; }
+.jar[data-state="rattled"] .glow--r { opacity: 1; }
+.jar[data-state="rattled"] .fluid--r { transform: translateY(0); }
+.jar[data-state="rattled"] .meniscus { fill: #FFB09C; }
+.jar[data-state="rattled"] .arcs { opacity: 1; }
+.jar[data-state="rattled"] .arcs path { animation: arcs 1.6s ease-in-out infinite; }
+.jar[data-state="rattled"] .specimen__pose { transform: rotate(-22deg) translate(-4px, 2px); }
+.jar[data-state="cracked"] .glow--g { opacity: 0; }
+.jar[data-state="cracked"] .glow--d { opacity: 1; }
+.jar[data-state="cracked"] .fluid--g { opacity: 0; }
+.jar[data-state="cracked"] .fluid--d { opacity: 1; }
+.jar[data-state="cracked"] .meniscus { opacity: 0; }
+.jar[data-state="cracked"] .crack { stroke-dashoffset: 0; }
+.jar[data-state="cracked"] .specimen { animation: none; }
+.jar[data-state="cracked"] .specimen__pose { transform: translate(0, 46px) rotate(28deg); opacity: .5; }
+.jar[data-state="cracked"] .bubble, .jar[data-state="rattled"] .bubble { display: none; }
+.jar { position: relative; list-style: none; }
+.jar__art { position: relative; transform-origin: 50% 96%; transform: rotate(var(--tilt, 0deg)); }
+.slide.is-on .jar[data-state="rattled"] .jar__art { animation: rattle .6s cubic-bezier(.36, .07, .19, .97) .5s 1, rattle .6s cubic-bezier(.36, .07, .19, .97) 4.5s 1; }
+.jar__svg { width: 100%; height: auto; overflow: visible; }
+.tag { position: absolute; z-index: 2; left: 9%; right: -3%; bottom: 3%; background: var(--tag); color: var(--label-ink); padding: 6px 8px 6px 22px; transform: rotate(var(--tag-tilt, -4deg)); box-shadow: 0 8px 14px rgba(0, 0, 0, .5); clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px), 0 10px); }
+.tag::before { content: ""; position: absolute; left: 7px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: #2A2418; box-shadow: 0 0 0 2px #BFA978; }
+.tag__acc { display: block; font: 500 16px/1.15 var(--font-data); }
+.tag__tool { display: block; font: 700 17px/1.15 var(--font-data); letter-spacing: -.03em; white-space: nowrap; }
+.tag__flag { display: block; margin: 5px -8px -6px -22px; padding: 3px 0 5px; text-align: center; font: 900 19px/1 var(--font-display); letter-spacing: .06em; background: var(--after); color: var(--label-ink); }
+.jar[data-state="cracked"] .tag__flag { background: var(--cracked); color: var(--ink); }
+.jar[data-state="preserved"] .tag__flag { display: none; }
+.stamp { position: absolute; z-index: 5; font: 900 44px/1 var(--font-display); color: var(--after); border: 4px solid var(--after); padding: 8px 18px 10px; background: rgba(16, 21, 15, .72); transform: rotate(-7deg); white-space: nowrap; letter-spacing: .02em; }
+.slide.is-on .stamp { animation: slam .38s cubic-bezier(.2, 1.8, .4, 1) .9s both; }
+.plank { position: relative; height: 22px; margin-top: -8px; background: linear-gradient(180deg, #5A6258 0, #3A4238 22%, var(--iron) 60%, #161A15 100%); box-shadow: 0 18px 22px -12px rgba(0, 0, 0, .8); }
+.plank::before, .plank::after { content: ""; position: absolute; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: #7E877C; }
+.plank::before { left: 14px; } .plank::after { right: 14px; }
+.codes { display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; padding-top: 12px; font: 700 18px/1 var(--font-data); letter-spacing: .24em; color: var(--muted); }
+
+/* ---------- 1 cover ---------- */
+.s-cover .brand { display: flex; align-items: center; gap: 18px; }
+.s-cover .brand img { width: 64px; height: 64px; filter: drop-shadow(0 0 22px rgba(168, 227, 95, .55)); }
+.s-cover .brand b { font: 900 46px/1 var(--font-display); }
+.s-cover .brand b span { color: var(--before); text-shadow: 0 0 22px rgba(168, 227, 95, .45); }
+.s-cover .stampline { display: inline-block; margin-top: 64px; font: 900 30px/1 var(--font-display); color: var(--tag); border: 3px solid var(--tag); padding: 10px 18px 12px; transform: rotate(-1.4deg); }
+.s-cover .h { font-size: 116px; line-height: .98; margin-top: 34px; max-width: 8.4em; }
+.s-cover .lede { max-width: 21em; }
+.s-cover .lab { position: absolute; right: 0; top: -20px; width: 860px; bottom: 0; }
+.s-cover .window { position: absolute; left: 50%; top: 0; width: 380px; transform: translateX(-50%); }
+.s-cover .rack { position: absolute; left: 0; right: 0; top: 330px; }
+.s-cover .rack ol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 0; }
+.s-cover .stamp { left: 120px; top: 286px; }
+.s-cover .term { position: absolute; left: 0; right: 0; bottom: 0; }
+.s-cover .plate { position: absolute; right: 0; top: 34px; z-index: 3; text-align: right; border: 2px solid var(--rule); background: rgba(25, 34, 25, .92); padding: 14px 22px 16px; }
+.s-cover .plate b { display: block; font: 900 64px/1 var(--font-display); color: var(--after); }
+.s-cover .plate b i { font: 700 44px/1 var(--font-body); font-style: normal; color: var(--ink); margin-left: 10px; }
+.s-cover .plate span { font: 500 22px/1.3 var(--font-data); color: var(--bone-2); }
+.s-cover .term pre { font-size: 21px; }
+
+/* ---------- 2 problem ---------- */
+.s-problem .duel { position: absolute; left: 0; right: 0; top: 300px; display: grid; grid-template-columns: 1fr 110px 1.25fr; align-items: end; }
+.duel__n { font: 900 330px/.8 var(--font-display); font-variant-numeric: tabular-nums; }
+.duel__n small { font: 700 64px/1 var(--font-body); color: var(--muted); margin-left: 14px; }
+.duel__l { margin-top: 26px; font-size: 32px; line-height: 1.3; color: var(--bone-2); max-width: 15em; }
+.duel__l code { font-size: 28px; color: var(--ink); }
+.duel__vs { align-self: center; font: 900 54px/1 var(--font-display); color: var(--muted); text-align: center; }
+.s-problem .under { position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.chg { border: 1px solid var(--rule); background: rgba(25, 34, 25, .85); padding: 22px 26px; font: 500 25px/1.4 var(--font-data); color: var(--bone-2); }
+.chg b { display: block; font: 700 17px/1 var(--font-data); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.chg.seen { border-color: var(--iron-hi); }
+.chg .tagw { float: right; font: 700 15px/1 var(--font-data); letter-spacing: .1em; padding: 5px 8px; border: 1px solid var(--rule); color: var(--muted); }
+.chg.seen .tagw { color: var(--ink); border-color: var(--ink); }
+
+/* ---------- 3 the jar ---------- */
+.s-jar .solo { position: absolute; left: 0; top: 250px; width: 360px; }
+.s-jar .words { position: absolute; left: 420px; top: 0; width: 1260px; }
+.s-jar .term { position: absolute; left: 420px; right: 0; top: 330px; }
+.s-jar .term pre { font-size: 23px; line-height: 1.6; }
+.s-jar .term .key { color: var(--muted); }
+.s-jar .term .val { color: var(--ink); }
+.s-jar .term .hot { color: var(--before); font-weight: 700; }
+.stat-row { display: flex; gap: 16px; margin-top: 26px; }
+.statc { border: 1px solid var(--iron-hi); padding: 12px 16px; font: 500 22px/1.2 var(--font-data); color: var(--ink); background: var(--stone); }
+.statc b { font-weight: 700; }
+
+/* ---------- 4 the storm, real ---------- */
+.s-storm .side { position: absolute; left: 0; top: 0; width: 470px; }
+.s-storm .shots { position: absolute; left: 540px; right: 0; top: 0; bottom: 0; display: grid; grid-template-rows: auto auto; align-content: space-between; }
+.shot { display: block; }
+.shot__v { display: none; }
+.shot__v { font: 900 46px/1 var(--font-display); text-align: right; }
+.shot__v small { display: block; margin-top: 8px; font: 700 18px/1.2 var(--font-data); letter-spacing: .08em; color: var(--muted); }
+.side .verdicts { margin-top: 44px; display: grid; gap: 22px; }
+.vline { border-left: 5px solid var(--after); padding: 6px 0 6px 18px; font: 500 22px/1.35 var(--font-data); color: var(--bone-2); }
+.vline b { display: block; font: 900 46px/1 var(--font-display); color: var(--after); margin-bottom: 8px; }
+.vline.ship { border-color: var(--before); } .vline.ship b { color: var(--before); }
+
+/* ---------- 5 the notebook ---------- */
+.s-notebook .book { position: absolute; left: 0; right: 0; top: 270px; bottom: 0; border: 1px solid var(--rule); border-left: 8px solid var(--after);
+  background: linear-gradient(90deg, transparent 0 96px, rgba(255, 74, 46, .45) 96px 98px, transparent 98px), repeating-linear-gradient(180deg, transparent 0 63px, rgba(51, 61, 49, .55) 63px 64px), rgba(25, 34, 25, .92);
+  padding: 34px 60px 30px 140px; }
+.book__head { font: 700 22px/1.2 var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.book__hero { margin-top: 22px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 28px; font: 500 64px/1.15 var(--font-data); }
+.book__hero s { color: var(--before); text-decoration-color: var(--after); text-decoration-thickness: 5px; }
+.book__hero .now { color: var(--after); font-weight: 700; font-size: 112px; line-height: 1; }
+.book__hero .x100 { font: 900 56px/1 var(--font-display); background: var(--after); color: var(--label-ink); padding: 6px 16px 10px; align-self: center; }
+.book__note { margin-top: 16px; font-size: 32px; color: var(--ink); }
+.book__rows { margin-top: 34px; display: grid; gap: 10px; font: 500 24px/1.4 var(--font-data); color: var(--bone-2); border-top: 1px solid var(--rule); padding-top: 20px; }
+.book__rows span.f { display: inline-block; min-width: 190px; font: 700 18px/1 var(--font-data); letter-spacing: .1em; text-transform: uppercase; color: var(--label-ink); background: var(--after); padding: 6px 10px; margin-right: 16px; text-align: center; }
+.book__rows span.f.c { background: var(--cracked); color: var(--ink); }
+.book .crackc { position: absolute; right: -1px; top: -1px; width: 150px; }
+
+/* ---------- 6 consequence ---------- */
+.s-cons .ledger { position: absolute; left: 0; top: 250px; width: 1100px; border: 1px solid var(--rule); background: var(--stone); }
+.lrow { display: grid; grid-template-columns: 124px 1fr; border-top: 1px solid var(--rule); }
+.lrow:first-child { border-top: 0; }
+.lrow > b { font: 900 48px/1 var(--font-display); padding: 30px 20px; border-right: 1px solid var(--rule); }
+.lrow ul { list-style: none; padding: 26px 24px; display: grid; gap: 10px; font: 500 24px/1.42 var(--font-data); color: var(--bone-2); }
+.lrow.bad > b, .lrow.bad li { color: var(--after); }
+.lrow.ok > b { color: var(--before); }
+.s-cons .agent { position: absolute; right: 0; top: 250px; bottom: 0; width: 560px; border: 1px solid var(--rule); background: rgba(25, 34, 25, .85); padding: 30px 32px; }
+.agent .agent__n { font: 900 136px/1 var(--font-display); color: var(--ink); margin: 18px 0 22px; }
+.agent p:not(.agent__n):not(.k) { font-size: 30px; line-height: 1.38; color: var(--bone-2); }
+.agent p + p { margin-top: 14px; }
+
+/* ---------- 7 the loop ---------- */
+.s-loop .flow { position: absolute; left: 0; right: 0; top: 300px; bottom: 0; display: grid; grid-template-columns: 300px 70px 1fr 70px 400px 70px 300px; align-items: stretch; }
+.stn { border: 1px solid var(--rule); background: rgba(25, 34, 25, .86); padding: 26px 24px; display: flex; flex-direction: column; gap: 16px; }
+.stn__k { font: 700 18px/1.2 var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.stn p { font-size: 26px; line-height: 1.35; color: var(--bone-2); }
+.stn code { font-size: 21px; color: var(--ink); overflow-wrap: anywhere; }
+.stn .pass { align-self: flex-start; font: 700 21px/1 var(--font-data); color: var(--label-ink); background: var(--before); padding: 8px 12px; }
+.stn--tag { align-items: center; justify-content: center; }
+.bigtag { position: relative; width: 250px; background: var(--tag); color: var(--label-ink); padding: 18px 14px 0 34px; transform: rotate(-5deg); box-shadow: 0 16px 26px rgba(0, 0, 0, .5); clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 calc(100% - 14px), 0 14px); }
+.bigtag::before { content: ""; position: absolute; left: 12px; top: 28px; width: 12px; height: 12px; border-radius: 50%; background: #2A2418; box-shadow: 0 0 0 3px #BFA978; }
+.bigtag b { display: block; font: 700 20px/1.2 var(--font-data); }
+.bigtag span { display: block; font: 700 27px/1.25 var(--font-data); }
+.bigtag i { display: block; margin: 14px -14px 0 -34px; background: var(--after); text-align: center; font: 900 32px/1 var(--font-display); font-style: normal; padding: 8px 0 11px; letter-spacing: .05em; }
+.sut { align-self: center; }
+.sut svg { width: 70px; height: 24px; }
+.stn--ship { border-color: var(--before); align-items: flex-start; justify-content: center; }
+.stn--ship .big { font: 900 84px/1 var(--font-display); color: var(--before); text-shadow: 0 0 40px rgba(168, 227, 95, .35); }
+.stn--ship .big small { display: block; margin-top: 14px; font: 500 24px/1.3 var(--font-data); color: var(--ink); text-shadow: none; }
+
+/* ---------- 8 the gate ---------- */
+.s-gate .term { position: absolute; left: 0; top: 270px; width: 1010px; }
+.s-gate .term pre { font-size: 28px; line-height: 1.6; padding: 30px 32px 34px; }
+.s-gate .evals { position: absolute; right: 0; top: 270px; width: 620px; list-style: none; padding: 0; display: grid; gap: 14px; }
+.ev { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: baseline; border-bottom: 1px solid var(--rule); padding-bottom: 14px; }
+.ev b { font: 700 22px/1 var(--font-data); color: var(--muted); }
+.ev span { font-size: 27px; line-height: 1.3; color: var(--bone-2); }
+.ev em { font-style: normal; font-weight: 700; }
+.ev .blk { color: var(--after); } .ev .alw { color: var(--before); }
+.s-gate .caveat { position: absolute; left: 0; right: 0; bottom: 0; font-size: 24px; color: var(--muted); border-left: 4px solid var(--iron-hi); padding-left: 18px; max-width: 64em; }
+
+/* ---------- 9 built with kiro ---------- */
+.s-kiro .inv { position: absolute; left: 0; right: 0; top: 270px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; list-style: none; padding: 0; }
+.inv li { border: 1px solid var(--rule); background: rgba(25, 34, 25, .86); padding: 22px 24px 20px; min-height: 236px; display: flex; flex-direction: column; }
+.inv li b { font: 900 104px/.9 var(--font-display); color: var(--ink); }
+.inv li span { margin-top: 12px; font-size: 27px; line-height: 1.25; color: var(--ink); }
+.inv li code { margin-top: auto; padding-top: 12px; font-size: 17px; color: var(--muted); overflow-wrap: anywhere; }
+.inv li.wide { grid-column: span 2; }
+.inv li.g b { color: var(--before); }
+.s-kiro .not { position: absolute; left: 0; right: 0; bottom: 0; font-size: 26px; color: var(--bone-2); border-left: 5px solid var(--iron-hi); padding: 6px 0 6px 20px; }
+.s-kiro .not code { font-size: 22px; color: var(--ink); }
+
+/* ---------- 10 try it ---------- */
+.s-end .cols { position: absolute; left: 0; right: 0; top: 230px; bottom: 0; display: grid; grid-template-columns: 1fr 470px; gap: 60px; }
+.s-end .left { display: grid; gap: 30px; align-content: start; }
+.rc { display: grid; gap: 14px; align-content: start; }
+.rc div { border-bottom: 1px solid var(--rule); padding-bottom: 14px; }
+.rc b { display: inline-block; font: 900 120px/1 var(--font-display); color: var(--ink); margin-right: 20px; }
+.rc b.g { color: var(--before); }
+.rc span { font-size: 32px; color: var(--bone-2); }
+.lims { list-style: none; padding: 0; display: grid; gap: 18px; align-content: start; }
+.lim { position: relative; background: var(--tag); color: var(--label-ink); padding: 24px 28px 20px 46px; clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px), 0 16px); box-shadow: 0 14px 24px rgba(0, 0, 0, .45); font-size: 30px; line-height: 1.38; }
+.lim:nth-child(1) { transform: rotate(-.8deg); } .lim:nth-child(2) { transform: rotate(.6deg); }
+.lim::before { content: ""; position: absolute; left: 13px; top: 28px; width: 11px; height: 11px; border-radius: 50%; background: #2A2418; box-shadow: 0 0 0 3px #BFA978; }
+.lim cite { display: block; margin-top: 8px; font: 700 15px/1.2 var(--font-data); letter-spacing: .08em; text-transform: uppercase; font-style: normal; color: #4D4331; }
+.qr { display: flex; flex-direction: column; gap: 16px; }
+.qr__box { background: var(--ink); padding: 22px; width: 470px; }
+.qr__box svg { width: 100%; height: auto; }
+.qr a, .qr span.url { font: 700 25px/1.25 var(--font-data); color: var(--ink); text-decoration: none; }
+.qr a:hover { text-decoration: underline; }
+.qr .small { font: 500 19px/1.3 var(--font-data); color: var(--muted); }
+
+/* ---------- deck UI (outside the stage) ---------- */
+.nav { position: fixed; left: 0; right: 0; bottom: 0; height: var(--navh, 56px); display: flex; align-items: center; gap: 10px; padding: 0 18px; background: #0B0F0A; border-top: 1px solid var(--rule); font: 700 15px/1 var(--font-data); z-index: 5; }
+.nav a, .nav button { color: var(--ink); background: none; border: 1px solid var(--iron-hi); padding: 9px 12px; font: inherit; text-decoration: none; cursor: pointer; transition: background-color .2s, border-color .2s; white-space: nowrap; }
+.nav a:hover, .nav button:hover { background: var(--glass); border-color: var(--ink); }
+.nav .sp { flex: 1; }
+.nav .count { color: var(--ink); min-width: 74px; text-align: right; letter-spacing: .06em; }
+.nav .ver { color: var(--bone-2); font-weight: 500; }
+.notes-panel { display: none; position: fixed; left: 0; right: 0; bottom: var(--navh, 56px); height: 20vh; padding: 18px 26px; background: rgba(11, 15, 10, .97); border-top: 2px solid var(--iron-hi); font: 400 20px/1.5 var(--font-body); color: var(--ink); overflow: auto; z-index: 4; }
+.presenting .notes-panel { display: block; }
+.presenting .viewport { bottom: calc(var(--navh, 56px) + 20vh); }
+.presenting.idle, .presenting.idle * { cursor: none; }
+.presenting .nav { opacity: .55; }
+.help { position: fixed; right: 18px; bottom: calc(var(--navh, 56px) + 12px); font: 500 14px/1.4 var(--font-data); color: var(--bone-2); background: #0B0F0A; border: 1px solid var(--rule); padding: 8px 10px; z-index: 5; display: none; }
+.overview .slide { opacity: 1; visibility: visible; transition: none; transform-origin: 0 0; cursor: pointer; outline: 2px solid var(--rule); }
+.overview .slide.is-on { outline: 6px solid var(--ink); }
+.debug-contrast .slide :is(h1, h2, p, li, span, b, code, pre, small, a) { outline: 1px dashed #FF00FF; }
+
+@keyframes rattle { 0%, 100% { transform: rotate(var(--tilt, 0deg)); } 8% { transform: rotate(calc(var(--tilt, 0deg) - 5deg)) translateX(-4px); } 25% { transform: rotate(calc(var(--tilt, 0deg) + 5deg)) translateX(4px); } 42% { transform: rotate(calc(var(--tilt, 0deg) - 4deg)) translateX(-3px); } 58% { transform: rotate(calc(var(--tilt, 0deg) + 3.5deg)) translateX(3px); } 75% { transform: rotate(calc(var(--tilt, 0deg) - 2deg)); } 90% { transform: rotate(calc(var(--tilt, 0deg) + 1deg)); } }
+@keyframes drift { from { transform: translate(0, -3px) rotate(-3deg); } to { transform: translate(2px, 4px) rotate(4deg); } }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(-70px); opacity: 0; } }
+@keyframes arcs { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@keyframes slam { 0% { opacity: 0; transform: rotate(-7deg) scale(1.8); } 100% { opacity: 1; transform: rotate(-7deg) scale(1); } }
+@keyframes caret { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .specimen, .bubble { animation: none !important; }
+}
+
+/* ---------- print: one slide per 16×9 in page ---------- */
+@page { size: 16in 9in; margin: 0; }
+@media print {
+  html, body, .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { overflow: visible; height: auto; background: var(--bg); }
+  .nav, .notes-panel, .help, .speaker-notes { display: none !important; }
+  .viewport { position: static; overflow: visible; }
+  .stage { position: static; transform: none !important; width: auto; height: auto; }
+  .slide { position: relative; inset: auto; width: 1920px; height: 1080px; zoom: .8; opacity: 1 !important; visibility: visible !important; break-after: page; page-break-after: always; break-inside: avoid; }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  * { animation: none !important; transition: none !important; }
+  .stamp { opacity: 1; }
+}
+
+</style>
+</head>
+<body>
+<svg class="sr-only" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute"><defs>
+<radialGradient id="glow-g" cx="50%" cy="58%" r="58%"><stop offset="0" stop-color="#A8E35F" stop-opacity=".46"/><stop offset=".55" stop-color="#A8E35F" stop-opacity=".16"/><stop offset="1" stop-color="#A8E35F" stop-opacity="0"/></radialGradient>
+<radialGradient id="glow-r" cx="50%" cy="58%" r="58%"><stop offset="0" stop-color="#FF4A2E" stop-opacity=".62"/><stop offset=".55" stop-color="#FF4A2E" stop-opacity=".22"/><stop offset="1" stop-color="#FF4A2E" stop-opacity="0"/></radialGradient>
+<radialGradient id="glow-d" cx="50%" cy="58%" r="58%"><stop offset="0" stop-color="#7A3B31" stop-opacity=".3"/><stop offset="1" stop-color="#7A3B31" stop-opacity="0"/></radialGradient>
+<linearGradient id="fl-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6FF9A"/><stop offset=".18" stop-color="#A8E35F"/><stop offset=".7" stop-color="#4F8A2A"/><stop offset="1" stop-color="#22401A"/></linearGradient>
+<linearGradient id="fl-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A6C"/><stop offset=".2" stop-color="#FF4A2E"/><stop offset=".75" stop-color="#B0241A"/><stop offset="1" stop-color="#5E120C"/></linearGradient>
+<linearGradient id="fl-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9A4A3C"/><stop offset="1" stop-color="#3E1A14"/></linearGradient>
+<linearGradient id="lid-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6E776C"/><stop offset=".45" stop-color="#3F463E"/><stop offset="1" stop-color="#22281F"/></linearGradient>
+<linearGradient id="bolt-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8C948A"/><stop offset=".5" stop-color="#4C534A"/><stop offset="1" stop-color="#262B24"/></linearGradient>
+<clipPath id="jar-inner" clipPathUnits="userSpaceOnUse"><path d="M26 33 Q15 35 15 49 L15 173 Q15 185 27 185 L93 185 Q105 185 105 173 L105 49 Q105 35 94 33 Z"/></clipPath>
+<g id="jar-lid"><rect x="22" y="17" width="76" height="12" rx="3" fill="#2A3028" stroke="#0A0C09" stroke-opacity=".6"/><rect x="16" y="-1" width="88" height="20" rx="4" fill="url(#lid-g)" stroke="#0A0C09" stroke-opacity=".7"/><rect x="18" y="1" width="84" height="3" rx="1.5" fill="#ECE6D3" opacity=".18"/><circle cx="30" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="50" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="70" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><circle cx="90" cy="11" r="2" fill="#7E877C" stroke="#0A0C09" stroke-opacity=".6"/><rect x="-4" y="17" width="27" height="9" rx="2" fill="url(#bolt-g)"/><rect x="-12" y="14" width="10" height="15" rx="2" fill="url(#bolt-g)" stroke="#0A0C09" stroke-opacity=".6"/><rect x="97" y="17" width="27" height="9" rx="2" fill="url(#bolt-g)"/><rect x="122" y="14" width="10" height="15" rx="2" fill="url(#bolt-g)" stroke="#0A0C09" stroke-opacity=".6"/></g>
+<g id="brace"><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#0E120D" stroke-opacity=".45" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#ECE6D3" stroke-opacity=".82" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#5E6E4E" stroke-opacity=".55" stroke-width="1.6" stroke-dasharray="2 4" stroke-linecap="round"/></g>
+</defs></svg>
+<main class="viewport" aria-label="SPECIMEN JAR pitch deck"><div class="stage" id="stage">
+<section class="slide s-cover" data-n="1" aria-roledescription="slide" aria-label="1 of 10: Cover">
+<div class="slide__in">
+
+<div class="brand"><img src="/static/img/icon.svg" alt="" width="64" height="64"><b>SPECIMEN <span>JAR</span></b></div>
+<span class="stampline">Kiroween 2026 · Frankenstein</span>
+<h1 class="h">The jars remember what your server <span class="hl--g">used to say.</span></h1>
+<p class="lede">Kiro hooks seal every MCP call your agent makes. Swap the server, replay the jars: the broken calls rattle red.</p>
+<div class="lab" data-exhibit>
+<div class="window" aria-hidden="true"><svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="lw1s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3A55"/><stop offset="0.55" stop-color="#18223A"/><stop offset="1" stop-color="#0E1424"/></linearGradient><radialGradient id="lw1f" cx="62%" cy="22%" r="60%"><stop offset="0" stop-color="#C9D6F2" stop-opacity="0.35"/><stop offset="1" stop-color="#C9D6F2" stop-opacity="0"/></radialGradient><clipPath id="lw1c"><path d="M30 392 L30 150 Q30 34 150 22 Q270 34 270 150 L270 392 Z"/></clipPath></defs><path d="M14 400 L14 148 Q14 14 150 4 Q286 14 286 148 L286 400 Z" fill="#1E261D"/><path d="M14 400 L14 148 Q14 14 150 4 Q286 14 286 148 L286 400" fill="none" stroke="#2C352A" stroke-width="3"/><g clip-path="url(#lw1c)"><rect width="300" height="400" fill="url(#lw1s)"/><rect width="300" height="400" fill="url(#lw1f)"/><path d="M10 120 Q60 88 110 112 Q150 80 200 108 Q250 84 300 112 L300 160 L0 160 Z" fill="#0F1628" opacity="0.75"/><path d="M0 200 Q50 176 96 196 Q150 168 204 194 Q252 176 300 196 L300 240 L0 240 Z" fill="#0B1120" opacity="0.6"/><path d="M196 30 L158 118 L188 124 L140 230 L162 234 L126 330" fill="none" stroke="#C9D6F2" stroke-opacity="0.35" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/><path d="M196 30 L158 118 L188 124 L140 230 L162 234 L126 330" fill="none" stroke="#F4F7FF" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M150 160 L118 196" fill="none" stroke="#F4F7FF" stroke-opacity="0.7" stroke-width="2.4" stroke-linecap="round"/><g stroke="#C9D6F2" stroke-opacity="0.18" stroke-width="1.2"><line x1="20" y1="30" x2="14" y2="56"/><line x1="35.5" y1="83" x2="29.5" y2="109"/><line x1="51" y1="136" x2="45" y2="162"/><line x1="66.5" y1="189" x2="60.5" y2="215"/><line x1="82" y1="242" x2="76" y2="268"/><line x1="97.5" y1="295" x2="91.5" y2="321"/><line x1="113" y1="48" x2="107" y2="74"/><line x1="128.5" y1="101" x2="122.5" y2="127"/><line x1="144" y1="154" x2="138" y2="180"/><line x1="159.5" y1="207" x2="153.5" y2="233"/><line x1="175" y1="260" x2="169" y2="286"/><line x1="190.5" y1="313" x2="184.5" y2="339"/><line x1="206" y1="66" x2="200" y2="92"/><line x1="221.5" y1="119" x2="215.5" y2="145"/><line x1="237" y1="172" x2="231" y2="198"/><line x1="252.5" y1="225" x2="246.5" y2="251"/><line x1="268" y1="278" x2="262" y2="304"/><line x1="283.5" y1="31" x2="277.5" y2="57"/></g></g><g fill="#0A0D09" stroke="#3A4238" stroke-width="1.5"><rect x="86" y="24" width="12" height="372" rx="3"/><rect x="144" y="18" width="12" height="378" rx="3"/><rect x="202" y="24" width="12" height="372" rx="3"/><rect x="30" y="232" width="240" height="12" rx="3"/></g><g fill="#5A6257"><circle cx="92" cy="238" r="3"/><circle cx="150" cy="238" r="3"/><circle cx="208" cy="238" r="3"/></g><rect x="4" y="384" width="292" height="16" rx="2" fill="#262E24"/></svg></div>
+<span class="stamp" aria-hidden="true">IT'S MOVING</span>
+<div class="rack"><ol aria-label="Rack A after the replay against hollow-inn v2"><li class="jar" data-state="preserved" style="--tilt:-2.2deg;--tag-tilt:-4deg" aria-label="SPC-0001 search_rooms: preserved"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="52.8" cy="132.3" r="1.8" fill="#ECE6D3" opacity="0.18"/><circle cx="73.6" cy="71.8" r="2.2" fill="#ECE6D3" opacity="0.15"/><circle cx="51.5" cy="147.7" r="1.7" fill="#ECE6D3" opacity="0.12"/><circle cx="21.3" cy="118.2" r="1.5" fill="#ECE6D3" opacity="0.15"/><circle cx="23.3" cy="91.1" r="1.9" fill="#ECE6D3" opacity="0.27"/><circle cx="68.4" cy="78.2" r="0.7" fill="#ECE6D3" opacity="0.32"/><circle cx="75.6" cy="99.7" r="2.0" fill="#ECE6D3" opacity="0.29"/><circle cx="23.3" cy="132.3" r="0.6" fill="#ECE6D3" opacity="0.23"/><circle cx="73.3" cy="135.4" r="1.2" fill="#ECE6D3" opacity="0.20"/><circle cx="29.2" cy="155.4" r="1.2" fill="#ECE6D3" opacity="0.29"/><circle cx="47.0" cy="156.0" r="1.1" fill="#ECE6D3" opacity="0.18"/><circle cx="39.8" cy="162.0" r="1.1" fill="#ECE6D3" opacity="0.11"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0001</span><span class="tag__tool">search_rooms</span><span class="tag__flag">ABNORMAL</span></span></li><li class="jar" data-state="rattled" style="--tilt:1.6deg;--tag-tilt:3deg" aria-label="SPC-0002 quote: rattled"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="85.8" cy="105.0" r="0.9" fill="#ECE6D3" opacity="0.10"/><circle cx="60.6" cy="107.8" r="1.2" fill="#ECE6D3" opacity="0.24"/><circle cx="28.2" cy="102.8" r="0.9" fill="#ECE6D3" opacity="0.25"/><circle cx="49.8" cy="123.6" r="1.5" fill="#ECE6D3" opacity="0.28"/><circle cx="32.5" cy="81.2" r="0.8" fill="#ECE6D3" opacity="0.20"/><circle cx="93.9" cy="144.8" r="1.9" fill="#ECE6D3" opacity="0.15"/><circle cx="99.7" cy="137.8" r="1.4" fill="#ECE6D3" opacity="0.18"/><circle cx="54.7" cy="76.6" r="1.1" fill="#ECE6D3" opacity="0.22"/><circle cx="67.7" cy="77.4" r="1.2" fill="#ECE6D3" opacity="0.16"/><circle cx="48.8" cy="108.4" r="1.5" fill="#ECE6D3" opacity="0.18"/><circle cx="20.7" cy="172.4" r="1.4" fill="#ECE6D3" opacity="0.23"/><circle cx="83.1" cy="97.5" r="1.6" fill="#ECE6D3" opacity="0.21"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0002</span><span class="tag__tool">quote</span><span class="tag__flag">ABNORMAL</span></span></li><li class="jar" data-state="preserved" style="--tilt:-1.1deg;--tag-tilt:-5deg" aria-label="SPC-0003 book: preserved"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="47.5" cy="101.3" r="1.6" fill="#ECE6D3" opacity="0.19"/><circle cx="32.2" cy="136.2" r="0.6" fill="#ECE6D3" opacity="0.16"/><circle cx="57.1" cy="128.3" r="0.9" fill="#ECE6D3" opacity="0.21"/><circle cx="58.9" cy="85.0" r="0.9" fill="#ECE6D3" opacity="0.14"/><circle cx="87.0" cy="166.5" r="0.7" fill="#ECE6D3" opacity="0.20"/><circle cx="28.0" cy="122.2" r="1.4" fill="#ECE6D3" opacity="0.14"/><circle cx="22.9" cy="103.6" r="1.5" fill="#ECE6D3" opacity="0.32"/><circle cx="58.9" cy="139.9" r="1.9" fill="#ECE6D3" opacity="0.16"/><circle cx="93.7" cy="164.1" r="0.8" fill="#ECE6D3" opacity="0.26"/><circle cx="72.8" cy="117.9" r="1.4" fill="#ECE6D3" opacity="0.22"/><circle cx="81.2" cy="135.2" r="2.1" fill="#ECE6D3" opacity="0.18"/><circle cx="67.5" cy="96.8" r="1.8" fill="#ECE6D3" opacity="0.27"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0003</span><span class="tag__tool">book</span><span class="tag__flag">ABNORMAL</span></span></li><li class="jar" data-state="preserved" style="--tilt:2.4deg;--tag-tilt:2deg" aria-label="SPC-0004 list_bookings: preserved"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="23.9" cy="176.5" r="1.4" fill="#ECE6D3" opacity="0.28"/><circle cx="84.8" cy="73.2" r="1.3" fill="#ECE6D3" opacity="0.10"/><circle cx="39.7" cy="113.7" r="0.6" fill="#ECE6D3" opacity="0.17"/><circle cx="35.8" cy="91.0" r="1.8" fill="#ECE6D3" opacity="0.12"/><circle cx="30.5" cy="174.2" r="1.5" fill="#ECE6D3" opacity="0.11"/><circle cx="49.6" cy="68.9" r="1.3" fill="#ECE6D3" opacity="0.18"/><circle cx="98.0" cy="145.3" r="1.3" fill="#ECE6D3" opacity="0.26"/><circle cx="44.4" cy="165.8" r="1.7" fill="#ECE6D3" opacity="0.23"/><circle cx="38.8" cy="98.5" r="0.7" fill="#ECE6D3" opacity="0.29"/><circle cx="24.0" cy="64.1" r="0.8" fill="#ECE6D3" opacity="0.16"/><circle cx="99.7" cy="126.9" r="1.2" fill="#ECE6D3" opacity="0.18"/><circle cx="60.5" cy="163.0" r="1.4" fill="#ECE6D3" opacity="0.19"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0004</span><span class="tag__tool">list_bookings</span><span class="tag__flag">ABNORMAL</span></span></li><li class="jar" data-state="rattled" style="--tilt:-1.8deg;--tag-tilt:-3deg" aria-label="SPC-0010 search_rooms: rattled"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="81.5" cy="76.1" r="2.1" fill="#ECE6D3" opacity="0.16"/><circle cx="34.9" cy="139.0" r="1.8" fill="#ECE6D3" opacity="0.32"/><circle cx="69.9" cy="128.6" r="2.1" fill="#ECE6D3" opacity="0.15"/><circle cx="34.4" cy="117.6" r="2.0" fill="#ECE6D3" opacity="0.31"/><circle cx="22.3" cy="174.7" r="1.2" fill="#ECE6D3" opacity="0.32"/><circle cx="97.8" cy="154.1" r="1.8" fill="#ECE6D3" opacity="0.16"/><circle cx="73.2" cy="154.8" r="1.1" fill="#ECE6D3" opacity="0.19"/><circle cx="60.1" cy="114.3" r="1.2" fill="#ECE6D3" opacity="0.16"/><circle cx="33.9" cy="70.4" r="1.5" fill="#ECE6D3" opacity="0.29"/><circle cx="91.3" cy="148.3" r="2.1" fill="#ECE6D3" opacity="0.15"/><circle cx="41.6" cy="154.4" r="1.4" fill="#ECE6D3" opacity="0.22"/><circle cx="91.4" cy="74.1" r="2.2" fill="#ECE6D3" opacity="0.24"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0010</span><span class="tag__tool">search_rooms</span><span class="tag__flag">ABNORMAL</span></span></li></ol>
+<div class="plank" aria-hidden="true"></div><div class="codes" aria-hidden="true"><span>A1</span><span>A2</span><span>A3</span><span>A4</span><span>A5</span></div></div>
+<p class="plate" aria-label="Verdict: HOLD v2, 5 preserved, 4 rattled, 1 cracked"><b>HOLD<i>v2</i></b><span>5 preserved · 4 rattled · 1 cracked</span></p>
+<div class="term" role="img" aria-label="Terminal: npx specimen replay against hollow-inn v2 prints HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room"><div class="term__bar"><i></i><i></i><i></i><span>specimen · real output</span></div><pre><span class="c">npx specimen replay --server "…v2"</span>
+<span class="hd">HOLD · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room</span> <span class="caret"></span></pre></div>
+</div>
+</div>
+<footer class="slide__foot"><span><code>evidence/replay/racks-vs-v2.txt</code> · rack A of 2, replayed against hollow-inn v2 · specimen.edycu.dev</span><span class="pg">01 / 10</span></footer>
+<aside class="speaker-notes">Every jar on this shelf is one real MCP call a Kiro agent made, sealed by Kiro hooks. We swapped in v2 of the server and replayed: two of rack A's five jars came back wrong. That is the whole idea; the rest of the deck is proof.</aside>
+</section>
+<section class="slide s-problem" data-n="2" aria-roledescription="slide" aria-label="2 of 10: The problem">
+<div class="slide__in">
+
+<p class="k">The problem</p>
+<h2 class="h">Tests green. Callers <span class="hl">break.</span></h2>
+<div class="duel">
+<div><p class="duel__n">2</p><p class="duel__l">changes a schema diff of <code>tools/list</code> saw</p></div>
+<p class="duel__vs">vs</p>
+<div><p class="duel__n r">5<small>of 10</small></p><p class="duel__l">recorded calls came back different</p></div>
+</div>
+<div class="under" data-exhibit>
+<p class="chg"><span class="tagw">unseen</span><b>quote</b>total → total_cents, ×100</p>
+<p class="chg"><span class="tagw">unseen</span><b>search_rooms</b>default limit 20 → 5</p>
+<p class="chg seen"><span class="tagw">seen</span><b>cancel_booking</b>renamed booking_cancel</p>
+</div>
+</div>
+<footer class="slide__foot"><span><code>evidence/bench/detect.md</code> · <code>evidence/replay/racks-vs-v2.txt</code> · <code>servers/hollow-inn/CHANGES.md</code> (three author-made breaks)</span><span class="pg">02 / 10</span></footer>
+<aside class="speaker-notes">An input-schema diff only sees tools/list: here it saw cancel_booking removed and booking_cancel added. The quote rename and the search_rooms default live in the responses, so it cannot see them. Replaying the recorded calls found five of ten changed.</aside>
+</section>
+<section class="slide s-jar" data-n="3" aria-roledescription="slide" aria-label="3 of 10: The jar">
+<div class="slide__in">
+
+<div class="solo" data-exhibit><div class="jar" data-state="preserved" style="--tilt:-2deg;--tag-tilt:-4deg"><span class="jar__art"><svg class="jar__svg" viewBox="-26 -16 172 222" aria-hidden="true" focusable="false">
+<ellipse class="glow glow--g" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-g)"/><ellipse class="glow glow--r" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-r)"/><ellipse class="glow glow--d" cx="60" cy="116" rx="84" ry="88" fill="url(#glow-d)"/>
+<g class="arcs" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-linecap="round"><path d="M-6 84 Q-18 104 -6 124"/><path d="M-16 74 Q-32 104 -16 134" stroke-opacity=".55"/><path d="M126 84 Q138 104 126 124"/><path d="M136 74 Q152 104 136 134" stroke-opacity=".55"/></g>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="#192219" fill-opacity=".55"/>
+<g clip-path="url(#jar-inner)"><rect class="fluid fluid--g" x="10" y="52" width="100" height="140" fill="url(#fl-g)"/><rect class="fluid fluid--r" x="10" y="52" width="100" height="140" fill="url(#fl-r)"/><rect class="fluid fluid--d" x="10" y="112" width="100" height="80" fill="url(#fl-d)"/>
+<ellipse class="meniscus" cx="60" cy="52" rx="46" ry="3.2" fill="#E6FFB8" opacity=".55"/><ellipse cx="60" cy="186" rx="52" ry="16" fill="#0A0D09" opacity=".45"/><circle cx="85.8" cy="105.0" r="0.9" fill="#ECE6D3" opacity="0.10"/><circle cx="60.6" cy="107.8" r="1.2" fill="#ECE6D3" opacity="0.24"/><circle cx="28.2" cy="102.8" r="0.9" fill="#ECE6D3" opacity="0.25"/><circle cx="49.8" cy="123.6" r="1.5" fill="#ECE6D3" opacity="0.28"/><circle cx="32.5" cy="81.2" r="0.8" fill="#ECE6D3" opacity="0.20"/><circle cx="93.9" cy="144.8" r="1.9" fill="#ECE6D3" opacity="0.15"/><circle cx="99.7" cy="137.8" r="1.4" fill="#ECE6D3" opacity="0.18"/><circle cx="54.7" cy="76.6" r="1.1" fill="#ECE6D3" opacity="0.22"/><circle cx="67.7" cy="77.4" r="1.2" fill="#ECE6D3" opacity="0.16"/><circle cx="48.8" cy="108.4" r="1.5" fill="#ECE6D3" opacity="0.18"/><circle cx="20.7" cy="172.4" r="1.4" fill="#ECE6D3" opacity="0.23"/><circle cx="83.1" cy="97.5" r="1.6" fill="#ECE6D3" opacity="0.21"/>
+<g transform="translate(60 96)"><g class="specimen"><g class="specimen__pose"><use href="#brace"/></g></g></g>
+<circle class="bubble" cx="84" cy="160" r="2.4" fill="none" stroke="#ECE6D3" stroke-opacity=".5"/><circle class="bubble bubble--2" cx="78" cy="170" r="1.7" fill="none" stroke="#ECE6D3" stroke-opacity=".45"/>
+<rect x="20" y="46" width="6" height="124" rx="3" fill="#ECE6D3" opacity=".16"/><rect x="96" y="58" width="3" height="80" rx="1.5" fill="#ECE6D3" opacity=".1"/></g>
+<path class="crack" d="M78 40 L70 64 L80 74 L68 104 L76 118" fill="none" stroke="#ECE6D3" stroke-width="1.8" stroke-opacity=".8" stroke-linejoin="round"/>
+<path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><use href="#jar-lid"/>
+<path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0002</span><span class="tag__tool">quote</span><span class="tag__flag">ABNORMAL</span></span></div></div>
+<div class="words"><p class="k">The jar</p><h2 class="h">Sealed inside the <span class="hl--g">agent.</span></h2>
+<p class="lede">Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks seal every call as one line: input and response text, byte for byte, redacted on write.</p></div>
+<div class="term" data-exhibit><div class="term__bar"><i></i><i></i><i></i><span>SPC-0002 · one jar line, excerpt (7 of 14 fields)</span></div><pre><span class="dim">{</span> <span class="key">"id"</span>: <span class="val">&quot;SPC-0002&quot;</span>,
+  <span class="key">"session_id"</span>: <span class="val">&quot;sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8&quot;</span>,
+  <span class="key">"tool"</span>: <span class="val">&quot;quote&quot;</span>,
+  <span class="key">"input"</span>: <span class="val">{&quot;room_id&quot;:&quot;r-04&quot;,&quot;nights&quot;:2}</span>,
+  <span class="key">"response_text"</span>: <span class="val">&quot;{\&quot;room_id\&quot;:\&quot;r-04\&quot;,\&quot;nights\&quot;:2,\&quot;nightly\&quot;:212.50,<span class="hot">\&quot;total\&quot;:425.00</span>,\&quot;currency\&quot;:\&quot;USD\&quot;}&quot;</span>,
+  <span class="key">"duration_ms"</span>: <span class="val">185</span>,
+  <span class="key">"redacted"</span>: <span class="val">[]</span> <span class="dim">}</span></pre></div>
+<div class="stat-row" style="position:absolute;left:420px;bottom:0"><span class="statc">hook p50 <b>465 ms</b> before</span><span class="statc"><b>474 ms</b> after</span></div>
+</div>
+<footer class="slide__foot"><span><code>jars/sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8.jsonl</code> · <code>evidence/bench/hook.md</code> (30 fresh npx processes each, one laptop)</span><span class="pg">03 / 10</span></footer>
+<aside class="speaker-notes">This is the actual line the capture hook wrote for the quote call: the input, and the server's response text byte for byte, including total 425.00 with both decimals. Nothing sits between the agent and the server; the hooks run inside Kiro.</aside>
+</section>
+<section class="slide s-storm" data-n="4" aria-roledescription="slide" aria-label="4 of 10: The cabinet, live">
+<div class="slide__in">
+
+<div class="side"><p class="k">The cabinet, live</p><h2 class="h">One switch. Five <span class="hl">red jars.</span></h2>
+<p class="lede">Same shelf, same ten jars. Only the server changes.</p>
+<div class="verdicts"><p class="vline"><b>HOLD v2</b>5 preserved · 4 rattled · 1 cracked</p><p class="vline ship"><b>SHIP v2.1</b>10 preserved</p></div></div>
+<div class="shots" data-exhibit>
+<div class="shot"><p class="shot__v r">v2<small>HOLD</small></p><div class="browser"><div class="browser__bar"><i></i><i></i><i></i><span>specimen.edycu.dev · server v2</span></div><img src="/static/img/cabinet-v2-hold.webp" width="2220" height="772" alt="The live cabinet after its in-browser replay of v2: verdict plate HOLD v2, 5 preserved, 4 rattled, 1 cracked; rack A shows SPC-0002 quote and SPC-0010 search_rooms flooded red with ABNORMAL tags."></div></div>
+<div class="shot"><p class="shot__v g">v2.1<small>SHIP</small></p><div class="browser"><div class="browser__bar"><i></i><i></i><i></i><span>specimen.edycu.dev · server v2.1</span></div><img src="/static/img/cabinet-v21-ship.webp" width="2220" height="772" alt="The live cabinet after its in-browser replay of v2.1: verdict plate SHIP v2.1, 10 preserved, 0 rattled, 0 cracked; every jar on rack A glows green."></div></div>
+</div>
+</div>
+<footer class="slide__foot"><span>Screenshots of <code>specimen.edycu.dev</code>, captured 2026-11-26 (WIB), cropped to the header and rack A · the cabinet replays the jars in the browser</span><span class="pg">04 / 10</span></footer>
+<aside class="speaker-notes">These are screenshots of the live cabinet, not mockups. It replays the committed jars in the browser: v2 holds with five red jars, and after Kiro's fix v2.1 ships with all ten preserved.</aside>
+</section>
+<section class="slide s-notebook" data-n="5" aria-roledescription="slide" aria-label="5 of 10: The lab notebook">
+<div class="slide__in">
+
+<p class="k">The lab notebook</p>
+<h2 class="h">It names <span class="hl">what broke.</span></h2>
+<div class="book">
+<p class="book__head" data-exhibit>SPC-0002 · quote · replayed against hollow-inn v2</p>
+<p class="book__hero" data-exhibit><span>/total</span><s>425.00</s><span>→ /total_cents</span><span class="now">42500</span><span class="x100">×100</span></p>
+<p class="book__note">suspected rename from /total ×100</p>
+<div class="book__rows" data-exhibit><p><span class="f">ABNORMAL</span>SPC-0010 · search_rooms · /rooms 7 → 5 · /rooms/r-08, /rooms/r-09 removed</p><p><span class="f c">CRACKED</span>SPC-0009 · cancel_booking · tool not in tools/list</p></div>
+<span class="crackc" aria-hidden="true"><svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#0A0D09" stroke-width="3" stroke-linejoin="round"/><path d="M120 6 L92 22 L98 34 L70 46 L76 60 L48 72 L52 90" fill="none" stroke="#ECE6D3" stroke-opacity="0.35" stroke-width="1" stroke-linejoin="round" transform="translate(1 1)"/><path d="M92 22 L80 14 M70 46 L58 40" fill="none" stroke="#0A0D09" stroke-width="2"/></svg></span>
+</div>
+</div>
+<footer class="slide__foot"><span><code>replays/npx-tsx-servers-hollow-inn-src-main.ts-v2-2026-11-25T12-38-40.763Z.json</code> · the CLI prints the same note in <code>evidence/replay/racks-vs-v2.txt</code></span><span class="pg">05 / 10</span></footer>
+<aside class="speaker-notes">The replay does not just say different. It reads the jarred value 425.00 next to the new 42500 and names a likely rename with a unit change, times one hundred. That sentence is what the bugfix spec is written from.</aside>
+</section>
+<section class="slide s-cons" data-n="6" aria-roledescription="slide" aria-label="6 of 10: The consequence">
+<div class="slide__in">
+
+<p class="k">The consequence</p>
+<h2 class="h">The client breaks. The agent <span class="hl--g">copes.</span></h2>
+<div class="ledger" data-exhibit>
+<div class="lrow ok"><b>v1</b><ul><li>rooms offered: 9 rooms</li><li>charge for r-04, 2 nights: USD 425.00</li><li>cancel it: cancelled</li></ul></div>
+<div class="lrow bad"><b>v2</b><ul><li>rooms offered: 5 rooms (r-01, r-02, r-03, r-04, r-05)</li><li>charge for r-04, 2 nights: THREW TypeError: Cannot read properties of undefined (reading 'toFixed')</li><li>cancel it: THREW Error: MCP error -32602: Tool cancel_booking not found</li></ul></div>
+<div class="lrow ok"><b>v2.1</b><ul><li>every line matches v1: 9 rooms · USD 425.00 · cancelled</li></ul></div>
+</div>
+<div class="agent"><p class="k k--plain">The Kiro agent, under v2</p><p class="agent__n">$425.00</p><p>Its own answer did not change.</p><p class="muted">Likely reason: v2's tool description names <code>total_cents</code>. No ablation was run.</p></div>
+</div>
+<footer class="slide__foot"><span><code>evidence/consequence-v2/consumer.md</code> (a 56-line client written for v1, no tool descriptions to read) · <code>evidence/consequence-v2/README.md</code></span><span class="pg">06 / 10</span></footer>
+<aside class="speaker-notes">We checked whether a red jar matters. Code written against v1 throws on the missing total and loses rooms and the cancel call. The Kiro agent itself still answered 425 dollars, most likely because v2's tool description told it about total_cents. We say both.</aside>
+</section>
+<section class="slide s-loop" data-n="7" aria-roledescription="slide" aria-label="7 of 10: The loop">
+<div class="slide__in">
+
+<p class="k">The loop</p>
+<h2 class="h">Red jar in. <span class="hl--g">Kiro fix out.</span></h2>
+<div class="flow">
+<div class="stn stn--tag"><p class="stn__k">Rattled under v2</p><div class="bigtag" data-exhibit><b>SPC-0002 · A2</b><span>quote</span><i>ABNORMAL</i></div></div>
+<div class="sut" aria-hidden="true"><svg viewBox="0 0 70 24" width="70" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q35 14.5 66 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="66.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
+<div class="stn"><p class="stn__k">Filed by Kiro's curator</p><code data-exhibit>.kiro/specs/quote-total-total-cents/bugfix.md</code><p>Captured call as the repro.</p><span class="pass">check-spec PASS</span></div>
+<div class="sut" aria-hidden="true"><svg viewBox="0 0 70 24" width="70" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q35 14.5 66 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="66.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
+<div class="stn"><p class="stn__k">Fixed by Kiro</p><p>Bug Fix workflow: design and tasks</p><code data-exhibit>prompts/turn-27.md</code><p>Tasks executed into <code>v2_1.ts</code></p><code data-exhibit>prompts/turn-28.md</code></div>
+<div class="sut" aria-hidden="true"><svg viewBox="0 0 70 24" width="70" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12 Q35 14.5 66 12" fill="none" stroke="#7A3B31" stroke-width="2.6" stroke-linecap="round"/><g stroke="#D9C49A" stroke-width="2.4" stroke-linecap="round"><line x1="11.2" y1="4.5" x2="8.8" y2="19.5"/><line x1="21.3" y1="4.5" x2="23.7" y2="19.5"/><line x1="36.2" y1="4.5" x2="33.8" y2="19.5"/><line x1="46.3" y1="4.5" x2="48.7" y2="19.5"/><line x1="61.2" y1="4.5" x2="58.8" y2="19.5"/></g><g fill="#0A0D09"><circle cx="11.2" cy="4.5" r="1.3"/><circle cx="8.8" cy="19.5" r="1.3"/><circle cx="21.3" cy="4.5" r="1.3"/><circle cx="23.7" cy="19.5" r="1.3"/><circle cx="36.2" cy="4.5" r="1.3"/><circle cx="33.8" cy="19.5" r="1.3"/><circle cx="46.3" cy="4.5" r="1.3"/><circle cx="48.7" cy="19.5" r="1.3"/><circle cx="61.2" cy="4.5" r="1.3"/><circle cx="58.8" cy="19.5" r="1.3"/></g><circle cx="3.5" cy="12" r="3.5" fill="#8C948A"/><circle cx="66.5" cy="12" r="3.5" fill="#8C948A"/></svg></div>
+<div class="stn stn--ship"><p class="stn__k">Replayed</p><p class="big">SHIP v2.1<small>10 of 10 preserved</small></p></div>
+</div>
+</div>
+<footer class="slide__foot"><span>The CLI writes the repro block and the diff; Kiro writes the prose · <code>evidence/slice/02-bugfix-to-v2.1.md</code> · three later Kiro execution turns were cut by our own timeout; we ran the remaining acceptance steps outside Kiro (<code>prompts/README.md</code>)</span><span class="pg">07 / 10</span></footer>
+<aside class="speaker-notes">specimen file hands the red jar to a Kiro curator agent, which writes a bugfix spec with the captured call as its repro; check-spec verifies it. Kiro's Bug Fix workflow designs the fix and executes it into v2_1.ts. The same loop ran for the other two breaks.</aside>
+</section>
+<section class="slide s-gate" data-n="8" aria-roledescription="slide" aria-label="8 of 10: The gate">
+<div class="slide__in">
+
+<p class="k">The gate</p>
+<h2 class="h">Kiro sends the agent <span class="hl">back.</span></h2>
+<div class="term" data-exhibit><div class="term__bar"><i></i><i></i><i></i><span>Stop hook output · eval E2 · server v2, nothing filed</span></div><pre>{&quot;decision&quot;:&quot;block&quot;,&quot;reason&quot;:&quot;jars rattled or cracked: SPC-0002, SPC-0006, SPC-0007, SPC-0009, SPC-0010. Keep the old contract so the jars replay calm. Or run `specimen file &lt;id&gt;` for each jar to file a bugfix spec.&quot;}</pre></div>
+<ul class="evals">
+<li class="ev"><b>E1</b><span>v1, own jars → <em class="alw">allow</em></span></li>
+<li class="ev"><b>E2</b><span>v2, nothing filed → <em class="blk">block</em>, all 5 red jars named</span></li>
+<li class="ev"><b>E3</b><span>quote spec filed → <em class="blk">block</em>: SPC-0009, SPC-0010</span></li>
+<li class="ev"><b>cap</b><span>4th stop → <em class="alw">allow</em>, logged to <code>unresolved.md</code></span></li>
+</ul>
+</div>
+<footer class="slide__foot"><span>Scripted evals through the real hooks, scratch copy, 2026-11-25T14:13:55Z (<code>evidence/stop-gate/eval.md</code>) · at most 3 blocks a session, fails open on any error or timeout · the committed hook targets v2.1, so it allows every stop</span><span class="pg">08 / 10</span></footer>
+<aside class="speaker-notes">The Stop hook replays when a turn changed the server, and while a red jar has no filed spec it returns block with the jar ids as the reason, so the agent goes back to work. It gives up after three blocks and never blocks on its own errors.</aside>
+</section>
+<section class="slide s-kiro" data-n="9" aria-roledescription="slide" aria-label="9 of 10: Built with Kiro">
+<div class="slide__in">
+
+<h2 class="h" style="margin-top:0">Stitched together <span class="hl--g">by Kiro.</span></h2>
+<ul class="inv">
+<li class="g"><b>49</b><span>numbered prompts, verbatim</span><code data-exhibit>prompts/</code></li>
+<li><b>7</b><span>hooks</span><code data-exhibit>.kiro/hooks/</code></li>
+<li><b>3</b><span>feature specs</span><code data-exhibit>cabinet-ui · jar-capture · replay-engine</code></li>
+<li><b>3</b><span>bugfix specs</span><code data-exhibit>.kiro/specs/*/bugfix.md</code></li>
+<li><b>4</b><span>steering files</span><code data-exhibit>.kiro/steering/</code></li>
+<li><b>1</b><span>curator agent</span><code data-exhibit>.kiro/agents/specimen-curator.json</code></li>
+<li class="wide"><b>1</b><span>Power: the workflow as one skill</span><code data-exhibit>power/specimen/</code></li>
+</ul>
+<p class="not">Not Kiro: demo server v1 and v2, harnesses and glue (<code>claude-direct:</code>), docs, the landing, this deck.</p>
+</div>
+<footer class="slide__foot"><span><code>prompts/README.md</code> lists the exceptions and each prompt's measured credits · the curator runs with no blanket trust, writes denied outside <code>.kiro/specs/</code> · the Power was written by Kiro (turn 49) and has not been imported in the Kiro IDE</span><span class="pg">09 / 10</span></footer>
+<aside class="speaker-notes">Kiro is the builder. Feature specs went requirements, Analyze Requirements, design, tasks, and Kiro executed them. Every prompt is in the repo, numbered, with its measured credit cost. What Kiro did not write is listed just as plainly.</aside>
+</section>
+<section class="slide s-end" data-n="10" aria-roledescription="slide" aria-label="10 of 10: Try it">
+<div class="slide__in">
+
+<h2 class="h" style="margin-top:0">Throw the switch <span class="hl">yourself.</span></h2>
+<div class="cols">
+<div class="left"><div class="rc"><div><b>1,082</b><span>tests passing in 121 files</span></div></div>
+<ul class="lims"><li class="lim">Ten jars from two racks, five of six hollow-inn tools. &quot;SHIP&quot; means <em>replay clean on the recorded set</em>, nothing more.<cite data-exhibit>README · Honest limits, 2</cite></li><li class="lim">No outside user has run it yet.<cite data-exhibit>README · Honest limits, 6</cite></li></ul></div>
+<div class="qr"><div class="qr__box" role="img" aria-label="QR code for https://specimen.edycu.dev/"><svg viewBox="0 0 33 33" class="segno"><path fill="#ece6d3" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#10150f" d="M2 2.5h7m2 0h1m4 0h1m1 0h1m1 0h1m3 0h7m-29 1h1m5 0h1m1 0h1m2 0h3m1 0h1m1 0h2m3 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m2 0h3m4 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m6 0h2m1 0h2m1 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m1 0h5m3 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h3m1 0h1m1 0h3m2 0h1m-20 1h3m1 0h2m3 0h2m1 0h2m4 0h1m6 0h2m-25 1h3m2 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m2 0h1m-29 1h1m5 0h1m3 0h1m3 0h1m5 0h1m1 0h1m2 0h3m-26 1h2m4 0h1m1 0h3m1 0h2m2 0h1m1 0h1m2 0h1m4 0h1m-28 1h2m1 0h3m1 0h1m3 0h2m2 0h2m2 0h2m1 0h1m2 0h3m-27 1h4m1 0h2m1 0h1m3 0h2m3 0h1m2 0h2m1 0h2m1 0h1m-29 1h2m2 0h4m2 0h1m2 0h2m2 0h5m1 0h3m1 0h2m-29 1h3m4 0h4m1 0h1m2 0h5m1 0h2m1 0h2m1 0h2m-26 1h2m1 0h2m2 0h2m3 0h4m2 0h1m2 0h2m1 0h2m-27 1h2m1 0h1m2 0h1m7 0h2m2 0h1m2 0h1m-24 1h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m1 0h2m-22 1h1m1 0h2m4 0h1m6 0h2m2 0h3m1 0h4m-28 1h1m1 0h1m1 0h2m4 0h1m2 0h1m1 0h9m1 0h1m-19 1h6m2 0h1m1 0h3m3 0h2m1 0h2m-29 1h7m3 0h1m1 0h3m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m-27 1h1m5 0h1m1 0h1m1 0h1m1 0h3m3 0h1m1 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m2 0h1m2 0h1m1 0h7m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h2m4 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h7m1 0h1m1 0h1m2 0h1m4 0h1m-29 1h1m5 0h1m1 0h5m3 0h1m3 0h1m3 0h2m1 0h1m-28 1h7m2 0h1m2 0h1m2 0h1m2 0h3m2 0h1m3 0h1"/></svg></div><a href="/">specimen.edycu.dev</a></div>
+</div>
+</div>
+<footer class="slide__foot"><span><code>evidence/tests.txt</code> · field shelf: <code>server-memory</code> 1.0.0 → 2.2.1, HOLD · 3 preserved · 2 unsealed (<code>evidence/field/server-memory.md</code>) · landing: <code>/landing/</code></span><span class="pg">10 / 10</span></footer>
+<aside class="speaker-notes">The cabinet is live at specimen.edycu.dev and replays in your browser. Every number in this deck is in the repo. And here is what it does not prove: SHIP means clean on ten recorded calls, and no outside user has run it yet.</aside>
+</section>
+</div></main>
+<div class="notes-panel" aria-live="polite"></div>
+<nav class="nav" aria-label="Deck">
+<a href="/landing/">← Landing</a><a href="/">Open the cabinet</a><span class="repo-text" data-repo="https://github.com/edycutjong/specimen" data-repo-label="Source on GitHub"></span>
+<span class="sp"></span><span class="ver">v1 · 2026-11-26 · from eee1ccd</span>
+<button type="button" data-go="prev" aria-label="Previous slide">←</button><button type="button" data-go="next" aria-label="Next slide">→</button>
+<span class="count" aria-live="polite">01 / 10</span>
+</nav>
+<script>
+/* SPECIMEN JAR deck — behaviour. Inlined by deck.mjs. No dependencies.
+   ←/→/Space/PageUp/PageDown move · Home/End · Esc overview · P presenter notes · C contrast debug. */
+(() => {
+  const root = document.documentElement, body = document.body;
+  const stage = document.getElementById("stage");
+  const slides = [...stage.querySelectorAll(".slide")];
+  const count = document.querySelector(".nav .count");
+  const panel = document.querySelector(".notes-panel");
+  const N = slides.length;
+  let i = 0, overview = false;
+
+  // scale from the layout viewport (clientWidth/Height), never innerWidth: a 1920 px stage makes phones zoom out
+  function fit() {
+    const nav = document.querySelector(".nav").offsetHeight;
+    const notes = body.classList.contains("presenting") ? panel.offsetHeight : 0;
+    const W = root.clientWidth, H = root.clientHeight - nav - notes;
+    const s = Math.max(0.05, Math.min(W / 1920, H / 1080));
+    stage.style.setProperty("--s", String(s));
+    if (overview) layoutOverview();
+  }
+
+  function show(n, push = true) {
+    i = Math.max(0, Math.min(N - 1, n));
+    slides.forEach((s, k) => { s.classList.toggle("is-on", k === i); s.setAttribute("aria-hidden", String(k !== i)); s.inert = k !== i && !overview; });
+    count.textContent = `${String(i + 1).padStart(2, "0")} / ${N}`;
+    const notes = slides[i].querySelector(".speaker-notes");
+    panel.textContent = notes ? notes.textContent : "";
+    if (push) history.replaceState(null, "", `#${i + 1}`);
+  }
+
+  function layoutOverview() {
+    const sc = 0.235, gap = 18, cols = 4, w = 1920 * sc, h = 1080 * sc;
+    const totalW = cols * w + (cols - 1) * gap, rows = Math.ceil(N / cols), totalH = rows * h + (rows - 1) * gap;
+    const x0 = (1920 - totalW) / 2, y0 = (1080 - totalH) / 2;
+    slides.forEach((s, k) => {
+      s.style.transform = `translate(${x0 + (k % cols) * (w + gap)}px, ${y0 + Math.floor(k / cols) * (h + gap)}px) scale(${sc})`;
+      s.inert = true;
+    });
+  }
+  function setOverview(on) {
+    overview = on; body.classList.toggle("overview", on);
+    if (on) layoutOverview(); else { slides.forEach((s) => (s.style.transform = "")); show(i); }
+  }
+  slides.forEach((s, k) => s.addEventListener("click", () => { if (overview) { i = k; setOverview(false); } }));
+
+  addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || (k === " " && !e.shiftKey)) { e.preventDefault(); if (!overview) show(i + 1); }
+    else if (k === "ArrowLeft" || k === "PageUp" || (k === " " && e.shiftKey)) { e.preventDefault(); if (!overview) show(i - 1); }
+    else if (k === "Home") show(0);
+    else if (k === "End") show(N - 1);
+    else if (k === "Escape") setOverview(!overview);
+    else if (k === "p" || k === "P") { body.classList.toggle("presenting"); fit(); }
+    else if (k === "c" || k === "C") body.classList.toggle("debug-contrast");
+  });
+  document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => show(i + (b.dataset.go === "next" ? 1 : -1))));
+
+  // swipe on touch screens
+  let x0 = null;
+  addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); x0 = null; }, { passive: true });
+
+  // presenter: hide the cursor after 2 s idle
+  let idle = 0;
+  addEventListener("mousemove", () => { body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => body.classList.add("idle"), 2000); });
+
+  // the same VITE_REPO_PUBLIC switch as the cabinet and the landing
+  fetch("/static/repo.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => {
+    if (!j || !j.public) return;
+    document.querySelectorAll("[data-repo]").forEach((el) => {
+      const a = document.createElement("a"); a.href = el.dataset.repo; a.rel = "noopener"; a.textContent = el.dataset.repoLabel; el.replaceWith(a);
+    });
+  }).catch(() => {});
+
+  addEventListener("resize", fit);
+  addEventListener("hashchange", () => { const n = parseInt(location.hash.slice(1), 10); if (n) show(n - 1, false); });
+  const start = parseInt(location.hash.slice(1), 10);
+  fit(); show(Number.isFinite(start) && start > 0 ? start - 1 : 0, false);
+})();
+
+</script>
+</body>
+</html>
