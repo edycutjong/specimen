@@ -59,7 +59,7 @@ npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"
 
 The CLI wrote each spec's repro block and diff table, Kiro's `specimen-curator` agent wrote the prose, Kiro's Bug Fix workflow wrote the design and tasks, and Kiro
 executed them into `servers/hollow-inn/src/v2_1.ts` — `quote` first (`evidence/slice/`), then `search_rooms` and `cancel_booking`
-(`.kiro/specs/*/`, prompts 42–45; the last execution turn was cut during its final acceptance task, which Claude Code (outside Kiro) ran itself — see `prompts/README.md`).
+(`.kiro/specs/*/`, prompts 42–45; turn 43 stopped by itself at its final acceptance task and turn 45 was cut by our timeout during its final acceptance task; Claude Code (outside Kiro) ran both remaining acceptance steps — see `prompts/README.md`).
 Every v2 break now replays preserved on v2.1: `evidence/replay/racks-vs-v2.1-ship.txt` is `SHIP · replay clean on the recorded set · 10 jars compared · 5 of 6 tools · not recorded: get_room`,
 exit 0. Before filing, the same replay read HOLD with SPC-0010 and SPC-0009 `not filed` (`racks-vs-v2.1.txt`); after filing and before the fixes it read
 `HOLD · covered` with exit 3 (`racks-vs-v2.1-after-filing-all.txt`). `specimen replay` also writes a new file under `replays/` each run.
@@ -104,3 +104,5 @@ SCENARIO=break TRUST_SHELL=1 scripts/stop-gate-live.sh evidence/stop-gate/live-b
 `evidence/stop-gate/eval.md` shows the exact JSON the hook prints. In the live run the agent edited `servers/`, said DONE, was sent back with
 `jars rattled or cracked: SPC-0002, SPC-0006, SPC-0007, SPC-0009, SPC-0010 …`, and ran `specimen file` for the red jars rather than change the server; with the gate off it stopped at DONE. One run per variant: that is
 an observation, not a rate.
+
+How the gate rows were produced: they were generated before commit 97403f7 (the rule that only a red jar `specimen file` can file may block; its unit tests were re-run at HEAD) and ran in scratch copies against v1 or v2, because the committed hook replays v2.1, which is SHIP. E1–E3 pass `--server` to `specimen hook stop` directly (`scripts/stop-gate-eval.sh:26`); the live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`), and each live run's header records its hook command. `evidence/stop-gate/eval.md` names the server in its E0, first E2 and E1 rows, and the rows after them continue those sessions (E3 also replays v2, `scripts/stop-gate-eval.sh:47`).

@@ -22,15 +22,19 @@
 
 ---
 
-Built for Kiroween 2026 (Frankenstein category). **What is shown:** a changed demo server (v2) breaks 5 of the 10 jars recorded from real Kiro sessions while an input-schema diff sees 2 changes; three bugfix specs are filed for the red jars, Kiro designs and executes the fixes, and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load.
+**For anyone who maintains an MCP server that agents call.** Change the server and its own tests stay green, while code that reads the old response breaks. SPECIMEN JAR seals the calls a Kiro agent really made (Kiro hooks, inside the agent), replays them against the new server, and files each call that no longer matches as a Kiro bugfix spec.
+
+**What is shown** (Kiroween 2026, Frankenstein category): our demo server's v2, with breaks we planted, turns 5 of the 10 jars recorded from real Kiro sessions red while an input-schema diff sees 2 changes; three bugfix specs are filed for the red jars, Kiro designs the fixes and executes them (we ran the final acceptance of two), and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load; capturing your own calls takes `specimen init` and the Kiro hooks in your own repository.
 
 ## 💡 The Problem & Solution
 
 ### The Problem
 
-You change an MCP server: a field is renamed, a default moves, a tool is renamed. Your tests are green. The agents that call
-it find out in production. An input-schema diff of `tools/list` sees only part of it: in our demo it reports 2 changes for
-the v2 server while 5 of the 10 recorded calls come back different.
+You change an MCP server: a field is renamed, a default moves, a tool is renamed. Its tests are updated with it and stay
+green. The callers find out in production. In our demo, a 56-line client written for v1 throws on the missing `total`, is
+offered 5 of 9 rooms and cannot cancel; the Kiro agent itself still answered `$425.00`, most likely because v2's tool
+description names `total_cents` (consequence rows below). An input-schema diff of `tools/list` sees only part of it: it
+reports 2 changes for the v2 server while 5 of the 10 recorded calls come back different.
 
 ### The Solution
 
@@ -47,9 +51,8 @@ the v2 server while 5 of the 10 recorded calls come back different.
    while a red jar has no filed bugfix spec (an operational crack — a timeout, a server that will not start — is logged, never blocked on).
    It blocks at most 3 times per session and fails open on any error or timeout.
    The committed hook (`.kiro/hooks/specimen-jar-stop.json`) replays the current server, hollow-inn v2.1, which is SHIP, so
-   in this repository as committed it allows every stop until someone changes v2.1. The gate rows below were generated before commit 97403f7 (the fileable-only rule; its unit tests were re-run at HEAD) and ran in scratch
-   copies against v1 or v2: E1–E3 pass `--server` to `specimen hook stop` directly (`scripts/stop-gate-eval.sh:26`), the
-   live runs rewrite the hook's `--server` (`scripts/stop-gate-live.sh:26`); each live run's header records its hook command; `evidence/stop-gate/eval.md` names the server in its E0, first E2 and E1 rows, and the rows after them continue those sessions (E3 also replays v2, `scripts/stop-gate-eval.sh:47`).
+   in this repository as committed it allows every stop until someone changes v2.1; the blocks in the table below were
+   measured in scratch copies against v1 or v2 (how each row was produced: [`DEMO.md` §7](DEMO.md#7-the-stop-gate)).
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -82,7 +85,8 @@ Kiro is the builder, and every prompt that built this repository is in [`prompts
 - **Bug Fix specs** — three, one per v2 break, filed by the curator from the CLI's repro block; Kiro wrote the design and tasks and executed them
   into `servers/hollow-inn/src/v2_1.ts`.
 - **What Kiro did not write** — the hollow-inn demo server v1 and v2 (the planted breaks are ours), test harnesses and glue
-  (commits starting `claude-direct:`: glue, fixes found while reviewing Kiro's output, the eval and probe scripts, the readiness script, the docs, and the landing page and deck in `site/`). The bugfix workflow ran headless: no IDE approval step was taken. Three Kiro execution turns (45, 46, 47)
+  (commits starting `claude-direct:`: glue, fixes found while reviewing Kiro's output, the eval and probe scripts, the readiness script, the docs, and the landing page and deck in `site/`). The bugfix workflow ran headless: no IDE approval step was taken. Turn 43 stopped by itself at its final acceptance task
+  (headless, it could not ask whether to update the cabinet tests that pin the old counts) and three execution turns (45, 46, 47)
   were cut by our own timeout; the remaining acceptance steps were run by us, outside Kiro, and are labelled so in `prompts/README.md`.
   Credits, friction and the measured rate: [`docs/DX-REPORT.md`](docs/DX-REPORT.md).
 
@@ -92,7 +96,7 @@ Kiro is the builder, and every prompt that built this repository is in [`prompts
 |---|---|---|
 | hollow-inn v1, self-replay | SHIP · 10 of 10 jars preserved | `evidence/bench/detect.md` |
 | hollow-inn v2 (three author-made breaks) | HOLD · 5 preserved · 4 rattled · 1 cracked | `evidence/bench/detect.md`, `evidence/replay/racks-vs-v2.txt` |
-| input-schema diff of the same v2 change | 2 changes (removed `cancel_booking`, added `booking_cancel`); the `quote` rename and the `search_rooms` default are invisible to it | `evidence/bench/detect.md` |
+| input-schema diff of the same v2 change | 2 changes (removed `cancel_booking`, added `booking_cancel`); the `quote` rename and the `search_rooms` default are invisible to it: neither touches `inputSchema` (the default is applied in the handler, `limit ?? 20` → `limit ?? 5`); both tools' description text did change (`default 20` → `default 5`; `total` → `total_cents`), which this diff does not compare — prose that says a value changed, not which recorded calls now get a different answer | `evidence/bench/detect.md` |
 | `specimen hook pre` / `post` latency (30 fresh `npx` processes each, CLI wall-clock excluding Kiro's own hook launch, this laptop) | pre p50 465 ms · p95 628 ms; post p50 474 ms · p95 668 ms (the stop hook's budget is 30 s) | `evidence/bench/hook.md` |
 | `specimen replay` of all 10 jars (10 cold runs per server, this laptop) | v1 p50 2254 ms; v2.1 p50 2365 ms (p95 = slowest of 10: 2780 / 2452 ms) | `evidence/bench/replay.md` |
 | hollow-inn v2.1 (fixed by Kiro from three filed bugfix specs) | SHIP · 10 of 10 preserved · 5 of 6 tools covered (`get_room` was never called by the agent). 3 of the 10 are `quote` jars that keep `total` and also carry the new `total_cents` field, which the default mode counts as a compatible addition; with `--strict` the same replay is HOLD · 3 rattled | `evidence/replay/racks-vs-v2.1-ship.txt`, `evidence/replay/racks-vs-v2.1-strict.txt` |
