@@ -54,3 +54,4 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 40 | cabinet first-screen regression fix after turn-39: one-line tagline at 1440, CountsPair grid, shelf padding (model claude-haiku-5.5) | 1.34 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.
+| 41 | wrote `specimen init` (hooks, mcp.json merge, replay.json allow list from `tools/list`, .gitignore, engine check) + 32 tests | 0.91 |

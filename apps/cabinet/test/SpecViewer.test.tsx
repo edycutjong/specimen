@@ -65,8 +65,9 @@ describe("SpecViewer filing status (Requirements 12.4, 12.5, 12.7, 12.8)", () =>
     expect(screen.getByText("not red in this replay")).toBeTruthy();
   });
 
-  it("shows 'not filed' for SPC-0010, which is red and cited by no spec", () => {
-    render(<SpecViewer jar={jarOf("SPC-0010", "v2", v2)} specs={SPECS} result={v2} />);
+  it("shows 'not filed' for SPC-0010 when its spec is withheld: red and cited by no spec", () => {
+    const withoutSpec = SPECS.filter((spec) => !spec.text.includes("SPC-0010"));
+    render(<SpecViewer jar={jarOf("SPC-0010", "v2", v2)} specs={withoutSpec} result={v2} />);
 
     expect(screen.getByText("not filed")).toBeTruthy();
     expect(screen.queryByText("check-spec PASS")).toBeNull();

@@ -50,9 +50,8 @@ describe("VerdictPlate with real replays", () => {
     expect(screen.getByText("v2")).toBeTruthy();
     expect(screen.getByText(countsLine("5 preserved · 4 rattled · 1 cracked"))).toBeTruthy();
     expect(screen.getByText(coverageString(replays.v2.coverage))).toBeTruthy();
-    expect(screen.getByText("5 red · 3 covered by 1 filed Kiro bugfix spec")).toBeTruthy();
-    expect(screen.queryByText(/all red jars covered by/)).toBeNull();
-    expect(screen.getByText(replays.v2.reason)).toBeTruthy();
+    expect(screen.getByText("5 red · all red jars covered by 3 filed Kiro bugfix specs")).toBeTruthy();
+        expect(screen.getByText(replays.v2.reason)).toBeTruthy();
     expect(screen.queryByText(/replay clean on the recorded set/)).toBeNull();
   });
 
@@ -72,7 +71,7 @@ describe("VerdictPlate with real replays", () => {
 
     expect(screen.getByText("HOLD")).toBeTruthy();
     expect(screen.getByText(countsLine("8 preserved · 1 rattled · 1 cracked"))).toBeTruthy();
-    expect(screen.getByText("2 red · 0 filed as Kiro bugfix specs")).toBeTruthy();
+    expect(screen.getByText("2 red · all red jars covered by 2 filed Kiro bugfix specs")).toBeTruthy();
     expect(screen.getByText(replays["v2.1"].reason)).toBeTruthy();
     expect(screen.queryByText("SHIP")).toBeNull();
   });
