@@ -75,3 +75,34 @@ describe("capture redacts the canonical HTTP header spelling", () => {
     expect(result.responseText).toBe(`{"accessToken": "${MARKER}", "total": 425.00}`);
   });
 });
+
+describe("a string value that is itself JSON with a sensitive key", () => {
+  const compiled = compileRedact(DEFAULT_REDACT_CONFIG);
+  if (!compiled.ok) throw new Error("default redact config does not compile");
+  const c = compiled.value;
+
+  it("is replaced whole in a tool input", () => {
+    const { value, pointers } = redactInput({ body: '{"password":"hunter2","user":"ada"}', note: "plain" }, c);
+    expect(value).toEqual({ body: MARKER, note: "plain" });
+    expect(pointers).toEqual(["/body"]);
+  });
+
+  it("is replaced whole when the key sits in a nested array or in doubly stringified JSON", () => {
+    const inner = JSON.stringify({ items: [{ api_key: "k" }] });
+    const { value } = redactInput({ a: inner, b: JSON.stringify({ wrapped: inner }) }, c);
+    expect(value).toEqual({ a: MARKER, b: MARKER });
+  });
+
+  it("is replaced whole in a JSON response, at the value span only", () => {
+    const text = JSON.stringify({ content: '{"token":"abc"}', total: 425 });
+    const result = redactResponse(text, c);
+    expect(result.responseText).toBe(`{"content":"${MARKER}","total":425}`);
+    expect(result.pointers).toEqual(["/content"]);
+  });
+
+  it("leaves JSON strings with no sensitive key, and malformed ones, alone", () => {
+    const { value, pointers } = redactInput({ a: '{"tokens_used":3}', b: '{"password":', c: "[1,2]" }, c);
+    expect(value).toEqual({ a: '{"tokens_used":3}', b: '{"password":', c: "[1,2]" });
+    expect(pointers).toEqual([]);
+  });
+});

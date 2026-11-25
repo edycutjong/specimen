@@ -114,6 +114,42 @@ function matchesAny(s: string, res: readonly RegExp[]): boolean {
   return false;
 }
 
+/**
+ * True when a string value is itself JSON (an object or array) that holds a sensitive key, at any
+ * depth, including inside further stringified JSON. Such a string is replaced whole: its
+ * characters cannot be spliced without re-serialising what the server wrote.
+ */
+function stringifiedSensitive(s: string, c: Compiled, depth = 0): boolean {
+  if (depth > 8) return false;
+  const t = s.trimStart();
+  if (t[0] !== "{" && t[0] !== "[") return false;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    return false;
+  }
+  return holdsSensitiveKey(parsed, c, depth);
+}
+
+function holdsSensitiveKey(v: unknown, c: Compiled, depth: number): boolean {
+  if (typeof v === "string") return stringifiedSensitive(v, c, depth + 1);
+  if (Array.isArray(v)) return v.some((item) => holdsSensitiveKey(item, c, depth));
+  if (v !== null && typeof v === "object") {
+    return Object.keys(v).some(
+      (key) =>
+        c.keys.has(key) ||
+        holdsSensitiveKey(Object.getOwnPropertyDescriptor(v, key)?.value, c, depth),
+    );
+  }
+  return false;
+}
+
+/** True when a string value must be replaced: a pattern matches it, or it is JSON with a sensitive key. */
+function stringSensitive(s: string, c: Compiled): boolean {
+  return matchesAny(s, c.res) || stringifiedSensitive(s, c);
+}
+
 /** Replaces every non-empty match of every pattern with the marker, one pattern after another. */
 function replaceAll(s: string, res: readonly RegExp[]): string {
   let out = s;
@@ -142,7 +178,7 @@ export function redactInput(input: Json, c: Compiled): { value: Json; pointers: 
 
 function redactInputValue(v: Json, ptr: string, c: Compiled, pointers: string[]): Json {
   if (typeof v === "string") {
-    if (matchesAny(v, c.res)) {
+    if (stringSensitive(v, c)) {
       pointers.push(ptr);
       return MARKER;
     }
@@ -224,7 +260,7 @@ function containsRedaction(value: ScanNode, c: Compiled): boolean {
     case "scalar":
       return false;
     case "string":
-      return matchesAny(value.decoded, c.res);
+      return stringSensitive(value.decoded, c);
     case "array":
       return value.items.some((item) => containsRedaction(item, c));
     case "object":
@@ -245,7 +281,7 @@ function locate(value: ScanNode, ptr: string, c: Compiled, spans: Span[]): void 
     case "scalar":
       return;
     case "string":
-      if (matchesAny(value.decoded, c.res)) {
+      if (stringSensitive(value.decoded, c)) {
         spans.push({ start: value.start, end: value.end, ptr });
       }
       return;
