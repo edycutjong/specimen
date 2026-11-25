@@ -80,8 +80,11 @@ was found in that hour; that is the result. Reproduce: `sh field/server-memory/r
 
 ```sh
 npx specimen init --server-key hollowinn --test-server "npx tsx servers/hollow-inn/src/main.ts v2.1" --watch 'servers/**'
+npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts   # the deployed site, as vercel.json builds it
 npx tsx scripts/check_submission_readiness.ts --allow-pending-video
 ```
+
+(`npm test` rebuilds the cabinet alone, so build the whole site again before the readiness script: it fails on a cabinet-only `apps/cabinet/dist`.)
 
 `specimen init` writes the capture and firewall hooks, `.specimen/replay.json` (replay allow-list pre-filled from `readOnlyHint`) and the ignore rules; a second run
 changes nothing (the stop and turn hook files only when a test server is given). A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
