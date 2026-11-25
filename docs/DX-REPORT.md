@@ -88,3 +88,16 @@ where does headless Kiro stop on its own?
     everything else axe checks is clean at 1440, 375 and 320 px (`label-content-name-mismatch` was real and Kiro fixed it in turns 46–47).
 16. The interaction gate (`hover` byte-diff of the element screenshot, focus-ring check, link status, 375 and 320 px scroll width) first reported the summary in the version notes as dead on hover; the cause was that
     the notes sit inside the closed "Details" fold, whose children have no real box until it is opened. After opening the fold the same element receives the pointer and its hover changes.
+
+## Experiment 4 — the Stop gate, built by Kiro and tried live (day 3, 2026-11-25)
+**Question:** does a `Stop` hook that replays the jars send a real Kiro agent back, and what does the agent do with the reason?
+**Built:** turn 48 (claude-haiku-5.5, 3.30 credits): `specimen hook prompt`, `specimen hook stop`, the pure `decideStop`, 33 tests. Evals E1–E3 and the live probes are scripts in `scripts/` (`stop-gate-eval.sh`, `stop-gate-live.sh`).
+**Measured:** `evidence/stop-gate/` — 4 live headless sessions after the fixes below (gate ON with shell, ON without shell, ON on a turn that edits nothing, OFF), ≈ 3.3 credits, almost all of it the curator sessions the agent started.
+
+## Findings, day 3 (continued)
+17. The gate works on the CLI as S2 predicted: the hook's JSON on STDOUT with exit 0 sent the agent back once; it read the reason and chose the second option in it (file the specs), not the first (keep the contract).
+    Without shell trust the same agent said it could not run `specimen file` and told us what to run; with it, it replayed v2 itself, filed five jars into three specs, retried one that failed `check-spec`, and left `servers/` alone.
+18. **The gate also fired inside the curator's own sessions** (first live run: ≈10 curator sessions each blocked once, about 40 % of the credits of that run). The hook runs for every headless session in the workspace. `specimen file` now starts the curator with `SPECIMEN_GATE=off`, the hook honours it, and the re-run shows one gate file instead of ten.
+19. **A trigger id we got wrong.** Our prompt called the turn-snapshot trigger `PromptSubmit`; Kiro wrote exactly that and every test passed, because the tests copied the same name. The documented id is `UserPromptSubmit` (34 mentions in the Kiro hooks docs, none of `PromptSubmit`). The repository's own hook-schema test listed the right id and failed once `specimen init` wrote the repo's hook files, which is how it was caught. Fixed; the live no-edit run now shows the snapshot hook writing `.specimen/turn.json` and the gate staying silent.
+20. Gate cost per stop: 1.2–2 s wall for ten jars (`evidence/stop-gate/eval.md`), against a 30 s hook timeout; a turn that changes nothing under the watched paths costs 0.3 s.
+21. `specimen init` in our own repository wanted to add `jars/` and `replays/` to `.gitignore` (its default for a user repo); we removed those two lines because this repo commits its racks, and never ran init with `--force`.

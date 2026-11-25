@@ -26,13 +26,15 @@ const TRIGGERS = [
   "PostFileDelete",
 ] as const;
 
-const TASK_TRIGGERS: readonly string[] = ["PreTaskExec", "PostTaskExec"];
+// Triggers that carry no tool name, so they take no matcher.
+const TASK_TRIGGERS: readonly string[] = ["PreTaskExec", "PostTaskExec", "Stop", "UserPromptSubmit"];
 
 const hookSchema = z
   .object({
     name: z.string().min(1),
     trigger: z.enum(TRIGGERS),
     matcher: z.string().min(1).optional(),
+    timeout: z.number().int().positive().optional(),
     action: z
       .object({
         type: z.literal("command"),
@@ -42,7 +44,7 @@ const hookSchema = z
   })
   .strict()
   .refine((hook) => hook.matcher !== undefined || TASK_TRIGGERS.includes(hook.trigger), {
-    message: "matcher is required unless the trigger is PreTaskExec or PostTaskExec",
+    message: "matcher is required unless the trigger is a task, Stop or UserPromptSubmit trigger",
     path: ["matcher"],
   });
 

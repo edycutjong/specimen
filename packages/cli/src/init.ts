@@ -140,14 +140,14 @@ export function stopHookText(testServer: string): string {
   });
 }
 
-/** The PromptSubmit hook that writes the turn snapshot the stop gate compares against. */
+/** The UserPromptSubmit hook that writes the turn snapshot the stop gate compares against. */
 export function turnHookText(): string {
   return jsonText({
     version: "v1",
     hooks: [
       {
         name: "specimen-jar-turn",
-        trigger: "PromptSubmit",
+        trigger: "UserPromptSubmit",
         action: { type: "command", command: "npx --no-install specimen hook prompt" },
       },
     ],

@@ -16,6 +16,8 @@ specimen replay --server "<cmd>"
 replays/<server>-<time>.json ──▶ verdict (SHIP | HOLD, red / filed / covered)
      │                                  ▲
      ▼                                  │ filed ids = jars named by a passing bugfix spec
+Kiro Stop hook ──▶ specimen hook stop ──▶ replay (only if servers/ changed this turn: snapshot by `hook prompt` on UserPromptSubmit)
+     └─ block + reason while a red jar is unfiled (max 3 per session; fails open)
 specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.md ──▶ specimen check-spec
                                           Kiro Bug Fix workflow: design.md, tasks.md ──▶ code change ──▶ replay again
 ```
@@ -24,8 +26,8 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 
 | Path | Role |
 |---|---|
-| `packages/core` (3,900 lines) | Pure logic: no `node:` import anywhere in `packages/core/src`, so the same code bundles for the browser. `jar.ts` (zod jar schema), `pairing.ts` (pre/post pairing), `scan.ts` (strict RFC 8259 scanner so redaction edits raw value spans instead of re-serialising), `redact.ts`, `replay.ts` (the loop), `normalize.ts`, `diff.ts` (RFC 6901 paths, keyed arrays, rename and unit detector), `verdict.ts` (SHIP/HOLD), `firewall.ts`, `spec-check.ts` + `reference.ts` + `bugfix-spec.ts` (bugfix spec validity and the jarred reference), `policy.ts` (`.specimen/replay.json`, volatile policy) |
-| `packages/cli` | The `specimen` command: `hook pre|post|firewall` (stdin JSON in, jar line out, fail-open on bad input), `replay`, `check-spec`, `file`, `init`, `manifest` |
+| `packages/core` (3,900 lines) | Pure logic: no `node:` import anywhere in `packages/core/src`, so the same code bundles for the browser. `jar.ts` (zod jar schema), `pairing.ts` (pre/post pairing), `scan.ts` (strict RFC 8259 scanner so redaction edits raw value spans instead of re-serialising), `redact.ts`, `replay.ts` (the loop), `normalize.ts`, `diff.ts` (RFC 6901 paths, keyed arrays, rename and unit detector), `verdict.ts` (SHIP/HOLD), `stop-gate.ts` (the pure `decideStop`), `firewall.ts`, `spec-check.ts` + `reference.ts` + `bugfix-spec.ts` (bugfix spec validity and the jarred reference), `policy.ts` (`.specimen/replay.json`, volatile policy) |
+| `packages/cli` | The `specimen` command: `hook pre|post|firewall|prompt|stop` (stdin JSON in, jar line / turn snapshot / block decision out, fail-open on bad input), `replay`, `check-spec`, `file`, `init`, `manifest` |
 | `servers/hollow-inn` | The demo MCP server (six tools: `search_rooms`, `get_room`, `quote`, `book`, `list_bookings`, `cancel_booking`). `v1.ts` baseline, `v2.ts` three author-made breaks (`CHANGES.md`), `v2_1.ts` the Kiro-written fix. Money is integer cents, written as a two-decimal literal by `money.ts` |
 | `apps/cabinet` | Vite + React. `browser-replay.ts` runs the real `replay()` and `verdict()` against the real hollow-inn modules over `InMemoryTransport` in the browser; jars, policy files and the committed bugfix specs are imported at build time; it writes nothing and requests no third-party host. Components: shelf of jars, ServerSwitch (v1 / v2 / v2.1), ReplayButton, CountsPair, VerdictPlate, LabReportTable, JarDrawer, SpecViewer, SpoiledTray, GuideStrip |
 | `spikes/` | Day-1 spike harnesses (S1 browser bundle). Evidence, not product code |
@@ -45,10 +47,15 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 - **The cabinet and the CLI share `@specimen/core`.** The cabinet's verdict for each version equals `specimen replay`'s
   (`evidence/bench/detect.md` for the CLI; the cabinet tests pin the same counts).
 
+- **The Stop gate** (`specimen hook stop --server "<cmd>"`, Kiro `Stop` hook, 30 s timeout). It runs only when the watched paths of `.specimen/replay.json` changed since the turn snapshot
+  (`.specimen/turn.json`, written by `specimen hook prompt` on `UserPromptSubmit`; a missing snapshot means "check"). `decideStop` blocks only when a red (rattled or cracked) jar has no
+  passing filed bugfix spec; SHIP, empty, all-skipped, quarantined or spoiled results never block. At most 3 blocks per session (`.specimen/gate-<session>.json`), then it allows the stop and
+  writes `.specimen/unresolved.md`. Any error or timeout allows the stop. `specimen file` starts the curator with `SPECIMEN_GATE=off` so the curator's own turn is not sent back.
+
 ## Hosting
 
 Static output (`apps/cabinet/dist`) on Vercel, `vercel.json` builds `npm run build -w apps/cabinet`; no server is needed on the judge path.
 
 ## Not built
 
-The Agent Stop gate (`specimen hook stop`), the prompt-submit snapshot hook, the Kiro Power and the gate A/B experiment are not in this repository.
+The Kiro Power, a gate A/B beyond one ON and one OFF run, and any IDE measurement of the Stop gate are not in this repository.

@@ -1,9 +1,9 @@
 /**
- * `specimen hook prompt`: the turn snapshot. On a PromptSubmit it writes `.specimen/turn.json`
+ * `specimen hook prompt`: the turn snapshot. On a UserPromptSubmit it writes `.specimen/turn.json`
  * with the HEAD and the watch hash at the start of the turn. The Stop gate compares the hash at
  * the end of the turn with this snapshot to learn whether the server changed during the turn.
  *
- * STDOUT stays empty, because the PromptSubmit output is added to the agent's context. Every
+ * STDOUT stays empty, because the UserPromptSubmit output is added to the agent's context. Every
  * failure goes to the Hook_Log and the hook exits 0.
  */
 import { execFileSync } from "node:child_process";
@@ -134,7 +134,7 @@ export async function runPrompt(readInput: () => Promise<string>): Promise<numbe
 /** The `specimen hook prompt` command. Silent on STDOUT. */
 export function createPromptCommand(): Command {
   return new Command("prompt")
-    .description("PromptSubmit hook: snapshot the server source at the start of a turn")
+    .description("UserPromptSubmit hook: snapshot the server source at the start of a turn")
     .exitOverride()
     .configureOutput({ writeOut: () => {}, writeErr: () => {} })
     .action(async () => {

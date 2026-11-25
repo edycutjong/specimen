@@ -319,7 +319,7 @@ describe("stop gate", () => {
       hooks: [
         {
           name: "specimen-jar-turn",
-          trigger: "PromptSubmit",
+          trigger: "UserPromptSubmit",
           action: { type: "command", command: "npx --no-install specimen hook prompt" },
         },
       ],

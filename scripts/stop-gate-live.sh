@@ -3,6 +3,7 @@
 # (no bugfix spec filed there). The agent is asked to edit servers/; the gate should block once and the agent's next reply shows what it did with the reason.
 # Usage: scripts/stop-gate-live.sh [out.md]                 agent may only read/write files (it cannot run `specimen file`)
 #        TRUST_SHELL=1 scripts/stop-gate-live.sh out.md      agent may also run shell commands in the scratch copy (it can file the spec)
+#        GATE=off TRUST_SHELL=1 scripts/stop-gate-live.sh out.md   the control run: same prompt, no stop or turn hook
 # Costs a few tenths of a Kiro credit per run. The repo itself is never touched.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -21,8 +22,10 @@ for d in quote-total-total-cents search-rooms-rooms-rooms-r-08-rooms-r-09 cancel
 # the gate under test replays against v2; the capture hooks are removed so the probe records nothing
 sed -i.bak 's/hollow-inn\/src\/main.ts v2.1/hollow-inn\/src\/main.ts v2/' .kiro/hooks/specimen-jar-stop.json && rm -f .kiro/hooks/specimen-jar-stop.json.bak
 rm -f .kiro/hooks/specimen-jar-pre.json .kiro/hooks/specimen-jar-post.json
+[ "${GATE:-on}" = "off" ] && rm -f .kiro/hooks/specimen-jar-stop.json .kiro/hooks/specimen-jar-turn.json
 git init -q && git add -A >/dev/null 2>&1 && git -c user.email=eval@example.com -c user.name=eval commit -qm base >/dev/null 2>&1
-PROMPT='Add the single comment line "// gate probe" as the first line of servers/hollow-inn/src/v1.ts, then reply with the word DONE. If a hook sends you back with a reason, read it and say in one sentence what you will do about it, then do it.'
+PROMPT="${PROMPT_OVERRIDE:-}"
+[ -n "$PROMPT" ] || PROMPT='Add the single comment line "// gate probe" as the first line of servers/hollow-inn/src/v1.ts, then reply with the word DONE. If a hook sends you back with a reason, read it and say in one sentence what you will do about it, then do it.'
 START=$(date +%s)
 kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5 --trust-workspace --trust-tools="$TOOLS" "$PROMPT" > "$S/live.log" 2>&1
 RC=$?
@@ -30,13 +33,15 @@ END=$(date +%s)
 {
   echo "# Agent Stop gate — one live headless Kiro session"
   echo
-  echo "Generated $(date -u +%Y-%m-%dT%H:%M:%SZ) by \`scripts/stop-gate-live.sh\`; \`kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5\`, scratch copy, stop hook = \`specimen hook stop --server \"npx tsx servers/hollow-inn/src/main.ts v2\"\` (timeout 30 s), no bugfix spec filed, trusted tools \`$TOOLS\`. exit $RC, $((END-START)) s."
+  echo "Generated $(date -u +%Y-%m-%dT%H:%M:%SZ) by \`scripts/stop-gate-live.sh\`; \`kiro-cli chat --no-interactive --agent-engine v3 --model claude-haiku-5.5\`, scratch copy, gate = ${GATE:-on}; stop hook = \`specimen hook stop --server \"npx tsx servers/hollow-inn/src/main.ts v2\"\` (timeout 30 s), no bugfix spec filed, trusted tools \`$TOOLS\`. exit $RC, $((END-START)) s."
   echo
   echo "Prompt: \`$PROMPT\`"
   echo
   echo '```'
   sed 's/\x1b\[[0-9;]*m//g' "$S/live.log" | tail -60
   echo '```'
+  echo
+  echo "Turn snapshot written by the UserPromptSubmit hook (\`.specimen/turn.json\`): $( [ -f .specimen/turn.json ] && echo yes || echo no )"
   echo
   echo "Gate state after the run (\`.specimen/gate-*.json\`):"
   echo

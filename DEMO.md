@@ -7,7 +7,7 @@ Every number below is printed by the command next to it; the outputs are committ
 
 ```sh
 npm ci
-npm test            # vitest: unit, property (fast-check) and end-to-end suites — 989 tests in 114 files at the last run (evidence/tests.txt)
+npm test            # vitest: unit, property (fast-check) and end-to-end suites — 1023 tests in 117 files at the last run (evidence/tests.txt)
 npm run seed:check  # the hollow-inn fixture still holds the properties the demo depends on
 ```
 
@@ -80,6 +80,18 @@ npx tsx scripts/check_submission_readiness.ts --allow-pending-video
 
 `specimen init` writes the capture and firewall hooks, `.specimen/replay.json` (replay allow-list pre-filled from `readOnlyHint`) and the ignore rules; a second run
 changes nothing. A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
-that hook calls `specimen hook stop`, which is **not built yet** (see "Not built" in `ARCHITECTURE.md`).
+that hook calls `specimen hook stop` (section 7).
 The readiness script checks `.kiro/` and `prompts/` are tracked, no unfinished-text markers, every spec folder complete, every bugfix spec passes `check-spec`, no third-party host in the built
 cabinet and no kitchen file tracked; the demo video URL is the one field allowed to stay `PENDING` until it is uploaded.
+
+## 7. The Stop gate
+
+```sh
+scripts/stop-gate-eval.sh                  # E1–E3 through the real hooks in a scratch copy → evidence/stop-gate/eval.md (no Kiro call)
+TRUST_SHELL=1 scripts/stop-gate-live.sh    # one live headless Kiro session in a scratch copy, gate ON (costs ≈ 3 Kiro credits: the agent files specs)
+GATE=off TRUST_SHELL=1 scripts/stop-gate-live.sh evidence/stop-gate/live-control-off.md   # the same prompt with no gate
+```
+
+`evidence/stop-gate/eval.md` shows the exact JSON the hook prints. In the live run the agent edited `servers/`, said DONE, was sent back with
+`jars rattled or cracked: SPC-0002, SPC-0006, SPC-0007, SPC-0009, SPC-0010 …`, and ran `specimen file` for the red jars rather than change the server; with the gate off it stopped at DONE. One run per variant: that is
+an observation, not a rate.

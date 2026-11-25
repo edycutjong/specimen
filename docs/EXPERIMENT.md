@@ -62,3 +62,14 @@ with the new descriptions loaded adapted, in one run per task.
 - `specimen init` on a scratch workspace with the real hollow-inn v2.1 as the test instance: exit 0, six files written (four hook files, `.specimen/replay.json`, `.gitignore`), second run changes nothing — `evidence/init-smoke.md`.
 
 **Caveat:** hollow-inn's three breaks are author-made, so this shows the loop closes, not how often real server changes are caught. The one public server we replayed (`server-memory` 1.0.0 → 2.2.1) was a null result (`evidence/field/server-memory.md`).
+
+## 5. Gate ON vs OFF (Kiro CLI, N = 1 per arm)
+
+**Question:** with the Stop gate installed, does the agent behave differently on the same prompt?
+
+**Run:** `scripts/stop-gate-live.sh`, scratch copy of this repo with no bugfix spec filed and the server under test at v2; prompt: add a comment line to `servers/hollow-inn/src/v1.ts`, say DONE, and "if a hook sends you back with a reason, say what you will do about it, then do it". Arms: gate ON with shell trust, gate ON without, gate OFF (shell trust), and a gate-ON prompt that edits nothing.
+
+**Result:** ON (shell): the agent said DONE, was sent back once, replayed v2, filed the five red jars into three bugfix specs (one needed a retry after a `check-spec` FAIL) and did not touch the server — `evidence/stop-gate/live-shell.md`. ON (no shell): sent back once, could not run `specimen file`, said so — `live.md`.
+OFF: DONE, and nothing else — `live-control-off.md`. No-edit turn: READY, never blocked — `live-no-edit.md`.
+
+**Caveat:** one run per arm, one prompt, a model (claude-haiku-5.5) chosen for credit cost; the prompt itself told the agent what to do if a hook sent it back, which makes the difference larger than an unprompted agent would show. This is a demonstration that the gate changes the turn, not a measured rate.

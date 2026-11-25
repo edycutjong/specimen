@@ -21,6 +21,8 @@ the v2 server while 5 of the 10 recorded calls come back different.
 4. **File** — `specimen file <jar>` has a Kiro curator agent write a bugfix spec for the red jar (repro block + diff written by
    the CLI, prose by Kiro); `specimen check-spec` verifies it is structurally valid and names the jarred reference.
 5. **Fix** — Kiro's Bug Fix workflow designs and executes the fix; the replay turns the jar calm again.
+6. **Gate** — a Kiro `Stop` hook (`specimen hook stop`) replays the jars when a turn changed the server and sends the agent back, with the jar ids as the reason,
+   while a red jar has no filed bugfix spec. It blocks at most 3 times per session and fails open on any error or timeout.
 
 ## Measured results (every number is a committed output)
 
@@ -30,7 +32,9 @@ the v2 server while 5 of the 10 recorded calls come back different.
 | hollow-inn v2 (three author-made breaks) | HOLD · 5 preserved · 4 rattled · 1 cracked | `evidence/bench/detect.md`, `evidence/replay/racks-vs-v2.txt` |
 | input-schema diff of the same v2 change | 2 changes (removed `cancel_booking`, added `booking_cancel`); the `quote` rename and the `search_rooms` default are invisible to it | `evidence/bench/detect.md` |
 | hollow-inn v2.1 (fixed by Kiro from three filed bugfix specs) | SHIP · 10 of 10 preserved · 5 of 6 tools covered (`get_room` was never called by the agent) | `evidence/replay/racks-vs-v2.1-ship.txt` |
-| Tests | 989 passing in 114 files (vitest + fast-check), typecheck clean | `evidence/tests.txt` |
+| Stop gate, E1–E3 through the real hooks | v1 → allow; v2 with no spec → block naming all 5 red jars; v2 with the `quote` spec filed → block naming only SPC-0009, SPC-0010; 4th stop → allow + `unresolved.md`; about 1.2–2 s per stop | `evidence/stop-gate/eval.md` |
+| Stop gate in a live headless Kiro session (N = 1 per row) | gate ON: the agent was sent back once and ran `specimen file` for the red jars instead of changing the server; gate OFF: it answered DONE; a turn that edited nothing was not blocked | `evidence/stop-gate/live-shell.md`, `live-control-off.md`, `live-no-edit.md` |
+| Tests | 1023 passing in 117 files (vitest + fast-check), typecheck clean | `evidence/tests.txt` |
 | Consequence run: did the agent's own answer change under v2? | No — it read the new tool description and coped (`$425.00`); anything else reading `total` would not | `evidence/consequence-v2/README.md` |
 | Field shelf: a public MCP server (`server-memory` 1.0.0 → 2.2.1) | SHIP 5 of 5 on the recorded set — a null result, reported as one | `evidence/field/server-memory.md` |
 
@@ -53,12 +57,12 @@ outputs pasted from real runs: [`DEMO.md`](DEMO.md).
 
 ## How Kiro was used
 
-Kiro is the builder, and every prompt is in [`prompts/`](prompts/), verbatim and numbered (47 turns), with its measured credit cost.
+Kiro is the builder, and every prompt is in [`prompts/`](prompts/), verbatim and numbered (48 turns), with its measured credit cost.
 
 - **Steering and agents** — `.kiro/steering/` (product, tech, structure, bugfix) and the curator agent `.kiro/agents/specimen-curator.json`
   were written by Kiro; the curator runs with no blanket trust and a deny rule on writes outside `.kiro/specs/`
   (spike S5, `evidence/spikes/S5.md`).
-- **Hooks** — capture, firewall (a `PreToolUse` write hook that blocks an agent edit to a jar: "jars are evidence and read-only"), manifest check and a post-task test hook
+- **Hooks** — capture, the Stop gate and its turn snapshot (`UserPromptSubmit`), firewall (a `PreToolUse` write hook that blocks an agent edit to a jar: "jars are evidence and read-only"), manifest check and a post-task test hook
   (`.kiro/hooks/`).
 - **Feature specs** — `jar-capture`, `replay-engine`, `cabinet-ui`: requirements → Analyze Requirements → design → tasks, executed by Kiro
   (`.kiro/specs/`).
@@ -74,8 +78,8 @@ Kiro is the builder, and every prompt is in [`prompts/`](prompts/), verbatim and
 - **Not the first MCP record/replay tool.** `mcp-recorder`, AgentVCR and mcpsnoop exist. What differs here is capture *inside* the agent
   through Kiro hooks (no proxy) and the closed loop into a Kiro bugfix spec.
 - Ten jars from two racks, five of six hollow-inn tools. "SHIP" means *replay clean on the recorded set*, nothing more.
-- The Agent Stop gate (a hook that stops the agent finishing while a red jar has no filed spec) is **not built**; the IDE-only Kiro
-  steps (Spec Correctness, IDE bugfix approvals) were not run.
+- The Stop gate was measured on the Kiro CLI only (one block per prompt: the continuation turn fires no second Stop), one live run per variant; the IDE behaviour
+  (S2-IDE) and the IDE-only Kiro steps (Spec Correctness, IDE bugfix approvals) were not run.
 - axe-core still reports `color-contrast` on the rotated toe-tag text of the jars, although the measured contrast of ink on tag is
   10.24:1 (tag text is the topmost element at its own points); see `docs/DX-REPORT.md`. Everything else axe checks is clean at 1440, 375 and 320 px.
 - No outside user has run it yet.

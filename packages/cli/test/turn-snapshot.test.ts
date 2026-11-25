@@ -52,7 +52,7 @@ function repo(): string {
 }
 
 function prompt(root: string, sessionId = SESSION): Promise<number> {
-  return runPrompt(async () => JSON.stringify({ session_id: sessionId, cwd: root, hook_event_name: "PromptSubmit" }));
+  return runPrompt(async () => JSON.stringify({ session_id: sessionId, cwd: root, hook_event_name: "UserPromptSubmit" }));
 }
 
 describe("hook prompt", () => {
