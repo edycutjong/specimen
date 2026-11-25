@@ -16,3 +16,6 @@ test-results/
 .specimen/pending.jsonl
 .specimen/hook.log
 .specimen/*.lock
+.specimen/turn.json
+.specimen/gate-*.json
+.specimen/unresolved.md

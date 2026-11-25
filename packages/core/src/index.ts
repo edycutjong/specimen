@@ -22,3 +22,4 @@ export * from "./replay.js";
 export * from "./replay-redact.js";
 export * from "./select-replay.js";
 export * from "./bugfix-spec.js";
+export * from "./stop-gate.js";

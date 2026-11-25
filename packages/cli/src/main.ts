@@ -1,5 +1,7 @@
 import { Command, CommanderError } from "commander";
 import { createFirewallCommand } from "./hooks/firewall.js";
+import { createPromptCommand } from "./hooks/prompt.js";
+import { createStopCommand } from "./hooks/stop.js";
 import { captureCommand, isCaptureName, runCapture } from "./hooks/run.js";
 import { createManifestGroup } from "./manifest.js";
 import { createReplayCommand } from "./replay.js";
@@ -24,7 +26,9 @@ export function createHookGroup(): Command {
     .configureOutput(SILENT)
     .addCommand(captureCommand("pre"))
     .addCommand(captureCommand("post"))
-    .addCommand(createFirewallCommand());
+    .addCommand(createFirewallCommand())
+    .addCommand(createPromptCommand())
+    .addCommand(createStopCommand());
 }
 
 
@@ -64,7 +68,7 @@ export async function run(argv: readonly string[]): Promise<void> {
     }
     if (!(err instanceof CommanderError) || argv[2] !== "hook") throw err;
     if (err.exitCode !== 0) {
-      const hook = argv[3] === "firewall" ? "firewall" : "hook";
+      const hook = ["firewall", "prompt", "stop"].includes(argv[3] ?? "") ? (argv[3] as string) : "hook";
       logDiag(findWorkspaceRoot(process.cwd()), hook, undefined, "invalid argument");
     }
     process.exitCode = 0;

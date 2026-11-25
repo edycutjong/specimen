@@ -20,12 +20,21 @@ export const INIT_EXIT = { done: 0, usage: 2 } as const;
 const KEY_PATTERN = /^[A-Za-z0-9]+$/;
 const UNSAFE_IN_DOUBLE_QUOTES = /["\\$`\r\n]/;
 const DEFAULT_WATCH = ["src/**"];
-const ALWAYS_IGNORED = ["replays/", ".specimen/pending.jsonl", ".specimen/hook.log"];
+const ALWAYS_IGNORED = [
+  "replays/",
+  ".specimen/pending.jsonl",
+  ".specimen/hook.log",
+  ".specimen/turn.json",
+  ".specimen/gate-*.json",
+  ".specimen/unresolved.md",
+];
 const JARS_IGNORED = "jars/";
 const TEST_SERVER_TIMEOUT_MS = 30_000;
 const MCP_REL = ".kiro/settings/mcp.json";
 const REPLAY_REL = ".specimen/replay.json";
 const STOP_REL = ".kiro/hooks/specimen-jar-stop.json";
+const TURN_REL = ".kiro/hooks/specimen-jar-turn.json";
+const STOP_TIMEOUT_SECONDS = 30;
 const GITIGNORE_REL = ".gitignore";
 const STOP_PROMPT =
   "command that starts a disposable test instance of the server — never production; leave blank for no stop gate";
@@ -124,8 +133,22 @@ export function stopHookText(testServer: string): string {
       {
         name: "specimen-jar-stop",
         trigger: "Stop",
-        timeout: 60,
+        timeout: STOP_TIMEOUT_SECONDS,
         action: { type: "command", command: `npx --no-install specimen hook stop --server "${testServer}"` },
+      },
+    ],
+  });
+}
+
+/** The PromptSubmit hook that writes the turn snapshot the stop gate compares against. */
+export function turnHookText(): string {
+  return jsonText({
+    version: "v1",
+    hooks: [
+      {
+        name: "specimen-jar-turn",
+        trigger: "PromptSubmit",
+        action: { type: "command", command: "npx --no-install specimen hook prompt" },
       },
     ],
   });
@@ -412,6 +435,7 @@ async function initRepository(options: InitOptions, ports: InitPorts): Promise<v
     ports.stdout("no stop gate installed\n");
   } else {
     writeUnlessKept(ports, root, STOP_REL, stopHookText(testServer), force);
+    writeUnlessKept(ports, root, TURN_REL, turnHookText(), force);
   }
   if (policy === undefined) {
     ports.stdout(`kept ${REPLAY_REL} (exists; use --force)\n`);

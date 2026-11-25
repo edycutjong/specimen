@@ -291,7 +291,7 @@ describe("stop gate", () => {
         {
           name: "specimen-jar-stop",
           trigger: "Stop",
-          timeout: 60,
+          timeout: 30,
           action: {
             type: "command",
             command: `npx --no-install specimen hook stop --server "${TEST_SERVER}"`,
@@ -306,6 +306,24 @@ describe("stop gate", () => {
     expect(h.stderr.join("")).toContain("double quote");
     expect(exists(h, ".kiro/hooks/specimen-jar-stop.json")).toBe(false);
     expect(exists(h, ".kiro/hooks/specimen-jar-pre.json")).toBe(false);
+  });
+
+  it("writes the turn hook next to the stop hook, and not without it", async () => {
+    expect(await init(h, { testServer: undefined })).toBe(INIT_EXIT.done);
+    expect(exists(h, ".kiro/hooks/specimen-jar-turn.json")).toBe(false);
+
+    h = harness();
+    expect(await init(h, { testServer: TEST_SERVER })).toBe(INIT_EXIT.done);
+    expect(JSON.parse(read(h, ".kiro/hooks/specimen-jar-turn.json"))).toEqual({
+      version: "v1",
+      hooks: [
+        {
+          name: "specimen-jar-turn",
+          trigger: "PromptSubmit",
+          action: { type: "command", command: "npx --no-install specimen hook prompt" },
+        },
+      ],
+    });
   });
 
   it("builds the stop hook text and checks the command", () => {
@@ -382,7 +400,9 @@ describe("gitignore", () => {
   it("appends only the missing lines and keeps the existing ones in order", async () => {
     seed(h, ".gitignore", "node_modules/\njars/\n");
     expect(await init(h)).toBe(INIT_EXIT.done);
-    expect(read(h, ".gitignore")).toBe("node_modules/\njars/\nreplays/\n.specimen/pending.jsonl\n.specimen/hook.log\n");
+    expect(read(h, ".gitignore")).toBe(
+      "node_modules/\njars/\nreplays/\n.specimen/pending.jsonl\n.specimen/hook.log\n.specimen/turn.json\n.specimen/gate-*.json\n.specimen/unresolved.md\n",
+    );
   });
 
   it("creates the file when it is missing", async () => {
@@ -392,6 +412,9 @@ describe("gitignore", () => {
       "replays/",
       ".specimen/pending.jsonl",
       ".specimen/hook.log",
+      ".specimen/turn.json",
+      ".specimen/gate-*.json",
+      ".specimen/unresolved.md",
     ]);
   });
 
