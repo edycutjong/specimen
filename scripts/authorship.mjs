@@ -9,6 +9,10 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 
 const DIRS = ["packages", "apps", "servers"];
+// Commits whose prefix does not match the in-scope lines, as disclosed in prompts/README.md: 82b5126 is labelled `kiro:`
+// for the Power (turn 49, outside this scope), but its lines in apps/ are our cabinet change that hides the GitHub
+// links until the public flip. Counted as claude-direct here.
+const RELABEL = { "82b5126": { kind: "claude-direct:", why: "prompts/README.md: only power/specimen/ and prompts/turn-49.md in it are Kiro output" } };
 const log = execFileSync("git", ["log", "--no-merges", "--format=%x00%h%x09%s", "--numstat", "--", ...DIRS], {
   encoding: "utf8",
   maxBuffer: 64 * 1024 * 1024,
@@ -18,8 +22,8 @@ const rows = {}; // kind → { src, test, commits }
 for (const block of log.split("\0")) {
   if (!block.trim()) continue;
   const [head, ...files] = block.trim().split("\n");
-  const subject = head.split("\t")[1] ?? "";
-  const kind = subject.startsWith("kiro:") ? "kiro:" : subject.startsWith("claude-direct") ? "claude-direct:" : "other";
+  const [sha, subject = ""] = head.split("\t");
+  const kind = RELABEL[sha]?.kind ?? (subject.startsWith("kiro:") ? "kiro:" : subject.startsWith("claude-direct") ? "claude-direct:" : "other");
   const r = (rows[kind] ??= { src: 0, test: 0, commits: 0 });
   r.commits += 1;
   for (const line of files) {
@@ -50,6 +54,8 @@ const out = [
   `| all | ${kinds.reduce((n, k) => n + rows[k].commits, 0)} | ${fmt(srcTotal)} | ${fmt(total - srcTotal)} | ${fmt(total)} | 100 % |`,
   ``,
   `Source lines only: \`kiro:\` ${pct(rows["kiro:"].src, srcTotal)} % (${fmt(rows["kiro:"].src)} of ${fmt(srcTotal)}).`,
+  ``,
+  ...Object.entries(RELABEL).map(([sha, r]) => `Relabelled: \`${sha}\` counted as \`${r.kind}\` (${r.why}).`),
   ``,
 ].join("\n");
 process.stdout.write(out);
