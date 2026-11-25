@@ -1,0 +1,12 @@
+HOLD · covered · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room
+SPC-0001 · search_rooms · preserved · - · -
+SPC-0002 · quote · rattled · /total, /total_cents · suspected rename from /total ×100
+SPC-0003 · book · preserved · - · -
+SPC-0004 · list_bookings · preserved · - · -
+SPC-0010 · search_rooms · rattled · /rooms, /rooms/r-08, /rooms/r-09 · -
+SPC-0005 · search_rooms · preserved · - · -
+SPC-0006 · quote · rattled · /total, /total_cents · suspected rename from /total ×100
+SPC-0007 · quote · rattled · /total, /total_cents · suspected rename from /total ×100
+SPC-0008 · book · preserved · - · -
+SPC-0009 · cancel_booking · cracked · - · tool not in tools/list
+exit=3

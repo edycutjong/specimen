@@ -1,0 +1,2 @@
+filed .kiro/specs/search-rooms-rooms-rooms-r-08-rooms-r-09/bugfix.md · PASS SPC-0010
+npx specimen file SPC-0010 --replay $V2 --timeout 420  6.05s user 1.75s system 38% cpu 20.219 total
