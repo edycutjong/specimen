@@ -56,6 +56,7 @@ export function ShelfRow({
         <p className="shelf-task">
           <q>{rack.task}</q>
         </p>
+        {rack.followUp !== undefined ? <p className="shelf-followup">{rack.followUp}</p> : null}
       </div>
       <ol className="shelf-grid" aria-label={`${rack.code} jars in call order`}>
         {rack.jars.map((jar) => (

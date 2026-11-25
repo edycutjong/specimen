@@ -28,24 +28,12 @@ export type JarProps = {
   onActivate: (jar: JarViewModel) => void;
 };
 
-/** The tool name split after each underscore, so the browser may wrap it there (Requirement 7.8). */
+/**
+ * The tool name as one unbreakable word. The tag is sized so the longest tool name fits one line, so the name never
+ * breaks at an underscore (QA round 3, item 12).
+ */
 function ToolName({ tool }: { tool: string }): ReactElement {
-  const parts = tool.split("_");
-  return (
-    <>
-      {parts.map((part, index) => (
-        <span key={index}>
-          {index < parts.length - 1 ? (
-            <>
-              {part}_<wbr />
-            </>
-          ) : (
-            part
-          )}
-        </span>
-      ))}
-    </>
-  );
+  return <>{tool}</>;
 }
 
 /** A decorative barcode. Its bar widths come from the accession, so they do not change per render. */

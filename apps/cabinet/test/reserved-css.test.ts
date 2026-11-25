@@ -18,7 +18,7 @@ describe("reserved space classes (design pass, item 3)", () => {
   it("holds the CountsPair strip and its hidden values in place", () => {
     const counts = css("counts-pair.css");
     expect(counts).toMatch(/\.counts-pair \{[^}]*min-height: 180px/);
-    expect(counts).toMatch(/\.counts-pair__value--hidden,\s*\.counts-pair__added--hidden,\s*\.counts-pair__connector--hidden \{\s*visibility: hidden/);
+    expect(counts).toMatch(/\.counts-pair__value--hidden,\s*\.counts-pair__connector--hidden \{\s*visibility: hidden/);
   });
 
   it("holds the ledger lines and the version notes with visibility, not display", () => {

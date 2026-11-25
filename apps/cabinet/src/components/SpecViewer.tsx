@@ -96,7 +96,7 @@ export function SpecViewer({ jar, specs, result, onSourceOpened }: SpecViewerPro
       {choice === null ? null : (
         <>
           <p className="spec-viewer__provenance">
-            Filed by the specimen-curator agent through <code>specimen file</code> on {SPEC_FILED_DATE}.
+            Filed by the specimen-curator agent through <code>specimen file</code> on {SPEC_FILED_DATE} (WIB).
           </p>
           <p className="spec-viewer__link">
             <a

@@ -3,7 +3,7 @@
  * count, with a connector between them that compares the two. The figures come from `buildViewModel`.
  * This module builds only the display text.
  *
- * The two halves sit on a lab-notebook strip. Each half shows its label ("schema diff:" or
+ * The two halves sit on a lab-notebook strip. Each half shows its label ("input-schema diff:" or
  * "replay:") in the body face and its value after it. The strip is always in the page, so its size is
  * the same before and after a replay. Before a replay the values and the connector are empty.
  *
@@ -27,7 +27,7 @@ export type CountsPairProps = {
   countUp?: boolean;
 };
 
-const SCHEMA_LABEL = "schema diff:";
+const SCHEMA_LABEL = "input-schema diff:";
 const REPLAY_LABEL = "replay:";
 
 /** The count-up has this many steps, so each step is COUNT_UP_MS / FRAMES ms apart. */
@@ -46,14 +46,14 @@ function capitalise(text: string): string {
 }
 
 /**
- * "schema diff: A of B tools changed" (Requirement 6.1), or "schema diff: unavailable — <error>"
- * when the replay reported a schemaDiffError (Requirement 6.9).
+ * "input-schema diff: A of B tools changed" (Requirement 6.1), or "input-schema diff: unavailable — <error>"
+ * when the replay reported a schemaDiffError (Requirement 6.9). The diff compares input schemas only.
  */
 export function schemaDiffText(counts: CountsPairViewModel): string {
   if (counts.schemaDiffError !== undefined) {
-    return `schema diff: unavailable — ${counts.schemaDiffError}`;
+    return `input-schema diff: unavailable — ${counts.schemaDiffError}`;
   }
-  return `schema diff: ${counts.schemaChanged} of ${pluralise(counts.schemaTotal, "tool", "tools")} changed`;
+  return `input-schema diff: ${counts.schemaChanged} of ${pluralise(counts.schemaTotal, "tool", "tools")} changed`;
 }
 
 /**
@@ -83,7 +83,7 @@ export function replayText(counts: CountsPairViewModel): string {
   return `replay: ${replayValueText(counts.replayToolCount, counts.redJarCount)}`;
 }
 
-/** The text after a label and its space, for example "1 of 6 tools changed" after "schema diff:". */
+/** The text after a label and its space, for example "1 of 6 tools changed" after "input-schema diff:". */
 function valueAfter(text: string, label: string): string {
   return text.startsWith(`${label} `) ? text.slice(label.length + 1) : text;
 }
@@ -97,16 +97,16 @@ export function ledeText(jarCount: number): string {
   return `${capitalise(countWord(jarCount))} ${calls} recorded against hollow-inn v1. We replayed them against the version you selected.`;
 }
 
-/** The break count sentence: "The replay found 5 broken calls — 4 in tools whose inputs never changed." */
+/** The break count sentence: "5 calls came back different — 4 in tools whose inputs never changed." */
 function brokenSentence(counts: CountsPairViewModel): string {
-  const broken = pluralise(counts.redJarCount, "broken call", "broken calls");
-  if (counts.redJarCount === 0) return `The replay found ${broken}.`;
+  const different = pluralise(counts.redJarCount, "call came back different", "calls came back different");
+  if (counts.redJarCount === 0) return `${different}.`;
   const unchanged = counts.unchangedRedCount;
   const tail =
     unchanged === 0
       ? "none in tools whose inputs never changed"
       : `${unchanged} in tools whose inputs never changed`;
-  return `The replay found ${broken} — ${tail}.`;
+  return `${different} — ${tail}.`;
 }
 
 /**
@@ -170,10 +170,10 @@ export function CountsPair({
   // Hidden until the Reveal has settled. With a count-up, the figures stay hidden through the first step.
   const hidden = countUp ? frame === 0 : !revealed;
   const figureClass = hidden ? "counts-pair__value counts-pair__value--hidden" : "counts-pair__value";
-  // A schema diff that could not be computed names no tool, so it shows no detail either.
-  const detail = replayed && counts.schemaDiffError === undefined ? addedText(counts) : null;
   const tools = countedAt(counts.replayToolCount, frame, countUp);
   const jars = countedAt(counts.redJarCount, frame, countUp);
+  // The connector names the final figures, so it waits until the count-up has reached them (no early final number).
+  const settled = countUp ? frame >= FRAMES : revealed;
 
   return (
     <div className="counts-pair-group">
@@ -182,16 +182,10 @@ export function CountsPair({
           <p className="counts-pair__schema" style={{ color: "var(--muted)" }}>
             <span className="counts-pair__label">{SCHEMA_LABEL}</span>{" "}
             <span className={figureClass}>{replayed ? valueAfter(schemaDiffText(counts), SCHEMA_LABEL) : ""}</span>
-            {detail !== null ? (
-              <span className={hidden ? "counts-pair__added counts-pair__added--hidden" : "counts-pair__added"}>
-                {" · "}
-                {detail}
-              </span>
-            ) : null}
           </p>
         </div>
         <p
-          className={hidden ? "counts-pair__connector counts-pair__connector--hidden" : "counts-pair__connector"}
+          className={settled ? "counts-pair__connector" : "counts-pair__connector counts-pair__connector--hidden"}
         >
           {replayed ? connectorText(counts) : ""}
         </p>

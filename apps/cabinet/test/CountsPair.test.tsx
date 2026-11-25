@@ -41,7 +41,7 @@ describe("CountsPair with real replays", () => {
   it("shows v1 as 0 of 6 schema changes and no jars changed (6.7)", () => {
     const { container } = render(<CountsPair counts={countsOf(replays.v1)} replayed />);
 
-    expect(halfText(".counts-pair__schema")).toBe("schema diff: 0 of 6 tools changed");
+    expect(halfText(".counts-pair__schema")).toBe("input-schema diff: 0 of 6 tools changed");
     expect(halfText(".counts-pair__replay")).toBe("replay: 0 tools · 0 jars changed");
     expect(container.querySelector(".counts-pair__added")).toBeNull();
     expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
@@ -53,7 +53,7 @@ describe("CountsPair with real replays", () => {
     render(<CountsPair counts={countsOf(replays.v2)} replayed />);
 
     expect(halfText(".counts-pair__schema")).toBe(
-      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+      "input-schema diff: 1 of 6 tools changed",
     );
     expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
   });
@@ -62,7 +62,7 @@ describe("CountsPair with real replays", () => {
     render(<CountsPair counts={countsOf(replays.v2)} replayed />);
 
     expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
-      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. The replay found 5 broken calls — 4 in tools whose inputs never changed.",
+      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. 5 calls came back different — 4 in tools whose inputs never changed.",
     );
   });
 
@@ -70,10 +70,10 @@ describe("CountsPair with real replays", () => {
     render(<CountsPair counts={countsOf(replays["v2.1"])} replayed />);
 
     expect(halfText(".counts-pair__schema")).toBe(
-      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+      "input-schema diff: 1 of 6 tools changed",
     );
     expect(document.querySelector(".counts-pair__connector")?.textContent).toBe(
-      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. The replay found 2 broken calls — 1 in tools whose inputs never changed.",
+      "The schema diff saw one renamed tool (cancel_booking → booking_cancel); 1 recorded call used it. 2 calls came back different — 1 in tools whose inputs never changed.",
     );
     expect(halfText(".counts-pair__replay")).toBe("replay: 2 tools · 2 jars changed");
   });
@@ -96,7 +96,7 @@ describe("CountsPair with real replays", () => {
     const replay = container.querySelector<HTMLElement>(".counts-pair__replay");
     expect(schema?.style.color).toBe("var(--muted)");
     expect(replay?.style.color).toBe("var(--after)");
-    expect(schema?.textContent).toBe("schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel");
+    expect(schema?.textContent).toBe("input-schema diff: 1 of 6 tools changed");
     expect(replay?.textContent).toBe("replay: 3 tools · 5 jars changed");
   });
 
@@ -106,7 +106,7 @@ describe("CountsPair with real replays", () => {
 
     expect(halfText(".counts-pair__replay")).toBe("replay: 1 tool · 1 jar changed");
     expect(halfText(".counts-pair__schema")).toBe(
-      "schema diff: 1 of 6 tools changed · renamed cancel_booking → booking_cancel",
+      "input-schema diff: 1 of 6 tools changed",
     );
   });
 
@@ -125,7 +125,7 @@ describe("CountsPair schemaDiffError", () => {
     const counts = countsOf(replays.v2, "baseline tools/list failed");
     render(<CountsPair counts={counts} replayed />);
 
-    expect(halfText(".counts-pair__schema")).toBe("schema diff: unavailable — baseline tools/list failed");
+    expect(halfText(".counts-pair__schema")).toBe("input-schema diff: unavailable — baseline tools/list failed");
     expect(halfText(".counts-pair__schema")).not.toMatch(/of 6 tools changed/);
     expect(halfText(".counts-pair__replay")).toBe("replay: 3 tools · 5 jars changed");
   });
@@ -139,17 +139,16 @@ describe("CountsPair reserved space (design pass, item 3)", () => {
     expect(container.querySelector(".counts-pair__connector")).not.toBeNull();
   });
 
-  it("hides the schema detail and the connector until the Reveal has ended (design pass, item 4)", () => {
+  it("hides the connector until the Reveal has ended and shows no schema detail line (design pass, item 4; QA round 3, item 2)", () => {
     const { container, rerender } = render(
       <CountsPair counts={countsOf(replays.v2)} replayed revealed={false} countUp={false} />,
     );
 
-    expect(container.querySelector(".counts-pair__added")?.className).toContain("counts-pair__added--hidden");
+    expect(container.querySelector(".counts-pair__added")).toBeNull();
     expect(container.querySelector(".counts-pair__connector")?.className).toContain("counts-pair__connector--hidden");
 
     rerender(<CountsPair counts={countsOf(replays.v2)} replayed revealed countUp={false} />);
 
-    expect(container.querySelector(".counts-pair__added")?.className).not.toContain("--hidden");
     expect(container.querySelector(".counts-pair__connector")?.className).not.toContain("--hidden");
   });
 });

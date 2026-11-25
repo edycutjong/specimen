@@ -202,13 +202,13 @@ describe("Jar toe-tag and strips as HTML (Requirements 8.4, 8.5, 8.6, 8.9)", () 
     expect(tool?.closest("svg")).toBeNull();
   });
 
-  it("splits a tool name after each underscore with a break opportunity and no hyphen", () => {
+  it("keeps a tool name as one unbreakable word, with no break opportunity inside it (QA round 3, item 12)", () => {
     const jar = { ...jarById(modelFor(v2), "SPC-0002"), tool: "cancel_booking" };
     const { container } = renderJar(jar);
 
     const tool = container.querySelector(".jar__tool");
     expect(tool?.textContent).toBe("cancel_booking");
-    expect(tool?.querySelectorAll("wbr")).toHaveLength(1);
+    expect(tool?.querySelectorAll("wbr")).toHaveLength(0);
   });
 
   it("carries an ABNORMAL strip as HTML on a rattled jar", () => {

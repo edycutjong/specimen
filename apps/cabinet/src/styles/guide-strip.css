@@ -54,6 +54,7 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 14px;
   color: var(--ink);
 }

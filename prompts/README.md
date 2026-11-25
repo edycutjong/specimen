@@ -50,5 +50,6 @@ does not stop to ask — no human approval step was taken (the IDE approvals are
 | 36 | cabinet fixes from the browser check: drawer-open layout, phone tags, lab-report values (model claude-haiku-5.5) | 5.29 |
 | 37 | cabinet fixes from QA round 2: schema-diff connector, filed wording, reserved layout, cold-open spoilers, drawer lab report, phone first screen (model claude-haiku-5.5) | 13.55 |
 | 38 | cabinet first screen at 1440: one-sentence pitch in the header, jars higher, details folded after the shelves (model claude-haiku-5.5) | 1.89 |
+| 39 | cabinet fixes from QA round 3: honest pitch and labels, rack A follow-up disclosure, one-line headline and plate, plate in step with the reveal, body face for controls (model claude-haiku-5.5) | 8.22 |
 Credits come from Kiro's own per-session `usage_summary` ([`scripts/kiro-credits.mjs`](../scripts/kiro-credits.mjs)).
 Spike prompts (04–13) ran in scratch workspaces outside this repo; their outputs are copied into `evidence/spikes/`.

@@ -23,6 +23,7 @@ import { getBugfixSpecs, type CabinetReplayResult, type HollowInnVersion } from 
 import type { JarViewModel } from "../src/cabinet-model.js";
 import { JarDrawer } from "../src/components/JarDrawer.js";
 import { loadReplays, viewModelOf, type Replays } from "./support/replays.js";
+import { countsLine } from "./support/counts.js";
 
 /** drawerFormFor(800) is the bottom sheet: modal. */
 const SHEET_WIDTH = 800;
@@ -93,7 +94,7 @@ function openJar(accession: string): HTMLElement {
 async function renderReplayedApp(width: number): Promise<void> {
   window.innerWidth = width;
   render(createElement(App));
-  await screen.findByText(V2_COUNTS, undefined, { timeout: 15_000 });
+  await screen.findByText(countsLine(V2_COUNTS), undefined, { timeout: 15_000 });
   await waitFor(() => expect(screen.queryAllByRole("button", { name: /— not replayed$/ })).toHaveLength(0), {
     timeout: 15_000,
   });

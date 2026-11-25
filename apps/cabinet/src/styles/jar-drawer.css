@@ -127,6 +127,7 @@
 .jar-drawer__heading {
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 22px;
   font-weight: 700;
   line-height: 1.2;
@@ -145,6 +146,7 @@
 .jar-drawer__tool {
   margin: 4px 0 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 18px;
   overflow-wrap: anywhere;
 }
@@ -152,6 +154,7 @@
 .jar-drawer__place {
   margin: 4px 0 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 14px;
   color: var(--muted);
   overflow-wrap: anywhere;
@@ -293,6 +296,7 @@
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 15px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;

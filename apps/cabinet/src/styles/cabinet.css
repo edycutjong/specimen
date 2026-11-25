@@ -78,14 +78,17 @@ summary {
 
 .shelf-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 900;
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 28px;
   line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .tool-name {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 16px;
   line-height: 1.25;
@@ -93,6 +96,7 @@ summary {
 
 .data {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: 15px;
   line-height: 1.4;

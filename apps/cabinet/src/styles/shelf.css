@@ -17,13 +17,13 @@
 }
 
 /*
- * From 600 px the shelf has room above its jars for the IT'S MOVING stamp: the top padding is 44 px, so the stamp
- * sits above the lid of the first jar (design pass, item 7). From 600 px to 1023 px the plate sits above the jars,
+ * From 600 px the shelf has room above its jars for the IT'S MOVING stamp: the top padding is 56 px, so the stamp
+ * keeps 12 px or more clear of the GuideStrip above it (QA round 3, item 11). From 600 px to 1023 px the plate sits above the jars,
  * so the row gap is wide enough for the stamp to clear the plate.
  */
 @media (min-width: 600px) {
   .shelf {
-    padding-top: 44px;
+    padding-top: 58px;
   }
 }
 
@@ -44,6 +44,15 @@
   justify-content: space-between;
   gap: 4px 16px;
   min-width: 0;
+}
+
+.shelf-followup {
+  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow-wrap: break-word;
 }
 
 .shelf-task {
@@ -67,6 +76,7 @@
   gap: 4px 12px;
   color: var(--muted);
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 14px;
 }
 
@@ -124,6 +134,13 @@ ol.shelf-grid {
   min-width: 0;
 }
 
+/* Below 600 px each cell keeps 36 px above its jar, so the scaled IT'S MOVING stamp sits clear of the lid (QA round 3, item 11). */
+@media (max-width: 599px) {
+  .shelf-cell {
+    padding-top: 36px;
+  }
+}
+
 /*
  * The iron shelf lip under each jar: 14 px tall, a steel gradient with rivets every 120 px and a soft
  * shadow below it. The position code sits under the lip.
@@ -153,6 +170,7 @@ ol.shelf-grid {
   margin-top: 6px;
   text-align: center;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.2;
@@ -193,6 +211,7 @@ ol.shelf-grid {
   background: var(--before);
   color: var(--label-ink);
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 14px;
   line-height: 16px;
@@ -272,6 +291,7 @@ ol.shelf-grid {
 
 .spoiled-tray__where {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: 15px;
 }

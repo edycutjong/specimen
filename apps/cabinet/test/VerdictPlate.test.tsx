@@ -8,6 +8,7 @@ import { coverageString } from "@specimen/core";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { CabinetReplayResult } from "../src/browser-replay.js";
 import { VerdictPlate } from "../src/components/VerdictPlate.js";
+import { countsLine } from "./support/counts.js";
 import { loadReplays, singleJarResult, viewModelOf, type Replays } from "./support/replays.js";
 
 const INTERVAL_MS = 250;
@@ -47,7 +48,7 @@ describe("VerdictPlate with real replays", () => {
 
     expect(screen.getByText("HOLD").style.color).toBe("var(--after)");
     expect(screen.getByText("v2")).toBeTruthy();
-    expect(screen.getByText("5 preserved · 4 rattled · 1 cracked")).toBeTruthy();
+    expect(screen.getByText(countsLine("5 preserved · 4 rattled · 1 cracked"))).toBeTruthy();
     expect(screen.getByText(coverageString(replays.v2.coverage))).toBeTruthy();
     expect(screen.getByText("5 red · 3 covered by 1 filed Kiro bugfix spec")).toBeTruthy();
     expect(screen.queryByText(/all red jars covered by/)).toBeNull();
@@ -59,7 +60,7 @@ describe("VerdictPlate with real replays", () => {
     render(<VerdictPlate plate={plateOf("v1", replays.v1)} revealed revealIntervalMs={INTERVAL_MS} />);
 
     expect(screen.getByText("SHIP").style.color).toBe("var(--before)");
-    expect(screen.getByText("10 preserved · 0 rattled · 0 cracked")).toBeTruthy();
+    expect(screen.getByText(countsLine("10 preserved · 0 rattled · 0 cracked"))).toBeTruthy();
     expect(screen.getByText("0 red · 0 filed as Kiro bugfix specs")).toBeTruthy();
     expect(statusText()).toContain("replay clean on the recorded set");
     expect(document.querySelector(".verdict-plate__reason")).toBeNull();
@@ -70,7 +71,7 @@ describe("VerdictPlate with real replays", () => {
     render(<VerdictPlate plate={plateOf("v2.1", replays["v2.1"])} revealed revealIntervalMs={INTERVAL_MS} />);
 
     expect(screen.getByText("HOLD")).toBeTruthy();
-    expect(screen.getByText("8 preserved · 1 rattled · 1 cracked")).toBeTruthy();
+    expect(screen.getByText(countsLine("8 preserved · 1 rattled · 1 cracked"))).toBeTruthy();
     expect(screen.getByText("2 red · 0 filed as Kiro bugfix specs")).toBeTruthy();
     expect(screen.getByText(replays["v2.1"].reason)).toBeTruthy();
     expect(screen.queryByText("SHIP")).toBeNull();

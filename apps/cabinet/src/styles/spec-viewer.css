@@ -42,6 +42,7 @@
   background: var(--before);
   color: var(--label-ink);
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 15px;
   font-weight: 700;
 }
@@ -54,13 +55,14 @@
 }
 
 .spec-viewer__provenance code {
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   font-size: 15px;
 }
 
 .spec-viewer__link {
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 15px;
   overflow-wrap: anywhere;
 }
@@ -121,6 +123,7 @@
 
 .spec-viewer__body code {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 15px;
   overflow-wrap: anywhere;
 }

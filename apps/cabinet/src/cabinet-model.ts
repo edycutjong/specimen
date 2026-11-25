@@ -57,6 +57,8 @@ export type JarViewModel = {
 export type RackViewModel = {
   code: string;
   task: string;
+  /** The same-session follow-up prompt that produced one of the rack's calls, or undefined when none did. */
+  followUp?: string;
   sessionId: string;
   shortSessionId: string;
   callCount: number;
@@ -135,6 +137,15 @@ export type BuildViewModelInput = {
 };
 
 /** Reasons that verdict() counts as quarantined. They mirror the constants in verdict.ts. */
+/**
+ * The same-session follow-ups of the racks, keyed by rack code. RACK A's fifth call (A5, SPC-0010) came from
+ * prompts/rack-a-followup.md, the one follow-up the recording gate allows, so the shelf says so under the task.
+ */
+export const RACK_FOLLOW_UPS: Readonly<Record<string, string>> = {
+  "RACK A":
+    "+ one follow-up in the same session (A5): “call search_rooms without the limit argument”, because the first search sent limit: 50.",
+};
+
 const ORPHAN_REASON = "orphan pre-event";
 const UNPAIRED_REASON = "unpaired post-event";
 
@@ -417,6 +428,7 @@ export function buildViewModel(input: BuildViewModelInput): CabinetViewModel {
     return {
       code: rack.code,
       task: rack.task,
+      followUp: RACK_FOLLOW_UPS[rack.code],
       sessionId: rack.sessionId,
       shortSessionId: rack.shortSessionId,
       callCount: rack.callCount,

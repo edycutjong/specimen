@@ -17,6 +17,7 @@ import { VersionNotes } from "./components/VersionNotes.js";
 import { StormWindow } from "./jar-art.js";
 import {
   COLD_OPEN_LEAD_MS,
+  COUNT_UP_MS,
   REVEAL_INTERVAL_MS,
   REVEAL_SETTLE_MS,
   STORM_MS,
@@ -42,6 +43,23 @@ const BUGFIX_SPECS = getBugfixSpecs();
 function messageOf(caught: unknown): string {
   if (caught instanceof Error && caught.message !== "") return caught.message;
   return "The replay failed without a message.";
+}
+
+/**
+ * True `delayMs` after `on` turns true, and false again as soon as `on` turns false. Under Reduced_Motion the caller
+ * passes `on` straight through, so this hook only adds the wait that the cold open needs.
+ */
+function useAfterDelay(on: boolean, delayMs: number): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!on) return undefined;
+    const id = window.setTimeout(() => setReady(true), delayMs);
+    return () => {
+      window.clearTimeout(id);
+      setReady(false);
+    };
+  }, [on, delayMs]);
+  return on && ready;
 }
 
 /** Writes the header's height to `--cabinet-header-h`, so a right-hand JarDrawer can start below the sticky header. */
@@ -220,8 +238,12 @@ export function App(): ReactElement {
     setGuideFlags((flags) => (flags.viewedSpec ? flags : { ...flags, viewedSpec: true }));
   }, []);
 
-  // The VerdictPlate and the GuideStrip pulse wait for the whole Reveal to complete.
+  // The GuideStrip pulses once the whole Reveal has completed.
   const revealed = reveal.complete;
+  // The verdict figures (the plate and the version notes) appear once the count-up has reached the final numbers,
+  // so no plate or connector figure runs ahead of the REPLAY counter (QA round 3, item 9).
+  const figuresReady = useAfterDelay(revealed, REVEAL_SETTLE_MS + COUNT_UP_MS);
+  const plateRevealed = reducedMotion ? revealed : figuresReady;
 
   return (
     <>
@@ -232,7 +254,7 @@ export function App(): ReactElement {
               <span className="cabinet-wordmark__specimen">SPECIMEN</span>{" "}
               <span className="cabinet-wordmark__jar">JAR</span>
             </h1>
-            <p className="cabinet-tagline">Every MCP call your Kiro agent makes, kept in a jar. Change the server, replay the cabinet: broken calls rattle red.</p>
+            <p className="cabinet-tagline">Your Kiro agent&apos;s MCP calls, kept in jars. Change the server, replay them: any call that comes back different rattles red.</p>
           </div>
           <div className="cabinet-plate-slot">
             {error !== null ? (
@@ -247,7 +269,7 @@ export function App(): ReactElement {
             ) : (
               <VerdictPlate
                 plate={viewModel.plate}
-                revealed={revealed}
+                revealed={plateRevealed}
                 revealIntervalMs={REVEAL_INTERVAL_MS}
                 part="plaque"
               />
@@ -300,11 +322,11 @@ export function App(): ReactElement {
             <div className="cabinet-ledger">
               <VerdictPlate
                 plate={viewModel.plate}
-                revealed={revealed}
+                revealed={plateRevealed}
                 revealIntervalMs={REVEAL_INTERVAL_MS}
                 part="ledger"
               />
-              <VersionNotes version={version} verdict={viewModel.plate.verdict} revealed={revealed} />
+              <VersionNotes version={version} verdict={viewModel.plate.verdict} revealed={plateRevealed} />
             </div>
           </details>
 

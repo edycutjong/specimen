@@ -294,7 +294,9 @@ function cssFontViolations(file: DistFile): string[] {
   for (const decl of file.text.matchAll(/(?<![\w-])font-size\s*:\s*([^;}]+)/gi)) {
     const value = (decl[1] ?? "").trim();
     if (CSS_WIDE_KEYWORDS.has(value)) continue;
-    const px = lengthPx(value);
+    // A clamp(min, preferred, max) is at least its minimum, so the minimum is what the scan checks.
+    const clampMin = /^clamp\(\s*([^,]+),/i.exec(value);
+    const px = lengthPx(clampMin?.[1] ?? value);
     if (px === undefined) violations.push(`${file.rel}: cannot resolve font-size: ${value}`);
     else if (px < MIN_FONT_PX) violations.push(`${file.rel}: font-size ${value} is ${px} px`);
   }

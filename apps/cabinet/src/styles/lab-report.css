@@ -70,6 +70,7 @@
 .lab-report__rename-line {
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 22px;
   line-height: 1.3;
   color: var(--ink);
@@ -97,6 +98,7 @@
   background: var(--after);
   color: var(--label-ink);
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 16px;
   line-height: 1.4;
@@ -129,6 +131,7 @@
 .lab-report__values {
   min-width: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 14px;
   overflow-wrap: anywhere;
 }
@@ -155,6 +158,7 @@
 /* Column headings: the data face, 14 px, uppercase. Each heading stays on one line. */
 .lab-report__table thead th {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.08em;
@@ -189,6 +193,7 @@
   padding-top: 8px;
   text-align: left;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.08em;
@@ -200,6 +205,7 @@
 /* Paths, values and literals are in the data face (Requirement 11.11). */
 .lab-report__data {
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 15px;
 }
 

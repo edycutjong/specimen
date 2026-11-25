@@ -35,15 +35,28 @@
   min-width: 0;
 }
 
-/* The verdict word and the version share the display face at line-height 1. */
-.verdict-plate__word,
-.verdict-plate__version {
+/* The verdict word is the display face at line-height 1. The version is body face (display face only on the verdict word). */
+.verdict-plate__word {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 40px;
   line-height: 1;
   overflow-wrap: normal;
+}
+
+.verdict-plate__version {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  overflow-wrap: normal;
+}
+
+/* Each count of the counts line is one unbreakable unit, so a break falls only between counts (QA round 3, item 8). */
+.verdict-plate__count {
+  white-space: nowrap;
 }
 
 .verdict-plate__word--hold {
@@ -57,6 +70,7 @@
 .verdict-plate__counts {
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: 14px;
   line-height: 1.3;
@@ -71,6 +85,7 @@
   gap: 2px 14px;
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-weight: 500;
   font-size: 14px;
   line-height: 1.3;
@@ -80,6 +95,7 @@
 .verdict-plate__idle {
   margin: 0;
   font-family: var(--font-data);
+  font-variant-ligatures: none;
   font-size: 14px;
   color: var(--muted);
 }
@@ -148,8 +164,8 @@
   border: 2px solid var(--ink);
   background: transparent;
   color: var(--ink);
-  font-family: var(--font-display);
-  font-weight: 900;
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 18px;
   text-transform: uppercase;
   cursor: pointer;
@@ -177,17 +193,15 @@
   }
 
   .verdict-plate--plaque .verdict-plate__status {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 2px 8px;
-    overflow: hidden;
   }
 
-  /* The plaque stays one line at 375 px: the compact facts never wrap onto a second row (design pass, item 8). */
+  /* The compact facts wrap between counts when the plaque is narrow. They never clip (QA round 3, item 8). */
   .verdict-plate__compact {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     min-width: 0;
-    white-space: nowrap;
   }
 
   .verdict-plate__word,

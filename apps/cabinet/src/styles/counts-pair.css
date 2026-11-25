@@ -49,12 +49,13 @@
 }
 
 .counts-pair__side--replay {
+  flex: 1 0 auto;
   padding-left: 28px;
 }
 
 /* The connector sits between the two halves and carries the comparison. Its left rule is the divider. */
 .counts-pair__connector {
-  flex: 0 1 300px;
+  flex: 0 1 260px;
   display: flex;
   align-items: center;
   min-width: 0;
@@ -113,17 +114,16 @@
 
 /* The values wait for the Reveal to settle (design pass, item 2). They keep their space while hidden. */
 .counts-pair__value--hidden,
-.counts-pair__added--hidden,
 .counts-pair__connector--hidden {
   visibility: hidden;
 }
 
-.counts-pair__added {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--muted);
-  overflow-wrap: anywhere;
+/* From 1024 px the replay headline stays on one line: nowrap, and the size scales with the viewport (QA round 3, item 7). */
+@media (min-width: 1024px) {
+  .counts-pair__replay .counts-pair__value {
+    white-space: nowrap;
+    font-size: clamp(28px, 2.4vw, 34px);
+  }
 }
 
 /* The lede under the strip: 19 px in the body face, in --ink. */
@@ -178,10 +178,6 @@
 
   .counts-pair::before {
     left: 16px;
-  }
-
-  .counts-pair__added {
-    display: none;
   }
 
   .counts-pair__schema .counts-pair__value,

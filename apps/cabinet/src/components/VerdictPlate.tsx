@@ -13,6 +13,7 @@
  * Reveal completes. Its content is added once, when `revealed` becomes true, and only while a
  * replay has a verdict (Requirement 2.17). Before that, the plate shows no verdict word.
  */
+import { Fragment } from "react";
 import { pluralise, type VerdictPlateViewModel } from "../cabinet-model.js";
 import "../styles/verdict.css";
 
@@ -55,6 +56,23 @@ export function compactCountsParts(countsLine: string): string[] {
   return countsLine.replace(/^\d+ preserved · /, "").split(" · ");
 }
 
+/**
+ * The counts line split into its facts, each in its own nowrap span with " · " between them, so a line break can only
+ * fall between two counts ("5 preserved · 4 rattled" / "1 cracked"), never inside one (QA round 3, item 8).
+ */
+function CountFacts({ facts }: { facts: string[] }) {
+  return (
+    <>
+      {facts.map((fact, index) => (
+        <Fragment key={index}>
+          {index > 0 ? " · " : null}
+          <span className="verdict-plate__count">{fact}</span>
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
 /** The verdict word, the version and the counts line: the plaque half. */
 function PlaqueLines({ plate }: { plate: VerdictPlateViewModel }) {
   const verdict = plate.verdict;
@@ -66,10 +84,14 @@ function PlaqueLines({ plate }: { plate: VerdictPlateViewModel }) {
         {verdict}
       </p>
       <p className="verdict-plate__version">{plate.version}</p>
-      <p className="verdict-plate__counts">{plate.countsLine}</p>
+      <p className="verdict-plate__counts">
+        <CountFacts facts={plate.countsLine === "" ? [] : plate.countsLine.split(" · ")} />
+      </p>
       <p className="verdict-plate__compact" aria-hidden="true">
         {compactCountsParts(plate.countsLine).map((fact, index) => (
-          <span key={index}>{fact}</span>
+          <span key={index} className="verdict-plate__count">
+            {fact}
+          </span>
         ))}
       </p>
     </>

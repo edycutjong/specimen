@@ -75,9 +75,9 @@
 .cabinet-tagline {
   margin: 4px 0 0;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.3;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
   overflow-wrap: break-word;
 }
 
@@ -185,18 +185,22 @@
 }
 
 /*
- * From 1280 px the pitch sits in the header's free band: under the controls, left of the plate (848 px wide, enough
- * for the whole sentence on one line). The header keeps its height, so the first jars stay near the top of the screen.
+ * From 1280 px the pitch sits in the header's free band: under the controls, left of the plate. At 20 px the sentence is
+ * 1034 px long, wider than the band (848 px at 1280), so it wraps to two lines. The header reserves 40 px under the
+ * controls for those lines (QA round 3, item 1), so they never sit on the controls.
  */
 @media (min-width: 1280px) {
+  .cabinet-header {
+    padding-bottom: 48px;
+  }
+
   .cabinet-tagline {
     position: absolute;
     left: 24px;
-    right: 408px;
+    right: 432px;
     bottom: 8px;
     max-width: none;
     margin: 0;
-    white-space: nowrap;
   }
 }
 
@@ -226,6 +230,11 @@
 @media (min-width: 1280px) {
   .cabinet-wordmark {
     font-size: 44px;
+  }
+
+  /* Wide enough for "5 preserved · 4 rattled · 1 cracked" on one line (QA round 3, item 8). */
+  .cabinet-plate-slot {
+    width: 400px;
   }
 
   .cabinet-plate-slot > .verdict-plate--plaque {

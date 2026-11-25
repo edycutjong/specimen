@@ -8,6 +8,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App.js";
 import * as browserReplay from "../src/browser-replay.js";
+import { countsLine } from "./support/counts.js";
 
 /** The VerdictPlate counts line of hollow-inn v2 over the committed jars (evidence/replay/racks-vs-v2.txt). */
 const V2_COUNTS = /5 preserved · 4 rattled · 1 cracked/;
@@ -19,7 +20,7 @@ function versionRadio(name: string): HTMLElement {
 }
 
 async function waitForReplayedV2(): Promise<void> {
-  await screen.findByText(V2_COUNTS, undefined, { timeout: 15_000 });
+  await screen.findByText(countsLine(V2_COUNTS), undefined, { timeout: 15_000 });
   // The figures show once the Reveal has ended, and the jars take their states before that.
   await waitFor(() => expect(document.querySelector(".verdict-plate__status--pending")).toBeNull(), {
     timeout: 15_000,
@@ -35,7 +36,7 @@ describe("App", () => {
   it("shows the one-sentence pitch in the header and keeps the lede closed in the Details fold (design pass, item 1)", () => {
     const { container } = render(<App />);
     expect(container.querySelector(".cabinet-tagline")?.textContent).toBe(
-      "Every MCP call your Kiro agent makes, kept in a jar. Change the server, replay the cabinet: broken calls rattle red.",
+      "Your Kiro agent's MCP calls, kept in jars. Change the server, replay them: any call that comes back different rattles red.",
     );
     const details = container.querySelector<HTMLDetailsElement>("details.cabinet-details");
     expect(details?.open).toBe(false);
@@ -63,7 +64,7 @@ describe("App", () => {
 
     expect(versionRadio("v1").getAttribute("aria-checked")).toBe("true");
     await screen.findByText(V1_IDLE);
-    expect(screen.queryByText(V2_COUNTS)).toBeNull();
+    expect(screen.queryByText(countsLine(V2_COUNTS))).toBeNull();
     // The labels stay in the page, but no schema or replay figure is shown (design pass, item 3).
     expect(document.querySelector(".counts-pair__schema .counts-pair__value")?.textContent).toBe("");
     expect(document.querySelector(".counts-pair__replay .counts-pair__value")?.textContent).toBe("");

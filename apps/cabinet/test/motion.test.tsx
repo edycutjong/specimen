@@ -16,9 +16,11 @@ import { revealOrder } from "../src/cabinet-model.js";
 import {
   COLD_OPEN_BOUND_MS,
   COLD_OPEN_LEAD_MS,
+  COUNT_UP_MS,
   NO_MOTION_CLASS,
   REDUCED_MOTION_QUERY,
   REVEAL_INTERVAL_MS,
+  REVEAL_SETTLE_MS,
   STAMP_TEXT,
   revealIntervalFor,
   revealSpanMs,
@@ -220,6 +222,9 @@ describe("Reveal order and interval (Requirement 2.3)", () => {
       expect(revealedAccessions()).toEqual(expected.slice(0, count));
     }
 
+    // The verdict waits for the count-up to reach the final figures (QA round 3, item 9).
+    expect(verdictWord()).toBeNull();
+    advance(REVEAL_SETTLE_MS + COUNT_UP_MS);
     expect(verdictWord()).toBe("HOLD");
   });
 });
@@ -238,6 +243,7 @@ describe("Completion on user action (Requirement 2.15)", () => {
     fireEvent.pointerDown(jarButtons()[JAR_COUNT - 1] as HTMLButtonElement);
 
     expect(revealedAccessions()).toHaveLength(JAR_COUNT);
+    advance(REVEAL_SETTLE_MS + COUNT_UP_MS);
     expect(verdictWord()).toBe("HOLD");
   });
 
@@ -253,6 +259,7 @@ describe("Completion on user action (Requirement 2.15)", () => {
     fireEvent.keyDown(document.body, { key: "ArrowDown" });
 
     expect(revealedAccessions()).toHaveLength(JAR_COUNT);
+    advance(REVEAL_SETTLE_MS + COUNT_UP_MS);
     expect(verdictWord()).toBe("HOLD");
   });
 });

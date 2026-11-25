@@ -9,6 +9,7 @@ import { createElement } from "react";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App.js";
+import { countsLine } from "./support/counts.js";
 
 /** Names of the recorders that were called, in call order. An empty list means no network call. */
 const calls: string[] = [];
@@ -60,7 +61,7 @@ describe("network guard", () => {
 
     // The replay has finished when the v2 counts show, and the Reveal is complete when no jar is
     // still "not replayed". Each jar takes its state on a timer, so both waits are needed.
-    await screen.findByText(V2_COUNTS, undefined, { timeout: 15_000 });
+    await screen.findByText(countsLine(V2_COUNTS), undefined, { timeout: 15_000 });
     await waitFor(() => expect(screen.queryAllByRole("button", { name: NOT_REPLAYED })).toHaveLength(0), {
       timeout: 15_000,
     });

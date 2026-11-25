@@ -50,6 +50,11 @@ export function HowJarsWereMade() {
         and the post hook runs after it.
       </p>
 
+      <p>
+        RACK A&apos;s fifth call (A5) came from one follow-up prompt in the same session: call search_rooms without the
+        limit argument, because the first search sent limit: 50.
+      </p>
+
       <details className="how-made__details">
         <summary>Show the two hook files</summary>
         <div className="how-made__hooks">
