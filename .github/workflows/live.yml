@@ -21,6 +21,10 @@ permissions:
   contents: read
 env:
   SITE: https://specimen.edycu.dev
+  # The pages link this repository only while it is public (VITE_REPO_PUBLIC, read at build time). The Vercel copy of that
+  # variable is of type "sensitive", which `vercel pull` writes empty, so the switch is derived here from the repository's
+  # own visibility (a schedule run has no repository payload and expects public).
+  REPO_PUBLIC: ${{ github.event.repository.private && '0' || '1' }}
 jobs:
   deploy:
     name: deploy to production
@@ -54,17 +58,19 @@ jobs:
           cache: npm
       - name: Install the Vercel CLI (pinned)
         run: npm install --global vercel@53.2.0
-      - name: Pull the production settings and environment (VITE_REPO_PUBLIC)
+      - name: Pull the production project settings and environment
         run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
       - name: Build (vercel.json buildCommand, production environment)
         run: vercel build --prod --token="$VERCEL_TOKEN"
-      - name: The build has every page, and links the public repository
+        env:
+          VITE_REPO_PUBLIC: ${{ env.REPO_PUBLIC }}
+      - name: The build has every page, and its repository switch matches the repository
         run: |
           out=.vercel/output/static
           for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do
             test -s "$out/$f" || { echo "::error::missing $out/$f"; exit 1; }
           done
-          node -e 'const j = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); console.log("repo.json", j); if (j.public !== true) { console.error("::error::static/repo.json is not {\"public\":true}: VITE_REPO_PUBLIC=1 did not reach the build"); process.exit(1); }' "$out/static/repo.json"
+          node -e 'const j = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); const want = process.env.REPO_PUBLIC === "1"; console.log("repo.json", j, "expected public:", want); if (j.public !== want) { console.error("::error::static/repo.json public is " + j.public + ", expected " + want); process.exit(1); }' "$out/static/repo.json"
       - name: Deploy the prebuilt output to production
         id: deploy
         run: |
@@ -99,7 +105,7 @@ jobs:
             echo "$code $SITE$p"
             test "$code" = 200 || { echo "::error::$SITE$p answered $code"; exit 1; }
           done
-          curl -sS "$SITE/static/repo.json" | node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8")); console.log("repo.json", j); if (j.public !== true) process.exit(1)'
+          curl -sS "$SITE/static/repo.json" | node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8")); const want = process.env.REPO_PUBLIC === "1"; console.log("repo.json", j, "expected public:", want); if (j.public !== want) process.exit(1)'
       - uses: actions/setup-node@v7
         with:
           node-version: 22
