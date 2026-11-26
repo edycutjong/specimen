@@ -14,7 +14,8 @@
  * `npm run build -w apps/cabinet` script with NODE_ENV=production, so its CSS is the CSS that dist holds.
  *
  * Scope limits: the parser reads only the at-rules this CSS uses (@media, @supports, @layer, plus skipping others). It
- * handles min-width and max-width in px. Any other media feature counts as not matching. The width check reads the
+ * handles width bounds in px (min-width / max-width, or the range syntax `width >= Npx` that Vite 8 minifies them to). Any
+ * other media feature counts as not matching. The width check reads the
  * `width` property only, not min-width or max-width.
  */
 import { execSync } from "node:child_process";
@@ -154,10 +155,38 @@ function parseCss(css: string): CssRule[] {
   return rules;
 }
 
+interface WidthBound {
+  readonly kind: "min" | "max";
+  readonly limit: number;
+  /** `>` or `<`: the limit itself does not match. */
+  readonly strict: boolean;
+}
+
 /**
- * Whether a media query holds at a viewport width. Only `(min-width: Npx)` and `(max-width: Npx)` joined by `and` are
- * understood. Any other feature (for example `prefers-reduced-motion`) makes the query fail, so an unknown rule never
- * counts as applying at a width.
+ * One width feature as a bound. Both spellings are read, because the minifier decides which one the production CSS
+ * holds (Vite 8's Lightning CSS writes `(min-width:600px)` as `(width>=600px)`): `min-width: Npx`, `max-width: Npx`,
+ * `width >= Npx`, `width > Npx`, `width <= Npx`, `width < Npx`, and the reversed `Npx <= width` forms.
+ */
+function widthBound(feature: string): WidthBound | undefined {
+  const legacy = /^(min|max)-width\s*:\s*(\d+(?:\.\d+)?)px$/i.exec(feature);
+  if (legacy) return { kind: (legacy[1] ?? "").toLowerCase() === "min" ? "min" : "max", limit: Number(legacy[2]), strict: false };
+  const range = /^width\s*(>=|<=|>|<)\s*(\d+(?:\.\d+)?)px$/i.exec(feature);
+  if (range) {
+    const op = range[1] ?? "";
+    return { kind: op.startsWith(">") ? "min" : "max", limit: Number(range[2]), strict: !op.endsWith("=") };
+  }
+  const reversed = /^(\d+(?:\.\d+)?)px\s*(>=|<=|>|<)\s*width$/i.exec(feature);
+  if (reversed) {
+    const op = reversed[2] ?? "";
+    return { kind: op.startsWith("<") ? "min" : "max", limit: Number(reversed[1]), strict: !op.endsWith("=") };
+  }
+  return undefined;
+}
+
+/**
+ * Whether a media query holds at a viewport width. Only width bounds (see `widthBound`) joined by `and` are understood.
+ * Any other feature (for example `prefers-reduced-motion`) makes the query fail, so an unknown rule never counts as
+ * applying at a width.
  */
 function mediaHolds(query: string, width: number): boolean {
   const features = [...query.matchAll(/\(([^()]*)\)/g)].map((m) => (m[1] ?? "").trim());
@@ -165,17 +194,20 @@ function mediaHolds(query: string, width: number): boolean {
   const leftover = query.replace(/\([^()]*\)/g, "").replace(/\band\b/gi, "").trim();
   if (leftover !== "") return false;
   return features.every((feature) => {
-    const match = /^(min|max)-width\s*:\s*(\d+(?:\.\d+)?)px$/i.exec(feature);
-    if (!match) return false;
-    const limit = Number(match[2]);
-    return (match[1] ?? "").toLowerCase() === "min" ? width >= limit : width <= limit;
+    const bound = widthBound(feature);
+    if (bound === undefined) return false;
+    if (bound.kind === "min") return bound.strict ? width > bound.limit : width >= bound.limit;
+    return bound.strict ? width < bound.limit : width <= bound.limit;
   });
 }
 
 /** Whether an enclosing media query requires a min-width of at least `minimum` px. */
 function guardedByMinWidth(media: readonly string[], minimum: number): boolean {
   return media.some((query) =>
-    [...query.matchAll(/\(\s*min-width\s*:\s*(\d+(?:\.\d+)?)px\s*\)/gi)].some((m) => Number(m[1]) >= minimum),
+    [...query.matchAll(/\(([^()]*)\)/g)].some((m) => {
+      const bound = widthBound((m[1] ?? "").trim());
+      return bound !== undefined && bound.kind === "min" && bound.limit >= minimum;
+    }),
   );
 }
 
