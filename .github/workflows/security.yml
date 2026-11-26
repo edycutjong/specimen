@@ -1,0 +1,59 @@
+name: Security
+# Secrets in the full git history (gitleaks), known vulnerabilities in the lockfile (npm audit), and on pull requests
+# the dependencies a change adds (dependency review).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  gitleaks:
+    name: gitleaks (full history)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        run: |
+          # pinned to the release's published SHA-256 (gitleaks_8.30.1_checksums.txt), checked before anything runs
+          curl -sSfL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks detect --source . --log-opts="--all" --redact
+  audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: npm audit (every dependency, moderate and above)
+        run: npm audit --audit-level=moderate
+      - name: Lockfile signatures
+        run: npm ci --ignore-scripts && npm audit signatures
+  dependency-review:
+    name: dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5.0.1
+        with:
+          fail-on-severity: moderate
+          comment-summary-in-pr: on-failure

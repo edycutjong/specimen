@@ -19,3 +19,4 @@ test-results/
 .specimen/turn.json
 .specimen/gate-*.json
 .specimen/unresolved.md
+.lighthouseci/

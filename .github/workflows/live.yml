@@ -1,0 +1,55 @@
+name: Live
+# Post-deploy smoke test of https://specimen.edycu.dev (deployed with the Vercel CLI; this workflow never deploys):
+# every page and static file answers, then the same Playwright judge-path suite runs against the live site.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+env:
+  SITE: https://specimen.edycu.dev
+jobs:
+  smoke:
+    name: live site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Every page and static file answers 200
+        run: |
+          for p in / /landing/ /deck/ /static/replay.js /static/repo.json; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --retry 3 --retry-all-errors "$SITE$p")
+            echo "$code $SITE$p"
+            test "$code" = 200 || { echo "::error::$SITE$p answered $code"; exit 1; }
+          done
+          curl -sS "$SITE/static/repo.json" | node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8")); if (typeof j.public !== "boolean") process.exit(1); console.log("repo.json", j)'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - name: Cache the Playwright browser
+        id: pw-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-chromium
+      - name: Install Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: The judge-path suite against the live site
+        run: npm run test:e2e
+        env:
+          E2E_BASE_URL: ${{ env.SITE }}

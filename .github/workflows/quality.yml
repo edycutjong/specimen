@@ -1,0 +1,37 @@
+name: Lighthouse
+# Lighthouse CI (desktop preset, 3 runs per page) on the built cabinet, landing and deck, with score floors and
+# byte budgets from lighthouserc.json.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  lighthouse:
+    name: lighthouse + budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build the site as Vercel does
+        run: npm run build:site
+      # the scoped @lhci/cli package, pinned (an unscoped "lhci" on npm is not Lighthouse CI)
+      - name: Lighthouse CI
+        run: npx --yes @lhci/cli@0.16.1 autorun
+      - name: Upload the reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports/
+          retention-days: 14

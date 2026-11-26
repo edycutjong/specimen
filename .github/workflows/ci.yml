@@ -1,51 +1,42 @@
-name: ci
+name: CI
+# Typecheck, the vitest + fast-check suite, the seed-fixture check and the exact Vercel build, on two Node versions.
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   test:
+    name: typecheck · test · build (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm test
+      - name: Typecheck (tsc --noEmit)
+        run: npm run typecheck
+      - name: Tests (vitest + fast-check)
+        run: npm test
+      - name: Seed fixture check
+        run: npm run seed:check
       # the exact Vercel build (vercel.json buildCommand): the cabinet, then the landing, the deck and /static/replay.js
-      - name: Build the site (cabinet + landing + deck)
+      - name: Build the site as Vercel does
         run: npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts
       - name: The deployed files exist
-        run: for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do test -s "apps/cabinet/dist/$f" || { echo "missing apps/cabinet/dist/$f"; exit 1; }; done
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - name: npm audit (production deps, high+)
-        run: npm audit --omit=dev --audit-level=high
-  gitleaks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: gitleaks (full history)
         run: |
-          # pinned to the release's published SHA-256 (gitleaks_8.24.2_checksums.txt), checked before anything runs
-          curl -sSfL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz
-          echo "fa0500f6b7e41d28791ebc680f5dd9899cd42b58629218a5f041efa899151a8e  gitleaks.tar.gz" | sha256sum -c -
-          tar -xzf gitleaks.tar.gz gitleaks
-          ./gitleaks detect --source . --log-opts="--all" --redact
+          for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do
+            test -s "apps/cabinet/dist/$f" || { echo "::error::missing apps/cabinet/dist/$f"; exit 1; }
+          done
