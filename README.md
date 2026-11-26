@@ -17,6 +17,12 @@
   ![React](https://img.shields.io/badge/React_+_Vite-149ECA?style=flat&logo=react&logoColor=white)
   ![Vitest](https://img.shields.io/badge/vitest_+_fast--check-6E9F18?style=flat&logo=vitest&logoColor=white)
   [![License](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
+  [![CI](https://github.com/edycutjong/specimen/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/ci.yml)
+  [![E2E](https://github.com/edycutjong/specimen/actions/workflows/e2e.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/e2e.yml)
+  [![CodeQL](https://github.com/edycutjong/specimen/actions/workflows/codeql.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/codeql.yml)
+  [![Security](https://github.com/edycutjong/specimen/actions/workflows/security.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/security.yml)
+  [![Lighthouse](https://github.com/edycutjong/specimen/actions/workflows/quality.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/quality.yml)
+  [![Live](https://github.com/edycutjong/specimen/actions/workflows/live.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/live.yml)
 
 </div>
 
@@ -103,7 +109,9 @@ Kiro is the builder, and every prompt that built this repository is in [`prompts
 | Stop gate, E1–E3 (the real `specimen hook` commands driven with scripted Stop payloads; no Kiro session) | v1 → allow; v2 with no spec → block naming all 5 red jars; v2 with the `quote` spec filed → block naming only SPC-0009, SPC-0010; 4th stop → allow + `unresolved.md`; 2.3–2.8 s per replaying stop, 0.4 s when nothing under `servers/` changed | `evidence/stop-gate/eval.md` |
 | Stop gate in a live headless Kiro session (N = 1 retained run per row, an earlier set of probes was overwritten by the re-runs (`prompts/README.md`); the prompt tells the agent what to do if a hook sends it back; its edit, one comment line in `servers/`, is unrelated to the red jars, which come from the server under test being v2) | gate ON: the agent was sent back once and ran `specimen file` for the red jars; without shell trust it said it could not; gate OFF: it answered DONE; a turn that edited nothing was not blocked | `evidence/stop-gate/live-shell.md`, `live.md` (no shell trust), `live-control-off.md`, `live-no-edit.md` |
 | Stop gate, break arm (N = 1 per arm; scratch at hollow-inn v1; prompt = "rename quote's `total` to `total_cents`, integer cents, reply DONE"; the prompt says nothing about hooks or replay, but the gate's own block reason does tell the agent what to do, and the rename was the requested change, so this is not an accident) | gate ON (171 s): the agent changed 2 lines and said DONE, was sent back once, replayed, ran `specimen file` for the 3 broken `quote` jars (the first filing call failed and was retried), the curator's check rejected the draft (`expected does not name the reference`), no spec was accepted, and the agent stopped with the jars still rattled and asked whether to keep the rename or revert it; gate OFF (about 20 s): 2 changed lines, DONE, "I did not run the test suite or the replay", nothing flagged. Gate ON cost 2.12 credits (6 curator sessions; figure from `prompts/README.md`, no credit output committed for these two runs), gate OFF 0.04; the unresolved ON turn is what `specimen seal` (accept an intended change, not built) would resolve | `evidence/stop-gate/live-break-on.md`, `live-break-off.md` |
-| Tests | 1082 passing in 121 files (vitest + fast-check), `tsc --noEmit` exit 0 | `evidence/tests.txt` |
+| Tests | 1090 passing in 123 files (vitest + fast-check), `tsc --noEmit` exit 0 | `evidence/tests.txt` |
+| End-to-end (Playwright, Chromium) | 13 passing on the built site, and the same 13 against <https://specimen.edycu.dev/> on every push and every 6 hours: the cabinet's v2 HOLD (5 preserved · 4 rattled · 1 cracked), v2.1 and v1 SHIP, the keyboard server switch, the landing's live replay, the deck's keys, no third-party request, no sideways scroll at 320 and 375 px | `e2e/judge-path.spec.ts`, `.github/workflows/e2e.yml`, `live.yml` |
+| Lighthouse CI (desktop preset, 3 runs per page) | cabinet, landing and deck held to performance ≥ 0.9, accessibility ≥ 0.95, best practices ≥ 0.95, SEO ≥ 0.9, script ≤ 250 KB and page ≤ 400 KB transferred; on this laptop all three scored performance 100 and accessibility 100, except the cabinet at 96 (the contrast limit 5 below) | `lighthouserc.json`, `.github/workflows/quality.yml` |
 | Consequence run: did the agent's own answer change under v2? | No — its answer was unchanged (`$425.00`); v2's tool description names `total_cents` and the agent had it loaded (no ablation was run, so that is the likely reason, not a measurement). A deterministic consumer written against v1 (`scripts/consumer.ts`) was run since | `evidence/consequence-v2/README.md` |
 | Consequence run, part 2: a client that reads `total` (our v1-era consumer, a 56-line script with no tool descriptions to read) | v2: the charge line throws (`total` is undefined), 5 of 9 rooms offered, cancel fails (`cancel_booking` not found); v2.1: every line matches v1 (`USD 425.00`, 9 rooms, cancelled) | `evidence/consequence-v2/consumer.md` |
 | Field shelf: a public MCP server (`server-memory` 1.0.0 → 2.2.1) | HOLD · 3 preserved · 2 unsealed — no break found (a null result, reported as one); 2 jars unsealed because the server also returns a `structuredContent` its text does not carry, which a text-only jar cannot compare | `evidence/field/server-memory.md` |
@@ -131,6 +139,7 @@ npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2.1"   # S
 npm run bench -- detect                                                      # rewrites evidence/bench/detect.md
 npm run bench -- hook                                                        # p50/p95 of the capture hooks → evidence/bench/hook.md
 npm run bench -- replay                                                      # p50/p95 of a full replay → evidence/bench/replay.md
+npm run build:site && npm run test:e2e                                       # the Vercel build, then the Playwright judge-path suite
 ```
 
 A Kiro Power with the workflow as one skill is in [`power/specimen/`](power/specimen/) (`plugin.json` + `skills/specimen-replay/SKILL.md`, written by Kiro in turn 49; no MCP server in it, and it has not been imported in the Kiro IDE).
@@ -138,6 +147,28 @@ A Kiro Power with the workflow as one skill is in [`power/specimen/`](power/spec
 Add it to your own project with `specimen init` (writes the Kiro hooks, an `mcp.json` entry check, `.specimen/replay.json` with
 a replay allow-list pre-filled from `readOnlyHint`, and checks the `kiro-cli` engine). Reproduction steps with the expected
 outputs pasted from real runs: [`DEMO.md`](DEMO.md).
+
+## 🧪 Testing & CI
+
+Six GitHub Actions workflows, on every push to `main` and every pull request (the badges above are their live state):
+
+| Workflow | What it checks |
+|---|---|
+| [`ci.yml`](.github/workflows/ci.yml) | `tsc --noEmit`, the vitest + fast-check suite, `npm run seed:check` and the exact Vercel build (`vercel.json` buildCommand), on Node 22 and 24 |
+| [`e2e.yml`](.github/workflows/e2e.yml) | Playwright drives the built cabinet, landing and deck in Chromium (`e2e/judge-path.spec.ts`) |
+| [`codeql.yml`](.github/workflows/codeql.yml) | CodeQL `security-extended` on the TypeScript and on these workflow files |
+| [`security.yml`](.github/workflows/security.yml) | gitleaks over the full git history, `npm audit` (moderate and above) and `npm audit signatures`; on pull requests, dependency review |
+| [`quality.yml`](.github/workflows/quality.yml) | Lighthouse CI with score floors and byte budgets (`lighthouserc.json`) |
+| [`live.yml`](.github/workflows/live.yml) | every page and static file of <https://specimen.edycu.dev/> answers 200, then the e2e suite runs against the live site; also every 6 hours. It never deploys (the site is deployed with the Vercel CLI) |
+
+Dependabot groups npm and Actions updates weekly (`.github/dependabot.yml`).
+
+```sh
+npm run typecheck && npm test        # what ci.yml runs
+npm run build:site && npm run test:e2e
+E2E_BASE_URL=https://specimen.edycu.dev npm run test:e2e   # the same suite against the live site
+npx @lhci/cli@0.16.1 autorun         # Lighthouse CI, after build:site
+```
 
 ## 📄 License
 
