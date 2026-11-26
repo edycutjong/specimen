@@ -344,8 +344,110 @@ export function redactText(text: string, c: Compiled): ResponseResult {
   return { responseText: redactTextMembers(replaced, c), response: null, pointers: [], textRedacted: true };
 }
 
-/** A JSON member written inside free text: a quoted key, a colon, then a scalar or the start of a container. */
-const TEXT_MEMBER = /"((?:[^"\\\n]|\\.)*)"(\s*:\s*)("(?:[^"\\\n]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{[])/g;
+/** A JSON member found in free text: `"key"`, the colon with its whitespace, and the value or the container's first char. */
+export interface TextMember {
+  readonly start: number;
+  readonly end: number;
+  readonly rawKey: string;
+  readonly colon: string;
+  readonly value: string;
+}
+
+const isLineTerminator = (ch: string): boolean => ch === "\n" || ch === "\r" || ch === " " || ch === " ";
+const isSpace = (ch: string): boolean => /\s/.test(ch);
+const isDigit = (ch: string | undefined): boolean => ch !== undefined && ch >= "0" && ch <= "9";
+
+/**
+ * Scans a string literal body from `from` (just after its opening quote): any char but `"`, `\` and `\n`, or a `\`
+ * followed by any char but a line terminator. Returns the index of the closing quote, or -1 and where the scan stopped.
+ */
+function scanQuoted(text: string, from: number): { close: number; stop: number } {
+  let i = from;
+  while (i < text.length) {
+    const ch = text.charAt(i);
+    if (ch === '"') return { close: i, stop: i };
+    if (ch === "\n") return { close: -1, stop: i };
+    if (ch === "\\") {
+      if (i + 1 >= text.length || isLineTerminator(text.charAt(i + 1))) return { close: -1, stop: i };
+      i += 2;
+    } else {
+      i += 1;
+    }
+  }
+  return { close: -1, stop: i };
+}
+
+/** The end (exclusive) of a value at `at`: a string, a JSON number, true, false, null, or `{` / `[`; -1 if none. */
+function valueEnd(text: string, at: number): number {
+  const ch = text.charAt(at);
+  if (ch === '"') {
+    const { close } = scanQuoted(text, at + 1);
+    return close < 0 ? -1 : close + 1;
+  }
+  if (ch === "-" || isDigit(ch)) {
+    let j = ch === "-" ? at + 1 : at;
+    if (!isDigit(text[j])) return -1;
+    while (isDigit(text[j])) j += 1;
+    if (text[j] === "." && isDigit(text[j + 1])) {
+      j += 1;
+      while (isDigit(text[j])) j += 1;
+    }
+    if (text[j] === "e" || text[j] === "E") {
+      let k = j + 1;
+      if (text[k] === "+" || text[k] === "-") k += 1;
+      if (isDigit(text[k])) {
+        while (isDigit(text[k])) k += 1;
+        j = k;
+      }
+    }
+    return j;
+  }
+  for (const word of ["true", "false", "null"]) if (text.startsWith(word, at)) return at + word.length;
+  return ch === "{" || ch === "[" ? at + 1 : -1;
+}
+
+/**
+ * Every JSON member written in free text, left to right and not overlapping: a quoted key, a colon, then a scalar or
+ * the start of a container. It finds exactly what the global pattern
+ * `/"((?:[^"\\\n]|\\.)*)"(\s*:\s*)("(?:[^"\\\n]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{[])/g`
+ * finds, in linear time. That pattern retried an unterminated string from every escaped quote inside it (quadratic,
+ * CodeQL js/polynomial-redos). A quote the key scan consumed as `\"` starts a scan in step with that one, so it ends
+ * where that one ended: no match can start before the key's closing quote (or before the stop of a failed scan).
+ */
+export function findTextMembers(text: string): TextMember[] {
+  const members: TextMember[] = [];
+  let p = text.indexOf('"');
+  while (p >= 0 && p < text.length) {
+    const key = scanQuoted(text, p + 1);
+    if (key.close < 0) {
+      p = text.indexOf('"', key.stop + 1);
+      continue;
+    }
+    let j = key.close + 1;
+    while (j < text.length && isSpace(text.charAt(j))) j += 1;
+    let end = -1;
+    let colonEnd = j;
+    if (text.charAt(j) === ":") {
+      colonEnd = j + 1;
+      while (colonEnd < text.length && isSpace(text.charAt(colonEnd))) colonEnd += 1;
+      end = valueEnd(text, colonEnd);
+    }
+    if (end < 0) {
+      // no member starts at p, nor at any quote inside the key: the next try is the key's closing quote
+      p = key.close;
+      continue;
+    }
+    members.push({
+      start: p,
+      end,
+      rawKey: text.slice(p + 1, key.close),
+      colon: text.slice(key.close + 1, colonEnd),
+      value: text.slice(colonEnd, end),
+    });
+    p = text.indexOf('"', end);
+  }
+  return members;
+}
 
 /**
  * The sensitive-key rule for a text response kept in plain text (redact mode; a2a round 07): an
@@ -356,19 +458,23 @@ const TEXT_MEMBER = /"((?:[^"\\\n]|\\.)*)"(\s*:\s*)("(?:[^"\\\n]|\\.)*"|-?\d+(?:
  */
 function redactTextMembers(text: string, c: Compiled): string {
   let whole = false;
-  const out = text.replace(TEXT_MEMBER, (member, rawKey: string, colon: string, value: string) => {
+  let out = "";
+  let last = 0;
+  for (const { start, end, rawKey, colon, value } of findTextMembers(text)) {
     let key = rawKey;
     try {
       key = JSON.parse(`"${rawKey}"`) as string;
     } catch {
       // not a valid JSON string literal: match the key as written
     }
-    if (!c.keys.has(key)) return member;
+    if (!c.keys.has(key)) continue;
     if (value === "{" || value === "[") {
       whole = true;
-      return member;
+      continue;
     }
-    return `"${rawKey}"${colon}${JSON.stringify(MARKER)}`;
-  });
+    out += `${text.slice(last, start)}"${rawKey}"${colon}${JSON.stringify(MARKER)}`;
+    last = end;
+  }
+  out += text.slice(last);
   return whole ? MARKER : out;
 }

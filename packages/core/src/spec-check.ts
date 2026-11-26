@@ -132,7 +132,26 @@ type FenceBlock = { open: number; close: number; info: string };
 
 const FENCE_OPEN = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 const FENCE_CLOSE = /^ {0,3}(`{3,}|~{3,})[ \t]*$/;
-const HEADING = /^ {0,3}(#{1,6})[ \t]+(.*?)[ \t]*$/;
+const HEADING_START = /^ {0,3}(#{1,6})[ \t]/;
+
+/**
+ * An ATX heading line: up to three spaces, one to six `#`, at least one space or tab, then the title with the spaces and
+ * tabs around it trimmed. Same lines and titles as `/^ {0,3}(#{1,6})[ \t]+(.*?)[ \t]*$/`, without that pattern's
+ * quadratic backtracking on long runs of tabs (CodeQL js/polynomial-redos): the title is trimmed by a loop. A line whose
+ * title holds a char that `.` does not match (`\n`, `\r`, U+2028, U+2029) is not a heading, as before.
+ */
+export function parseHeading(line: string): { level: number; text: string } | undefined {
+  const match = HEADING_START.exec(line);
+  const hashes = match?.[1];
+  if (match === null || hashes === undefined) return undefined;
+  const rest = line.slice(match[0].length);
+  if (/[\n\r\u2028\u2029]/.test(rest)) return undefined;
+  let from = 0;
+  let to = rest.length;
+  while (from < to && (rest[from] === " " || rest[from] === "\t")) from += 1;
+  while (to > from && (rest[to - 1] === " " || rest[to - 1] === "\t")) to -= 1;
+  return { level: hashes.length, text: rest.slice(from, to) };
+}
 
 /** Every fenced code block of the text, in order. An unclosed block runs to the end of the text. */
 function fenceBlocks(lines: readonly string[]): FenceBlock[] {
@@ -174,12 +193,8 @@ function markdownHeadings(lines: readonly string[], blocks: readonly FenceBlock[
   const headings: Heading[] = [];
   lines.forEach((line, index) => {
     if (inside.has(index)) return;
-    const match = HEADING.exec(line);
-    const hashes = match?.[1];
-    const title = match?.[2];
-    if (hashes !== undefined && title !== undefined) {
-      headings.push({ index, level: hashes.length, text: title });
-    }
+    const heading = parseHeading(line);
+    if (heading !== undefined) headings.push({ index, level: heading.level, text: heading.text });
   });
   return headings;
 }

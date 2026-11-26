@@ -74,17 +74,26 @@ function stripCommentSpans(line: string, startInComment: boolean): { text: strin
   }
 }
 
-/** Splits one table row into trimmed cells. A leading and a trailing pipe are optional; `\|` is a literal pipe. */
+/**
+ * Splits one table row into trimmed cells. A leading and a trailing pipe are optional; `\|` is a literal pipe and `\\`
+ * a literal backslash (the two escapes `specimen file` writes in a repro table cell).
+ */
 export function splitTableRow(line: string): string[] {
   let text = line.trim();
   if (text.startsWith("|")) text = text.slice(1);
-  if (text.endsWith("|") && !text.endsWith("\\|")) text = text.slice(0, -1);
+  if (text.endsWith("|")) {
+    // the trailing pipe ends the row unless it is escaped: an odd run of backslashes before it
+    let slashes = 0;
+    for (let k = text.length - 2; k >= 0 && text.charAt(k) === "\\"; k -= 1) slashes += 1;
+    if (slashes % 2 === 0) text = text.slice(0, -1);
+  }
   const cells: string[] = [];
   let current = "";
   for (let i = 0; i < text.length; i += 1) {
     const ch = text.charAt(i);
-    if (ch === "\\" && text.charAt(i + 1) === "|") {
-      current += "|";
+    const next = text.charAt(i + 1);
+    if (ch === "\\" && (next === "|" || next === "\\")) {
+      current += next;
       i += 1;
     } else if (ch === "|") {
       cells.push(current.trim());

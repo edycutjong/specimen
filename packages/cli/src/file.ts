@@ -9,7 +9,6 @@
  */
 import { spawn } from "node:child_process";
 import {
-  existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -202,9 +201,12 @@ export function signatureGroup(jars: readonly ResultEntry[], target: ResultEntry
   );
 }
 
-/** Escapes a value for one markdown table cell. */
-function cell(text: string): string {
-  return text.replace(/\|/g, "\\|");
+/**
+ * Escapes a value for one markdown table cell: a backslash as `\\`, then a pipe as `\|`, so a value holding `\|` cannot
+ * end the cell early (CodeQL js/incomplete-sanitization). The cabinet's table parser reads both escapes.
+ */
+export function tableCell(text: string): string {
+  return text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
 }
 
 /**
@@ -221,7 +223,7 @@ export function buildSkeleton(group: readonly ResultEntry[]): string {
   }));
   const rows = group.flatMap((entry) =>
     entry.changes.map(
-      (change) => `| ${cell(entry.id ?? "")} | ${cell(change.path)} | ${change.kind} | ${cell(change.note ?? "-")} |`,
+      (change) => `| ${tableCell(entry.id ?? "")} | ${tableCell(change.path)} | ${change.kind} | ${tableCell(change.note ?? "-")} |`,
     ),
   );
   const lines = [
@@ -457,12 +459,15 @@ export async function runFile(
   }
 
   // A filed spec is never overwritten: a failed or rejected re-run would otherwise replace it and then
-  // delete or rename it (a2a round 05).
-  if (existsSync(specPath)) {
+  // delete or rename it (a2a round 05). The exclusive create makes the check and the write one step, so no other
+  // process can put a spec there in between (CodeQL js/file-system-race).
+  mkdirSync(dirname(specPath), { recursive: true });
+  try {
+    writeFileSync(specPath, skeleton, { flag: "wx" });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
     return usage(io, `${relPath} already exists — a filed spec is never overwritten; move it away first to file it again`);
   }
-  mkdirSync(dirname(specPath), { recursive: true });
-  writeFileSync(specPath, skeleton);
 
   /** One curator run. Returns the exit code to stop with, or undefined when the run finished. */
   const curate = async (failures?: readonly Finding[]): Promise<number | undefined> => {
@@ -506,7 +511,11 @@ export async function runFile(
   }
 
   if (findings.length > 0) {
-    if (existsSync(specPath)) renameSync(specPath, join(dirname(specPath), REJECTED_NAME));
+    try {
+      renameSync(specPath, join(dirname(specPath), REJECTED_NAME));
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; // nothing left to set aside
+    }
     for (const finding of findings) {
       io.stdout(`FAIL ${finding.id} ${finding.code}: ${finding.message}\n`);
     }
