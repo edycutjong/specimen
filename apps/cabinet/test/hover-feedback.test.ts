@@ -34,7 +34,7 @@ describe("hover and press feedback on the disclosures and the footer link", () =
         stateRuleBody(css, item.selector, "focus-visible") ??
         stateRuleBody(read("../src/styles/cabinet.css"), "", "focus-visible");
       expect(focusRing, "focus ring").toBeDefined();
-      expect(new RegExp(`${item.selector.replace(/\./g, "\\.")}\\s*\\{[^}]*transition:[^;]*var\\(--hover-ms\\)`).test(css)).toBe(true);
+      expect(new RegExp(`${item.selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{[^}]*transition:[^;]*var\\(--hover-ms\\)`).test(css)).toBe(true);
     });
   }
 

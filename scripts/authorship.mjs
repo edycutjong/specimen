@@ -21,7 +21,8 @@ const log = execFileSync("git", ["log", "--no-merges", "--format=%x00%h%x09%s", 
   encoding: "utf8",
   maxBuffer: 64 * 1024 * 1024,
 });
-const isTest = (f) => /(^|\/)(test|tests|__tests__)\/|\.test\.[cm]?[jt]sx?$/.test(f);
+// a test directory anywhere in the path, or a *.test.(c|m)?(j|t)sx? file (two tests: the same files as before, no shared $)
+const isTest = (f) => /(^|\/)(test|tests|__tests__)\//.test(f) || /\.test\.[cm]?[jt]sx?$/.test(f);
 const rows = {}; // kind → { src, test, commits }
 for (const block of log.split("\0")) {
   if (!block.trim()) continue;

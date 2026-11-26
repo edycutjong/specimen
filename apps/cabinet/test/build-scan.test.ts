@@ -200,7 +200,7 @@ function jsHosts(text: string): Map<string, number> {
  */
 function exceptionProblems(rel: string, text: string, host: string): string[] {
   const problems: string[] = [];
-  const pattern = new RegExp(`https?://${host.replace(/\./g, "\\.")}`, "gi");
+  const pattern = new RegExp(`https?://${host.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "gi");
   const occurrences = [...text.matchAll(pattern)].map((m) => ({ at: m.index ?? 0, len: m[0].length }));
   if (occurrences.length === 0) return problems;
 
