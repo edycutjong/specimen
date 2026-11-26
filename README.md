@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="docs/icon.svg" alt="SPECIMEN JAR icon" width="144">
+  <img src="docs/icon-animated.svg" alt="SPECIMEN JAR icon" width="144">
   <h1>SPECIMEN JAR 🫙</h1>
   <p><em>Seal what your agent saw. Replay it against the new MCP server. Know what you are about to break before you ship.</em></p>
-  <img src="docs/readme-hero.png" alt="SPECIMEN JAR — an iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL" width="100%">
+  <img src="docs/readme-hero-animated.svg" alt="SPECIMEN JAR — an iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL" width="100%">
 
   <br/>
 

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="SPECIMEN JAR — replays real agent MCP calls against a changed server. An iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL.">
+<title>SPECIMEN JAR — replays real agent MCP calls against a changed server. An iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL.</title>
+<!-- STORYBOARD (dur 6s — must equal this file's single master dur)
+  0-10%   steady state: night-lab plate, barred storm window, one jar with iron neck bolts glowing green, the curled { specimen
+          drifting, a blank manila toe-tag — the poster (no text anywhere)
+  10-28%  trigger: lightning draws itself down the window (the replay firing) and flashes the plate        data-story="beat-2"
+  28-45%  mechanism: An iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL.
+          (the jar rattles three times in 600 ms at 30 %, red floods bottom-up, the specimen twitches, the toe-tag's
+          red strip prints in four steps, rattle arcs appear)                                         data-story="beat-3"
+  45-80%  resolution: held red — the flood, strip and arcs stay; the red glow breathes                 data-story="beat-4"
+  80-100% breathe; seam fade 92-98 % back to the green poster
+-->
+<defs>
+  <linearGradient id="ip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A2219"/><stop offset="1" stop-color="#10150F"/></linearGradient>
+  <radialGradient id="ist" cx="50%" cy="20%" r="55%"><stop offset="0" stop-color="#C9D6F2" stop-opacity="0.34"/><stop offset="1" stop-color="#C9D6F2" stop-opacity="0"/></radialGradient>
+  <radialGradient id="iG" cx="50%" cy="60%" r="50%"><stop offset="0" stop-color="#A8E35F" stop-opacity="0.32"/><stop offset="1" stop-color="#A8E35F" stop-opacity="0"/></radialGradient>
+  <radialGradient id="iR" cx="50%" cy="60%" r="50%"><stop offset="0" stop-color="#FF4A2E" stop-opacity="0.6"/><stop offset="1" stop-color="#FF4A2E" stop-opacity="0"/></radialGradient>
+  <linearGradient id="ifl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6FF9A"/><stop offset="0.35" stop-color="#A8E35F"/><stop offset="1" stop-color="#4F8A2A"/></linearGradient>
+  <linearGradient id="ird" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A6C"/><stop offset="0.3" stop-color="#FF4A2E"/><stop offset="1" stop-color="#8E1C12"/></linearGradient>
+  <linearGradient id="iir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A3AC9F"/><stop offset="0.45" stop-color="#5A6257"/><stop offset="1" stop-color="#2A3028"/></linearGradient>
+  <filter id="iglow" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
+  <clipPath id="iinner"><path d="M52 146 Q30 150 30 178 L30 408 Q30 430 52 430 L204 430 Q226 430 226 408 L226 178 Q226 150 204 146 Z"/></clipPath>
+  <clipPath id="iplate"><rect x="16" y="16" width="480" height="480" rx="112"/></clipPath>
+  <clipPath id="istrip"><rect x="-70" y="12" width="0" height="26"><animate attributeName="width" values="0;38;76;114;150;0;0" keyTimes="0;0.34;0.355;0.37;0.385;0.975;1" dur="6s" repeatCount="indefinite" calcMode="discrete"/></rect></clipPath>
+</defs>
+<style>
+  .breath { animation: breath 6s ease-in-out infinite; }
+  @keyframes breath { 0%, 45% { opacity: 1; } 62% { opacity: 0.62; } 80% { opacity: 1; } 100% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+<rect x="16" y="16" width="480" height="480" rx="112" fill="url(#ip)"/>
+<g clip-path="url(#iplate)">
+  <rect x="16" y="16" width="480" height="300" fill="url(#ist)"/>
+  <path d="M150 300 L150 128 Q150 56 256 44 Q362 56 362 128 L362 300" fill="#0C110E" fill-opacity=".55" stroke="#3E4C55" stroke-width="6"/>
+  <g stroke="#2E3A40" stroke-width="7" stroke-linecap="round"><line x1="203" y1="62" x2="203" y2="300"/><line x1="256" y1="48" x2="256" y2="300"/><line x1="309" y1="62" x2="309" y2="300"/></g>
+  <path d="M348 60 L318 108 L338 112 L306 168" fill="none" stroke="#C9D6F2" stroke-width="16" stroke-linejoin="round" filter="url(#iglow)" opacity="0" data-story="beat-2"><animate attributeName="opacity" values="0;0;1;0.3;0.9;0;0" keyTimes="0;0.13;0.14;0.16;0.18;0.26;1" dur="6s" repeatCount="indefinite"/></path>
+  <path d="M348 60 L318 108 L338 112 L306 168" fill="none" stroke="#C9D6F2" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"><animate attributeName="stroke-dashoffset" values="100;100;0;0;100;100" keyTimes="0;0.1;0.14;0.92;0.97;1" dur="6s" repeatCount="indefinite"/></path>
+  <rect x="16" y="16" width="480" height="480" fill="#C9D6F2" opacity="0" data-story="beat-2"><animate attributeName="opacity" values="0;0;0.18;0.03;0.12;0;0" keyTimes="0;0.14;0.145;0.16;0.17;0.2;1" dur="6s" repeatCount="indefinite"/></rect>
+  <ellipse cx="256" cy="330" rx="210" ry="190" fill="url(#iG)"/>
+  <g class="breath"><ellipse cx="256" cy="330" rx="210" ry="190" fill="url(#iR)" opacity="0" data-story="beat-4"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.3;0.35;0.92;0.975;1" dur="6s" repeatCount="indefinite"/></ellipse></g>
+</g>
+<g transform="translate(143.4 60) scale(0.88)">
+  <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="none" stroke="#FF4A2E" stroke-width="4" stroke-opacity=".35" opacity="0" data-story="beat-3" transform="translate(-10 0) rotate(-4 128 440)"><animate attributeName="opacity" values="0;0;1;0.6;0;0" keyTimes="0;0.3;0.32;0.92;0.975;1" dur="6s" repeatCount="indefinite"/></path>
+  <g><animateTransform attributeName="transform" type="rotate" values="0 128 440;0 128 440;-5 128 440;5 128 440;-5 128 440;5 128 440;-4 128 440;-4 128 440;0 128 440;0 128 440" keyTimes="0;0.3;0.3167;0.3333;0.35;0.3667;0.4;0.92;0.975;1" dur="6s" repeatCount="indefinite"/>
+    <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="#192219" fill-opacity=".7"/>
+    <g clip-path="url(#iinner)">
+      <rect x="20" y="186" width="216" height="254" fill="url(#ifl)"/>
+      <path d="M20 450 Q56 432 92 450 T164 450 T236 444 L236 640 L20 640 Z" fill="url(#ird)"><animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -160;0 -160;0 -160;0 0;0 0" keyTimes="0;0.3;0.38;0.92;0.976;0.98;1" dur="6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.92;0.975;0.985;1" dur="6s" repeatCount="indefinite"/></path>
+      <ellipse cx="128" cy="186" rx="98" ry="6" fill="#E6FFB8" opacity=".6"/>
+      <g transform="translate(120 248) rotate(-6) scale(1.9)"><g><animateTransform attributeName="transform" type="rotate" values="0;0;-14;10;-16;8;-12;-12;0;0" keyTimes="0;0.3;0.3167;0.3333;0.35;0.3667;0.4;0.92;0.975;1" dur="6s" repeatCount="indefinite"/>
+        <path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#0E120D" stroke-opacity=".45" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11 -34 C1 -34 -3 -28 -3 -19 L-3 -9 C-3 -3 -7 0 -14 0 C-7 0 -3 3 -3 9 L-3 19 C-3 28 1 34 11 34" fill="none" stroke="#ECE6D3" stroke-opacity=".9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      </g></g>
+      <circle cx="196" cy="400" r="7" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.5"><animate attributeName="cy" values="400;210;400" keyTimes="0;0.5;1" dur="6s" repeatCount="indefinite" calcMode="discrete"/></circle>
+      <rect x="44" y="192" width="12" height="220" rx="6" fill="#ECE6D3" opacity=".16"/>
+    </g>
+    <path d="M48 136 Q20 140 20 172 L20 412 Q20 440 48 440 L208 440 Q236 440 236 412 L236 172 Q236 140 208 136 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".85" stroke-width="9"/>
+    <rect x="42" y="118" width="172" height="24" rx="6" fill="#2A3028"/>
+    <rect x="30" y="76" width="196" height="46" rx="10" fill="url(#iir)"/>
+    <rect x="-26" y="114" width="72" height="22" rx="5" fill="url(#iir)"/><rect x="-40" y="106" width="22" height="38" rx="5" fill="url(#iir)"/>
+    <rect x="210" y="114" width="72" height="22" rx="5" fill="url(#iir)"/><rect x="274" y="106" width="22" height="38" rx="5" fill="url(#iir)"/>
+    <g transform="translate(136 384) rotate(5) scale(0.78)">
+      <path d="M-74 -34 L-62 -46 L80 -46 L80 46 L-62 46 L-74 34 Z" fill="#D9C49A"/>
+      <circle cx="-56" cy="0" r="9" fill="#2A2418"/>
+      <rect x="-38" y="-30" width="96" height="9" rx="3" fill="#1E1912"/>
+      <rect x="-38" y="-14" width="60" height="7" rx="3" fill="#1E1912" opacity=".7"/>
+      <g clip-path="url(#istrip)"><rect x="-70" y="12" width="150" height="26" fill="#FF4A2E"/></g>
+    </g>
+  </g>
+  <g fill="none" stroke="#FF4A2E" stroke-width="14" stroke-linecap="round" opacity="0" data-story="beat-3"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.3;0.315;0.92;0.975;1" dur="6s" repeatCount="indefinite"/>
+    <path d="M-36 230 Q-62 280 -36 330"/><path d="M292 220 Q318 270 292 320"/>
+  </g>
+</g>
+<rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="#333D31" stroke-width="4"/>
+</svg>
