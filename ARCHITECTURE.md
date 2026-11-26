@@ -1,9 +1,9 @@
 # Architecture
 
-Regenerated from the code on 2026-11-25 (file names below are the files in this repository). One TypeScript codebase; the
+Regenerated from the code on 2026-11-26 at commit fcfea86 (file names below are the files in this repository). One TypeScript codebase; the
 same `@specimen/core` runs in the Kiro hook, the `specimen` CLI, the demo MCP server's replay and the browser cabinet.
 
-![specimen architecture, as built: the jar → replay → file → fix loop between Kiro, specimen and the hollow-inn MCP server](docs/architecture.png)
+![SPECIMEN JAR architecture, as built: the seven .kiro/hooks files run specimen on each call to the hollow-inn MCP server; jars → replay → verdict (v2 HOLD jar by jar, v2.1 SHIP) → specimen file → Kiro curator → Kiro Bug Fix → hollow-inn v2_1.ts; the Stop gate; @specimen/core shared with the cabinet, landing and deck on Vercel](docs/architecture.png)
 
 ```
 Kiro agent ──MCP call──▶ hollow-inn (stdio)
@@ -32,6 +32,7 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 | `packages/cli` | The `specimen` command: `hook pre|post|firewall|prompt|stop` (stdin JSON in, jar line / turn snapshot / block decision out, fail-open on bad input), `replay`, `check-spec`, `file`, `init`, `manifest` |
 | `servers/hollow-inn` | The demo MCP server (six tools: `search_rooms`, `get_room`, `quote`, `book`, `list_bookings`, `cancel_booking`). `v1.ts` baseline, `v2.ts` three author-made breaks (`CHANGES.md`), `v2_1.ts` the Kiro-written fix. Money is integer cents, written as a two-decimal literal by `money.ts` |
 | `apps/cabinet` | Vite + React. `browser-replay.ts` runs the real `replay()` and `verdict()` against the real hollow-inn modules over `InMemoryTransport` in the browser; jars, policy files and the committed bugfix specs are imported at build time; it writes nothing and requests no third-party host. Components: shelf of jars, ServerSwitch (v1 / v2 / v2.1), ReplayButton, CountsPair, VerdictPlate, LabReportTable, JarDrawer, SpecViewer, SpoiledTray, GuideStrip |
+| `site/` | The landing page (`/landing/`) and the pitch deck (`/deck/`): static files in `site/public/`, plus `/static/replay.js` built from `site/replay-entry.ts` (the cabinet's replay module), so both pages replay the jars live in the visitor's tab |
 | `spikes/` | Day-1 spike harnesses (S1 browser bundle). Evidence, not product code |
 | `scripts/` | `bench.ts detect|hook|replay`, `seed-check.ts`, `record-sessions.sh`, `consequence-run.sh`, `consequence-extract.mjs`, `kiro-credits.mjs`, `stop-gate-eval.sh`, `stop-gate-live.sh`, `check_submission_readiness.ts` |
 
@@ -56,7 +57,7 @@ specimen file <jar> ──▶ curator agent ──▶ .kiro/specs/<name>/bugfix.
 
 ## Hosting
 
-Static output (`apps/cabinet/dist`) on Vercel, `vercel.json` builds `npm run build -w apps/cabinet`; no server is needed on the judge path.
+Static output (`apps/cabinet/dist`) on Vercel at <https://specimen.edycu.dev/>. `vercel.json` runs `npm run build -w apps/cabinet`, then `npx vite build --config site/vite.config.ts`, which adds `site/public/` (the landing at `/landing/`, the deck at `/deck/`) and `/static/replay.js` (`site/replay-entry.ts`: the cabinet's `browser-replay.ts` bundled on its own, so those two pages run the same replay and verdict code without the React app). No server is needed on the judge path.
 
 ## Not built
 
