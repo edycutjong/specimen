@@ -1,26 +1,97 @@
-name: Live
-# Post-deploy smoke test of https://specimen.edycu.dev (deployed with the Vercel CLI; this workflow never deploys):
-# every page and static file answers, then the same Playwright judge-path suite runs against the live site.
+name: Deploy & Live
+# Deploy: once CI has passed on a push to main, that commit goes to the Vercel project `specimen` in production,
+# prebuilt on the runner with a pinned Vercel CLI (vercel pull → vercel build --prod → vercel deploy --prebuilt --prod),
+# and the live site is checked to serve exactly that build. Live: every page and static file of
+# https://specimen.edycu.dev answers 200, then the Playwright judge-path suite runs against it — after every deploy,
+# and on its own every 6 hours. A manual run deploys main first (input `deploy`, default true).
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
   schedule:
     - cron: "23 */6 * * *"
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy main to production before the live checks
+        type: boolean
+        default: true
 permissions:
   contents: read
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
 env:
   SITE: https://specimen.edycu.dev
 jobs:
+  deploy:
+    name: deploy to production
+    # A CI run for a push to main that passed, and only while its commit is still the head of main (github.sha is the
+    # head of the default branch for workflow_run): an older commit whose CI finished late is never deployed over a newer one.
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.deploy) ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_sha == github.sha)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://specimen.edycu.dev/
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install the Vercel CLI (pinned)
+        run: npm install --global vercel@53.2.0
+      - name: Pull the production settings and environment (VITE_REPO_PUBLIC)
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Build (vercel.json buildCommand, production environment)
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+      - name: The build has every page, and links the public repository
+        run: |
+          out=.vercel/output/static
+          for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do
+            test -s "$out/$f" || { echo "::error::missing $out/$f"; exit 1; }
+          done
+          node -e 'const j = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); console.log("repo.json", j); if (j.public !== true) { console.error("::error::static/repo.json is not {\"public\":true}: VITE_REPO_PUBLIC=1 did not reach the build"); process.exit(1); }' "$out/static/repo.json"
+      - name: Deploy the prebuilt output to production
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          { echo "### Deployed to production"; echo; echo "- commit \`$GITHUB_SHA\`"; echo "- deployment $url"; echo "- live $SITE/"; } >> "$GITHUB_STEP_SUMMARY"
+      - name: The live site serves this build
+        run: |
+          want=$(sha256sum .vercel/output/static/index.html | cut -d' ' -f1)
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            got=$(curl -sS --retry 3 --retry-all-errors "$SITE/?deploy=$GITHUB_RUN_ID-$i" | sha256sum | cut -d' ' -f1)
+            if [ "$got" = "$want" ]; then echo "live index.html = this build ($want)"; exit 0; fi
+            echo "attempt $i: live $got, build $want"; sleep 6
+          done
+          echo "::error::$SITE/ does not serve this build's index.html"; exit 1
+
   smoke:
     name: live site
+    needs: deploy
+    # after a deploy, or on its own (schedule, a manual run without deploy, a CI run that did not deploy)
+    if: ${{ !cancelled() && (needs.deploy.result == 'success' || needs.deploy.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Every page and static file answers 200
         run: |
           for p in / /landing/ /deck/ /static/replay.js /static/repo.json; do
@@ -28,7 +99,7 @@ jobs:
             echo "$code $SITE$p"
             test "$code" = 200 || { echo "::error::$SITE$p answered $code"; exit 1; }
           done
-          curl -sS "$SITE/static/repo.json" | node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8")); if (typeof j.public !== "boolean") process.exit(1); console.log("repo.json", j)'
+          curl -sS "$SITE/static/repo.json" | node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8")); console.log("repo.json", j); if (j.public !== true) process.exit(1)'
       - uses: actions/setup-node@v7
         with:
           node-version: 22
