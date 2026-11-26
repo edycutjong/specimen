@@ -18,13 +18,16 @@
     "test": "vitest run",
     "spike:s1": "npm run -w spikes/s1-browser check",
     "seed:check": "tsx scripts/seed-check.ts",
-    "bench": "tsx scripts/bench.ts"
+    "bench": "tsx scripts/bench.ts",
+    "build:site": "npm run build -w apps/cabinet && vite build --config site/vite.config.ts",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/node": "^22.10.0",
     "fast-check": "^4.11.0",
     "tsx": "^4.23.15",
     "typescript": "^5.7.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.12"
   }
 }
