@@ -107,14 +107,14 @@ if (existsSync(dist)) {
     }
   }
   const other = [...hosts].filter((h) => h !== OWN && !/(^|\.)w3\.org$/.test(h));
-  add("built site requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (cabinet, /landing/, /deck/); <a> links only: ${[...nav].sort().join(", ") || "none"}`);
+  add("built site requests no third-party host", other.length === 0 ? "PASS" : "FAIL", other.length ? other.join(", ") : `${files.length} built files scanned (cabinet, /landing/, /deck/, /judge); <a> links only: ${[...nav].sort().join(", ") || "none"}`);
 
-  // The deploy is the cabinet plus the landing and the deck (vercel.json): a cabinet-only dist is not the live site.
-  const need = ["index.html", "landing/index.html", "deck/index.html", "static/replay.js", "static/repo.json"];
+  // The deploy is the cabinet plus the landing, the deck and the judge page (vercel.json): a cabinet-only dist is not the live site.
+  const need = ["index.html", "landing/index.html", "deck/index.html", "judge/index.html", "static/replay.js", "static/repo.json"];
   const missing = need.filter((p) => !existsSync(join(dist, p)));
   let repoPublic: unknown = null;
   try { repoPublic = (JSON.parse(read(join(dist, "static/repo.json"))) as { public?: unknown }).public; } catch { /* reported as missing */ }
-  add("built site has the cabinet, landing, deck and replay bundle", missing.length === 0 ? "PASS" : "FAIL", missing.length ? `missing in apps/cabinet/dist: ${missing.join(", ")} — run the vercel.json buildCommand` : `${need.length} files; repo links ${repoPublic === true ? "ON" : "off (VITE_REPO_PUBLIC unset: turn on at the public flip)"}`);
+  add("built site has the cabinet, landing, deck, judge page and replay bundle", missing.length === 0 ? "PASS" : "FAIL", missing.length ? `missing in apps/cabinet/dist: ${missing.join(", ")} — run the vercel.json buildCommand` : `${need.length} files; repo links ${repoPublic === true ? "ON" : "off (VITE_REPO_PUBLIC unset: turn on at the public flip)"}`);
 } else add("built site requests no third-party host", "FAIL", "apps/cabinet/dist missing: run the vercel.json buildCommand first");
 
 // 7. A kitchen file never sits in the repository.

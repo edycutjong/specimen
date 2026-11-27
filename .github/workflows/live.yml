@@ -67,7 +67,7 @@ jobs:
       - name: The build has every page, and its repository switch matches the repository
         run: |
           out=.vercel/output/static
-          for f in index.html landing/index.html deck/index.html static/replay.js static/repo.json; do
+          for f in index.html landing/index.html deck/index.html judge/index.html static/replay.js static/repo.json; do
             test -s "$out/$f" || { echo "::error::missing $out/$f"; exit 1; }
           done
           node -e 'const j = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); const want = process.env.REPO_PUBLIC === "1"; console.log("repo.json", j, "expected public:", want); if (j.public !== want) { console.error("::error::static/repo.json public is " + j.public + ", expected " + want); process.exit(1); }' "$out/static/repo.json"
@@ -100,7 +100,7 @@ jobs:
           persist-credentials: false
       - name: Every page and static file answers 200
         run: |
-          for p in / /landing/ /deck/ /static/replay.js /static/repo.json; do
+          for p in / /landing/ /deck/ /judge /static/replay.js /static/repo.json; do
             code=$(curl -sS -o /dev/null -w '%{http_code}' --retry 3 --retry-all-errors "$SITE$p")
             echo "$code $SITE$p"
             test "$code" = 200 || { echo "::error::$SITE$p answered $code"; exit 1; }

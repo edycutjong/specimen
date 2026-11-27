@@ -93,6 +93,35 @@ test.describe("deck (/deck/)", () => {
   });
 });
 
+test.describe("judge page (/judge)", () => {
+  // Vercel serves site/public/judge/index.html at /judge; the local static preview needs the trailing slash.
+  const judgePath = process.env.E2E_BASE_URL ? "/judge" : "/judge/";
+
+  test("renders the judge path, links every surface, and replays v2.1 live in the tab", async ({ page }) => {
+    const seen = watch(page);
+    await page.goto(judgePath);
+    await expect(page).toHaveTitle(/SPECIMEN JAR for judges/);
+    await expect(page.locator("h1")).toContainText("Three minutes in the specimen lab.");
+    for (const href of ["/", "/landing/", "/deck/", "https://github.com/edycutjong/specimen"]) {
+      await expect(page.locator(`footer a[href="${href}"]`)).toHaveCount(1);
+    }
+    await expect(page.locator(".jar")).toHaveCount(10);
+    await expect(page.locator(".plate-v")).toContainText("HOLD");
+    await page.locator('[data-ver="v2.1"]').click();
+    await expect(page.locator(".plate-v")).toContainText("LIVE IN THIS TAB", { timeout: 20_000 });
+    await expect(page.locator(".plate-v")).toContainText("v2.1 · 10 preserved · 0 rattled · 0 cracked");
+    expect(seen.thirdParty).toEqual([]);
+    expect(seen.errors).toEqual([]);
+  });
+
+  test("the cabinet and the landing link to it", async ({ page }) => {
+    await page.goto("/landing/");
+    await expect(page.locator('a[href="/judge"]').first()).toBeVisible();
+    await page.goto("/");
+    await expect(page.locator('a[href="/judge"]')).toHaveCount(1);
+  });
+});
+
 test.describe("static files the pages load", () => {
   test("/static/replay.js and /static/repo.json are served", async ({ request }) => {
     const js = await request.get("/static/replay.js");
@@ -105,7 +134,7 @@ test.describe("static files the pages load", () => {
 });
 
 test.describe("phone widths", () => {
-  for (const path of ["/", "/landing/", "/deck/"]) {
+  for (const path of ["/", "/landing/", "/deck/", process.env.E2E_BASE_URL ? "/judge" : "/judge/"]) {
     for (const width of [320, 375]) {
       test(`${path} has no horizontal page scroll at ${width} px`, async ({ page }) => {
         await page.setViewportSize({ width, height: 800 });
