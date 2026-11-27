@@ -548,7 +548,7 @@ code, pre, .data { font-family: var(--font-data); font-variant-ligatures: none; 
 <path d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="#ECE6D3" stroke-opacity=".5" stroke-width="2.6"/><path class="rim" d="M24 28 Q10 30 10 46 L10 176 Q10 190 24 190 L96 190 Q110 190 110 176 L110 46 Q110 30 96 28 Z" fill="none" stroke="url(#rim-g)" stroke-width="3.4"/><use href="#jar-lid"/>
 <path d="M40 27 C 34 60 26 92 24 122" fill="none" stroke="#CDBB8E" stroke-width="1.4" stroke-opacity=".85"/></svg></span><span class="tag" aria-hidden="true"><span class="tag__acc">SPC-0002</span><span class="tag__tool">quote</span><span class="tag__flag">ABNORMAL</span></span></div></div>
 <div class="words"><p class="k">The jar</p><h2 class="h">Sealed inside the <span class="hl--g">agent.</span></h2>
-<p class="lede">Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks seal every call to the hooked server as one line: input and response text, byte for byte, redacted on write.</p></div>
+<p class="lede">Kiro's <code>PreToolUse</code> and <code>PostToolUse</code> hooks seal every call to the hooked server as one line: the input, and the response text exactly as returned except for secret values, which are redacted before the line is written.</p></div>
 <div class="term" data-exhibit><div class="term__bar"><i></i><i></i><i></i><span>SPC-0002 · one jar line, excerpt (7 of 14 fields)</span></div><pre><span class="dim">{</span> <span class="key">"id"</span>: <span class="val">&quot;SPC-0002&quot;</span>,
   <span class="key">"session_id"</span>: <span class="val">&quot;sess_2e9b7313-1fcc-4a05-9adc-987b528ae3b8&quot;</span>,
   <span class="key">"tool"</span>: <span class="val">&quot;quote&quot;</span>,
