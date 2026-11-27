@@ -21,13 +21,13 @@
   ![Vitest](https://img.shields.io/badge/vitest_+_fast--check-6E9F18?style=flat&logo=vitest&logoColor=white)
   [![License](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
   [![CI](https://github.com/edycutjong/specimen/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/ci.yml)
-  [![Release](https://img.shields.io/github/v/release/edycutjong/specimen?sort=semver)](https://github.com/edycutjong/specimen/releases/latest)
+  [![Release](docs/badges/release.svg)](https://github.com/edycutjong/specimen/releases/latest)
   [![E2E](https://github.com/edycutjong/specimen/actions/workflows/e2e.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/e2e.yml)
   [![CodeQL](https://github.com/edycutjong/specimen/actions/workflows/codeql.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/codeql.yml)
   [![Security](https://github.com/edycutjong/specimen/actions/workflows/security.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/security.yml)
   [![Lighthouse](https://github.com/edycutjong/specimen/actions/workflows/quality.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/quality.yml)
   [![Deploy & Live](https://github.com/edycutjong/specimen/actions/workflows/live.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/live.yml)
-  [![Production deployment](https://img.shields.io/github/deployments/edycutjong/specimen/production?label=production&logo=vercel)](https://github.com/edycutjong/specimen/deployments/production)
+  [![Production deployment](docs/badges/production.svg)](https://github.com/edycutjong/specimen/deployments/production)
 
 </div>
 
