@@ -5,7 +5,7 @@
   <img src="docs/readme-hero-animated.svg" alt="SPECIMEN JAR — an iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL" width="100%">
 
   <p><strong>Change an MCP server and its own tests stay green, while code that reads its old responses breaks.</strong> SPECIMEN JAR seals the calls a Kiro agent really made, replays them against the new server and files each break as a Kiro bugfix spec: on our demo server an input-schema diff sees 2 changes, the replay finds 5 of 10 calls changed. <a href="https://specimen.edycu.dev/">Open the cabinet</a>, watch the jars rattle, click a red one.</p>
-  <p><sub><b>Built with Kiro:</b> 7 hook files (capture, Stop gate, firewall) · a custom agent fenced to <code>.kiro/specs/</code> · 3 feature specs and 3 Bug Fix specs whose tasks Kiro executed · 4 steering files · a Power · all 49 build prompts in <a href="prompts/"><code>prompts/</code></a></sub></p>
+  <p><sub><b>Built with Kiro:</b> 7 hook files (capture, firewall and task hooks by Kiro; the Stop and turn hook files are ours) · a custom agent fenced to <code>.kiro/specs/</code> · 3 feature specs and 3 Bug Fix specs executed by Kiro (we ran the final acceptance of two) · 4 steering files · a Power · all 49 build prompts in <a href="prompts/"><code>prompts/</code></a></sub></p>
 
   <br/>
 
