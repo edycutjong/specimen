@@ -72,7 +72,8 @@ reports 2 changes for the v2 server, both from the one renamed tool, so it sees 
    the request, and the response text exactly as the server returned it except for secrets: values under sensitive keys (`token`, `password`, `api_key` …)
    and matches of the secret patterns (`Bearer …`, `sk-…`, email addresses) are replaced in place by `[REDACTED]` before the jar is written, listed in the
    jar's `redacted` field and left out of the replay comparison (`packages/core/src/redact.ts`, `.specimen/redact.json`; none of the 10 committed jars
-   needed it: `"redacted":[]`). Jars are checksummed (`jars/MANIFEST.sha256`).
+   needed it: `"redacted":[]`). A redacted value in a request is replayed as `[REDACTED]`, so that call may answer differently, and the replay
+   cannot tell that from a server change. Jars are checksummed (`jars/MANIFEST.sha256`).
 2. **Replay** — `specimen replay --server "<command>"` starts a fresh instance of the changed server per recorded session, replays the
    jars in order, and compares each response with the jar: **preserved**, **rattled** (came back different), **cracked** (the call
    no longer works). The detector names a likely rename or unit change (`/total` → `/total_cents`, ×100).
