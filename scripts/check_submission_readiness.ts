@@ -18,7 +18,7 @@ const git = (...a: string[]): { code: number; out: string } => {
   return { code: r.status ?? 1, out: (r.stdout ?? "").trim() };
 };
 const read = (p: string): string => readFileSync(p, "utf8");
-const prose = ["README.md", "DEMO.md", "ARCHITECTURE.md", "docs/DX-REPORT.md", "docs/EXPERIMENT.md"].map((f) => join(root, f)).concat(extraFiles);
+const prose = ["README.md", "JUDGE.md", "DEMO.md", "ARCHITECTURE.md", "docs/DX-REPORT.md", "docs/EXPERIMENT.md"].map((f) => join(root, f)).concat(extraFiles);
 
 // 1. /.kiro and prompts/ exist, are not ignored, and are tracked (rules: /.kiro at the repo root, not gitignored; tool-scored prompts).
 for (const dir of [".kiro", "prompts"]) {
@@ -41,7 +41,7 @@ for (const f of prose) {
     if (m) hits.push(`${f.replace(root + "/", "")}:${i + 1} "${m[0]}"`);
   });
 }
-add("no placeholder fields in README/DEMO/ARCHITECTURE/docs", hits.length === 0 ? "PASS" : "FAIL", hits.length === 0 ? `${prose.length} files scanned` : hits.slice(0, 8).join("; "));
+add("no placeholder fields in README/JUDGE/DEMO/ARCHITECTURE/docs", hits.length === 0 ? "PASS" : "FAIL", hits.length === 0 ? `${prose.length} files scanned` : hits.slice(0, 8).join("; "));
 
 // 3. Video URL in the README (the only field allowed to stay pending until the human uploads it).
 const readme = existsSync(join(root, "README.md")) ? read(join(root, "README.md")) : "";
