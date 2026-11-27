@@ -46,3 +46,11 @@ that frame; it never speeds it up without a label.
 
 Kiro credits for these takes: 1.20 (T2 0.58, T3 0.62 — two curator sessions), summed from each session's `usage_summary`
 by `scripts/kiro-credits.mjs`.
+
+## README b-roll (`docs/broll/`, 2026-11-27)
+Four looping GIFs in the README, 1200 px wide, 20 fps. No clock was faked and nothing was retimed except the one labelled stretch.
+
+| GIF | Source | Speed |
+|---|---|---|
+| `swap-rattle.gif` · `jar-diff.gif` · `ship-v2-1.gif` | the production page `https://specimen.edycu.dev/`, captured 2026-11-27 in Chromium driven by Playwright: CDP screencast at device scale 2, every frame kept with its compositor timestamp, resampled to 20 fps on those timestamps. The page was the build of e410134 (its `index.html`, landing, deck and `/static/replay.js` byte-identical to a local `npm run build:site` of that commit with `VITE_REPO_PUBLIC=1`). The only added element is a cursor with a click ring that follows the real mouse; nothing on the page is edited. Each loop starts on its result (the plate, or the open drawer) and ends in the state it starts in | real time |
+| `file-spec.gif` | take T3 above (`specimen file SPC-0002` in the scratch clone), its recorded bytes written into xterm.js at the recorded 100 columns; the boxes on three lines and the speed chip are annotation | real time, except Enter → the filed line (8.9 s → 45.4 s into T3, 36.5 s, both curator runs) at ×24, labelled on screen |

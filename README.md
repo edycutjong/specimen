@@ -33,6 +33,14 @@
 
 **What is shown** (Kiroween 2026, Frankenstein category): our demo server's v2, with breaks we planted, turns 5 of the 10 jars recorded from real Kiro sessions red while an input-schema diff sees 2 changes; three bugfix specs are filed for the red jars, Kiro designs the fixes and executes them (we ran the final acceptance of two), and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load; capturing your own calls takes `specimen init` and the Kiro hooks in your own repository.
 
+## 📸 See it in Action
+
+<p align="center">
+  <img src="docs/broll/swap-rattle.gif" width="100%" alt="Screen capture of the live SPECIMEN JAR cabinet: the server switch moves from v1 to v2 and Replay is pressed; a storm flash, then the ten jars on two shelves take their state one by one: five stay green, four flood red with ABNORMAL tags, one cracks; the counts read input-schema diff 1 of 6 tools changed against replay 3 tools · 5 jars changed, and the plate reads HOLD v2 · 5 preserved · 4 rattled · 1 cracked">
+</p>
+
+*The live cabinet at real speed: switch to hollow-inn v2 and replay the 10 jars recorded from real Kiro sessions. Five come back different (four rattle red, one cracks because its tool is gone from `tools/list`) and the plate says HOLD, while the input-schema diff above the shelves counts 1 of 6 tools changed (the renamed `cancel_booking`). Captured from <https://specimen.edycu.dev/> with Playwright (CDP screencast at 2×, real time); the cursor is drawn in, nothing on the page is edited.*
+
 ## 💡 The Problem & Solution
 
 ### The Problem
@@ -42,6 +50,12 @@ green. The callers find out in production. In our demo, a 56-line client written
 offered 5 of 9 rooms and cannot cancel; the Kiro agent itself still answered `$425.00`, most likely because v2's tool
 description names `total_cents` (consequence rows below). An input-schema diff of `tools/list` sees only part of it: it
 reports 2 changes for the v2 server while 5 of the 10 recorded calls come back different.
+
+<p align="center">
+  <img src="docs/broll/jar-diff.gif" width="100%" alt="Screen capture of the live cabinet: the red quote jar SPC-0002 is clicked and its drawer opens: /total 425.00 → /total_cents 42500 ×100, 'Renamed, and the unit changed from dollars to cents. A client that reads total gets nothing.', and BUGFIX SPEC filed as a Kiro bugfix spec with check-spec PASS; beside it the counts read input-schema diff 1 of 6 tools changed against replay 3 tools · 5 jars changed; the drawer is closed again">
+</p>
+
+*Open a red jar and the replay names the break: `quote` now answers `/total_cents 42500` where the jar holds `/total 425.00` (renamed, ×100). An input-schema diff cannot see it, because `quote`'s inputs never changed. The jar's Kiro bugfix spec is already filed and passed `check-spec`. Live cabinet, real speed.*
 
 ### The Solution
 
@@ -60,6 +74,18 @@ reports 2 changes for the v2 server while 5 of the 10 recorded calls come back d
    The committed hook (`.kiro/hooks/specimen-jar-stop.json`) replays the current server, hollow-inn v2.1, which is SHIP, so
    in this repository as committed it allows every stop until someone changes v2.1; the blocks in the table below were
    measured in scratch copies against v1 or v2 (how each row was produced: [`DEMO.md` §7](DEMO.md#7-the-stop-gate)).
+
+<p align="center">
+  <img src="docs/broll/file-spec.gif" width="100%" alt="Terminal recording: a v2 replay has listed SPC-0002, SPC-0006 and SPC-0007 as rattled quote jars and 'not filed'; npx specimen file SPC-0002 is typed, the Kiro curator agent runs (36.5 s, shown at ×24 with an on-screen label), the CLI prints filed .kiro/specs/quote-total-total-cents/bugfix.md · PASS SPC-0002, SPC-0006, SPC-0007, and a grep of the new bugfix.md shows WHEN … THEN requirement lines that cite each jar">
+</p>
+
+*File: `specimen file SPC-0002` hands the red `quote` jar to the Kiro curator agent, which writes `.kiro/specs/quote-total-total-cents/bugfix.md`; the CLI checks it (`PASS` for all three `quote` jars), and its requirements cite the jarred calls. The real terminal take from the demo video (2026-11-26, a scratch clone with the committed `quote` spec removed), replayed byte for byte; the curator's two runs took 36.5 s and are shown ×24, labelled on screen. Provenance: [`evidence/video-takes.md`](evidence/video-takes.md).*
+
+<p align="center">
+  <img src="docs/broll/ship-v2-1.gif" width="100%" alt="Screen capture of the live cabinet on hollow-inn v2.1: Replay is pressed and all ten jars take their state green; the counts read 0 of 6 tools changed and 0 tools · 0 jars changed, and the plate reads SHIP v2.1 · 10 preserved · 0 rattled · 0 cracked">
+</p>
+
+*Fix: hollow-inn v2.1, fixed by Kiro from the three filed bugfix specs, replays SHIP · 10 of 10 preserved on the recorded set (default mode: the three `quote` jars keep `total` and gain `total_cents`, a compatible addition; `--strict` says HOLD · 3 rattled). Live cabinet, real speed.*
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -160,7 +186,7 @@ Six GitHub Actions workflows (the badges above are their live state). Five run o
 | [`codeql.yml`](.github/workflows/codeql.yml) | CodeQL `security-extended` on the TypeScript and on these workflow files |
 | [`security.yml`](.github/workflows/security.yml) | gitleaks over the full git history, `npm audit` (moderate and above) and `npm audit signatures`; on pull requests, dependency review |
 | [`quality.yml`](.github/workflows/quality.yml) | Lighthouse CI with score floors and byte budgets (`lighthouserc.json`) |
-| [`live.yml`](.github/workflows/live.yml) | **Deploy & Live.** When CI passes on a push to `main` (and that commit is still the head of `main`), it deploys the commit to Vercel production — `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`, Vercel CLI pinned, recorded as a GitHub deployment to the `production` environment — after checking the build has every page and `static/repo.json` is `{"public":true}`, then checks that the live `index.html` is byte-identical to that build. Then every page and static file of <https://specimen.edycu.dev/> answers 200 and the e2e suite runs against the live site. The live checks also run on their own every 6 hours |
+| [`live.yml`](.github/workflows/live.yml) | **Deploy & Live.** When CI passes on a push to `main` (and that commit is still the head of `main`), it deploys the commit to Vercel production — `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`, Vercel CLI pinned, recorded as a GitHub deployment to the `production` environment — after checking the build has every page and that its repository switch matches the repository's visibility (`static/repo.json` = `{"public":true}` while the repo is public), then checks that the live `index.html` is byte-identical to that build. Then every page and static file of <https://specimen.edycu.dev/> answers 200 and the e2e suite runs against the live site. The live checks also run on their own every 6 hours |
 
 Dependabot groups npm and Actions updates weekly (`.github/dependabot.yml`).
 
