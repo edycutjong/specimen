@@ -96,7 +96,7 @@ npx tsx scripts/check_submission_readiness.ts --allow-pending-video
 `specimen init` writes the capture and firewall hooks, `.specimen/replay.json` (replay allow-list pre-filled from `readOnlyHint`) and the ignore rules; a second run
 changes nothing (the stop and turn hook files only when a test server is given). A real run on a scratch workspace is in `evidence/init-smoke.md`. It also writes `.kiro/hooks/specimen-jar-stop.json` when a test server is given;
 that hook calls `specimen hook stop` (section 7).
-The readiness script checks `.kiro/` and `prompts/` are tracked, no unfinished-text markers, every spec folder complete, every bugfix spec passes `check-spec` for every jar it names, the built site (cabinet, `/landing/`, `/deck/`,
+The readiness script checks `.kiro/` and `prompts/` are tracked, no unfinished-text markers, every spec folder complete, every bugfix spec passes `check-spec` for every jar it names, the built site (cabinet, `/landing/`, `/deck/`, `/judge`,
 `/static/replay.js`) is complete and requests no third-party host (only an `<a>` link counts as navigation), and no kitchen file is tracked; the demo video URL is the one field allowed to stay `PENDING` until it is uploaded.
 
 ## 7. The Stop gate

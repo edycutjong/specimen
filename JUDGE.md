@@ -4,7 +4,8 @@
 
 Three minutes: the 30-second test, about 60 seconds in the live cabinet (no setup), where Kiro did the work with a file
 behind every line, four commands to check it from a clone, and the limits. The full reproduction, with every expected
-output, is [`DEMO.md`](DEMO.md).
+output, is [`DEMO.md`](DEMO.md). The same path as a web page, with a live replay you can run in place:
+<https://specimen.edycu.dev/judge>.
 
 ## The 30-second test
 
@@ -24,8 +25,8 @@ carries the `session_id`).
 
 **Video (2:37, public):** <https://youtu.be/41UlOy2X318>. Kiro on screen at
 [0:43](https://youtu.be/41UlOy2X318?t=43) (a live Kiro CLI session, its calls sealed by the capture hooks),
-[1:03](https://youtu.be/41UlOy2X318?t=63) (the curator agent files a bugfix spec, `check-spec` PASS) and
-[1:25](https://youtu.be/41UlOy2X318?t=85) (Kiro's Bug Fix tasks, then SHIP v2.1).
+[1:04](https://youtu.be/41UlOy2X318?t=64) (the curator agent files a bugfix spec, `check-spec` PASS) and
+[1:42](https://youtu.be/41UlOy2X318?t=102) (Kiro's Bug Fix tasks, then SHIP v2.1).
 
 | Criterion | Where to look |
 |---|---|
@@ -142,7 +143,7 @@ output: [`DEMO.md`](DEMO.md).
 ## Links
 
 - Repository (MIT): <https://github.com/edycutjong/specimen>
-- Live cabinet: <https://specimen.edycu.dev/> · landing: <https://specimen.edycu.dev/landing/> · deck: <https://specimen.edycu.dev/deck/>
+- Judge page: <https://specimen.edycu.dev/judge> · live cabinet: <https://specimen.edycu.dev/> · landing: <https://specimen.edycu.dev/landing/> · deck: <https://specimen.edycu.dev/deck/>
 - Video: <https://youtu.be/41UlOy2X318>
 - Write-up on dev.to: <https://dev.to/edycutjong/our-schema-diff-saw-2-changes-replaying-the-agents-real-calls-found-5-that-came-back-different-2jlh>
 - Full reproduction: [`DEMO.md`](DEMO.md) · how it is built: [`ARCHITECTURE.md`](ARCHITECTURE.md) · Kiro friction and credits: [`docs/DX-REPORT.md`](docs/DX-REPORT.md)
