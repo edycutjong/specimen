@@ -13,11 +13,17 @@ output, is [`DEMO.md`](DEMO.md). The same path as a web page, with a live replay
 against the changed server, and files each call that comes back different as a Kiro bugfix spec, with the captured call
 as its repro. **Who:** anyone who maintains an MCP server that Kiro agents call. **Why:** the server's own tests are
 updated with the change and stay green while its callers break; on our demo server an input-schema diff reports 2
-changes (one renamed tool: `cancel_booking` removed, `booking_cancel` added), and the replay finds 5 of the 10 recorded
-calls changed.
+changes, both from one renamed tool (`cancel_booking` removed, `booking_cancel` added), so it sees 1 of the 3 breaks; the
+replay sees all 3, in 5 of the 10 recorded calls.
 
-**Why Frankenstein:** four parts built for different jobs, stitched into one loop: MCP (the thing under test), Kiro
-hooks (the capture), a replay engine (the verdict) and Kiro's Bug Fix specs (where a break lands as work). **Why Kiro:**
+**Why Frankenstein:** four parts that were not made to fit, stitched into one loop: MCP (the thing under test), Kiro
+hooks (the capture), a replay engine (the verdict) and Kiro's Bug Fix specs (where a break lands as work). They are
+incompatible at the seams, and each seam has a suture: Kiro's hook payload carries no timestamp and no call id, so each
+response is paired with its request by session, tool and input hash, oldest first ([`S3.md`](evidence/spikes/S3.md),
+[`pairing.ts`](packages/core/src/pairing.ts)); the hook's `tool_name` makes a hyphenated server key ambiguous, so the hook
+is passed the key (`--server`); an MCP server is a process, so the browser cabinet runs the server's own modules over an
+in-memory MCP transport ([`browser-replay.ts`](apps/cabinet/src/browser-replay.ts)); and a spec a language model drafts
+counts only once the deterministic `specimen check-spec` passes it. **Why Kiro:**
 a `PreToolUse` / `PostToolUse` hook runs inside the agent and sees each MCP call's `tool_input` and `tool_response` with
 Kiro's `session_id`, so there is no proxy in front of the server, and a red jar becomes a spec Kiro's Bug Fix workflow can
 execute (payload keys measured in [`evidence/spikes/S3.md`](evidence/spikes/S3.md); every jar line in [`jars/`](jars/)
@@ -94,6 +100,7 @@ git clone https://github.com/edycutjong/specimen && cd specimen && npm ci
 
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"; echo "exit $?"
 # HOLD · covered · 4 rattled, 1 cracked · 10 jars compared · 4 of 6 tools · not recorded: booking_cancel, get_room
+# (4 of 6, not 5: v2 lists booking_cancel, a name the jars never called; their cancel_booking call is the cracked jar)
 # then one line per jar, e.g. SPC-0002 · quote · rattled · /total, /total_cents · suspected rename from /total ×100
 # exit 3   ("covered": every red jar already has a filed bugfix spec; an unfiled red jar makes it exit 1)
 

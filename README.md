@@ -40,7 +40,7 @@
 
 **For anyone who maintains an MCP server that agents call.** Change the server, update its tests with it, and they stay green, while code that reads the old response breaks. SPECIMEN JAR seals the calls a Kiro agent really made (Kiro hooks, inside the agent), replays them against the new server, and files each break as a Kiro bugfix spec, with the captured calls as its repro.
 
-**What is shown** (Kiroween 2026, Frankenstein category): our demo server's v2, with breaks we planted, turns 5 of the 10 jars recorded from real Kiro sessions red while an input-schema diff sees 2 changes; three bugfix specs are filed for the red jars, Kiro designs the fixes and executes them (we ran the final acceptance of two), and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load; capturing your own calls takes `specimen init` and the Kiro hooks in your own repository.
+**What is shown** (Kiroween 2026, Frankenstein category): our demo server's v2, with breaks we planted, turns 5 of the 10 jars recorded from real Kiro sessions red while an input-schema diff sees 2 changes, both from the one renamed tool (1 of the 3 breaks; the replay catches all 3); three bugfix specs are filed for the red jars, Kiro designs the fixes and executes them (we ran the final acceptance of two), and v2.1 replays SHIP 10 of 10. Live cabinet: <https://specimen.edycu.dev/> — it replays the committed jars in your browser on load; capturing your own calls takes `specimen init` and the Kiro hooks in your own repository.
 
 ## 📸 See it in Action
 
@@ -58,7 +58,7 @@ You change an MCP server: a field is renamed, a default moves, a tool is renamed
 green. The callers find out in production. In our demo, a 56-line client written for v1 throws on the missing `total`, is
 offered 5 of 9 rooms and cannot cancel; the Kiro agent itself still answered `$425.00`, most likely because v2's tool
 description names `total_cents` (consequence rows below). An input-schema diff of `tools/list` sees only part of it: it
-reports 2 changes for the v2 server while 5 of the 10 recorded calls come back different.
+reports 2 changes for the v2 server, both from the one renamed tool, so it sees 1 of the 3 breaks; the replay sees all 3, in 5 of the 10 recorded calls.
 
 <p align="center">
   <img src="docs/broll/jar-diff.gif" width="100%" alt="Screen capture of the live cabinet: the red quote jar SPC-0002 is clicked and its drawer opens: /total 425.00 → /total_cents 42500 ×100, 'Renamed, and the unit changed from dollars to cents. A client that reads total gets nothing.', and BUGFIX SPEC filed as a Kiro bugfix spec with check-spec PASS; beside it the counts read input-schema diff 1 of 6 tools changed against replay 3 tools · 5 jars changed; the drawer is closed again">
@@ -69,7 +69,10 @@ reports 2 changes for the v2 server while 5 of the 10 recorded calls come back d
 ### The Solution
 
 1. **Capture** — Kiro hooks (`PreToolUse` / `PostToolUse` on the MCP server's tools) seal every real tool call a Kiro agent makes as a *jar*:
-   request, response text byte for byte, redacted on write. Jars are checksummed (`jars/MANIFEST.sha256`).
+   the request, and the response text exactly as the server returned it except for secrets: values under sensitive keys (`token`, `password`, `api_key` …)
+   and matches of the secret patterns (`Bearer …`, `sk-…`, email addresses) are replaced in place by `[REDACTED]` before the jar is written, listed in the
+   jar's `redacted` field and left out of the replay comparison (`packages/core/src/redact.ts`, `.specimen/redact.json`; none of the 10 committed jars
+   needed it: `"redacted":[]`). Jars are checksummed (`jars/MANIFEST.sha256`).
 2. **Replay** — `specimen replay --server "<command>"` starts a fresh instance of the changed server per recorded session, replays the
    jars in order, and compares each response with the jar: **preserved**, **rattled** (came back different), **cracked** (the call
    no longer works). The detector names a likely rename or unit change (`/total` → `/total_cents`, ×100).
@@ -129,7 +132,7 @@ Kiro is the builder, and every prompt that built this repository is in [`prompts
 - **What Kiro did not write** — the hollow-inn demo server v1 and v2 (the planted breaks are ours), test harnesses and glue
   (commits starting `claude-direct:`: glue, fixes found while reviewing Kiro's output, the eval and probe scripts, the readiness script, the docs, and the landing page and deck in `site/`). The bugfix workflow ran headless: no IDE approval step was taken. Turn 43 stopped by itself at its final acceptance task
   (headless, it could not ask whether to update the cabinet tests that pin the old counts) and three execution turns (45, 46, 47)
-  were cut by our own timeout; the remaining acceptance steps were run by us, outside Kiro, and are labelled so in `prompts/README.md`.
+  were cut by our own timeout (45 = the `cancel_booking` fix, during its final acceptance task; 46 and 47 = cabinet UX fixes, at their last item); the remaining acceptance steps were run by us, outside Kiro, and are labelled so in `prompts/README.md`.
   Credits, friction and the measured rate: [`docs/DX-REPORT.md`](docs/DX-REPORT.md).
 
 ## 📊 Engineering Rigor
@@ -186,7 +189,7 @@ outputs pasted from real runs: [`DEMO.md`](DEMO.md).
 
 ## 🧪 Testing & CI
 
-Six GitHub Actions workflows (the badges above are their live state). Five run on every push to `main` and every pull request; the sixth, Deploy & Live, deploys `main` once CI has passed on it:
+Seven GitHub Actions workflows. Five run on every push to `main` and every pull request (CI, E2E, CodeQL, Security, Lighthouse); two start only after CI has passed on a push to `main`: Deploy & Live, which deploys it, and Release, which tags a version when the new commits call for one. The badges above show the six checks' live state; the Release badge shows the latest version:
 
 | Workflow | What it checks |
 |---|---|
@@ -196,6 +199,7 @@ Six GitHub Actions workflows (the badges above are their live state). Five run o
 | [`security.yml`](.github/workflows/security.yml) | gitleaks over the full git history, `npm audit` (moderate and above) and `npm audit signatures`; on pull requests, dependency review |
 | [`quality.yml`](.github/workflows/quality.yml) | Lighthouse CI with score floors and byte budgets (`lighthouserc.json`) |
 | [`live.yml`](.github/workflows/live.yml) | **Deploy & Live.** When CI passes on a push to `main` (and that commit is still the head of `main`), it deploys the commit to Vercel production — `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`, Vercel CLI pinned, recorded as a GitHub deployment to the `production` environment — after checking the build has every page and that its repository switch matches the repository's visibility (`static/repo.json` = `{"public":true}` while the repo is public), then checks that the live `index.html` is byte-identical to that build. Then every page and static file of <https://specimen.edycu.dev/> answers 200 and the e2e suite runs against the live site. The live checks also run on their own every 6 hours |
+| [`release.yml`](.github/workflows/release.yml) | **Release.** After CI passes on a push to `main`, it reads the commit subjects since the last tag (`.github/scripts/next-version.sh`, Angular convention, the authorship prefixes stripped): `feat` bumps minor, `fix`/`perf` patch, anything else cuts nothing. It tags the exact commit CI judged, creates the GitHub Release and keeps `docs/badges/release.svg` equal to it. Nothing deploys from it |
 
 Dependabot groups npm and Actions updates weekly (`.github/dependabot.yml`).
 

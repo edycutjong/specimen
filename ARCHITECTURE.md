@@ -9,7 +9,7 @@ same `@specimen/core` runs in the Kiro hook, the `specimen` CLI, the demo MCP se
 Kiro agent ──MCP call──▶ hollow-inn (stdio)
      │   PreToolUse / PostToolUse hooks (.kiro/hooks/specimen-jar-{pre,post}.json)
      ▼
-specimen hook pre|post ──▶ jars/sess_<id>.jsonl      one JSON line per call, response_text byte for byte
+specimen hook pre|post ──▶ jars/sess_<id>.jsonl      one JSON line per call, response_text as returned, secrets → [REDACTED]
      │                       jars/MANIFEST.sha256     (checked by `specimen manifest check`, which the manifest hook runs before and after each Kiro task)
      ▼
 specimen replay --server "<cmd>"
