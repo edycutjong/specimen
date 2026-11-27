@@ -1,9 +1,9 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig, transformWithEsbuild, type Plugin } from "vite";
 
-// The landing page and the deck: static files in site/public/ (landing/, deck/, static/), copied next to the cabinet
+// The landing page, the deck and the judge page: static files in site/public/ (landing/, deck/, judge/, static/), copied next to the cabinet
 // in apps/cabinet/dist/ after the cabinet's own build, plus /static/replay.js, the cabinet's replay code bundled for
-// those two pages. Run from the repository root: `npx vite build --config site/vite.config.ts` (vercel.json does).
+// those pages. Run from the repository root: `npx vite build --config site/vite.config.ts` (vercel.json does).
 
 // Vite does not minify whitespace in an ES-format library build, so this step does it for the one output file.
 const minifyEsLib: Plugin = {
