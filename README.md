@@ -8,7 +8,6 @@
 
   [![For judges](https://img.shields.io/badge/For_judges-the_judge_path-1F4E79?style=for-the-badge)](JUDGE.md)
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://specimen.edycu.dev/)
-
   [![Demo Video](https://img.shields.io/badge/▶_Demo-Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/41UlOy2X318)
   [![Landing](docs/badges/production-landing.svg)](https://specimen.edycu.dev/landing/)
   [![Cabinet](docs/badges/production-cabinet.svg)](https://specimen.edycu.dev/)
