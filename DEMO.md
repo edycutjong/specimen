@@ -79,6 +79,8 @@ was found in that hour; that is the result. Reproduce: `sh field/server-memory/r
 ## 6. Set it up in another repository, and the readiness gate
 
 ```sh
+# the CLI is not published to npm: run this from a clone of this repo after `npm ci`, or make the CLI resolve inside
+# your project first (power/specimen/skills/specimen-replay/SKILL.md, step 1); otherwise `npx specimen` fetches an unrelated npm package
 npx specimen init --server-key hollowinn --test-server "npx tsx servers/hollow-inn/src/main.ts v2.1" --watch 'servers/**'
 npm run build -w apps/cabinet && npx vite build --config site/vite.config.ts   # the deployed site, as vercel.json builds it
 npx tsx scripts/check_submission_readiness.ts --allow-pending-video
