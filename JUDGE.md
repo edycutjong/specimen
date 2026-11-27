@@ -15,6 +15,13 @@ updated with the change and stay green while its callers break; on our demo serv
 changes (one renamed tool: `cancel_booking` removed, `booking_cancel` added), and the replay finds 5 of the 10 recorded
 calls changed.
 
+**Why Frankenstein:** four parts built for different jobs, stitched into one loop: MCP (the thing under test), Kiro
+hooks (the capture), a replay engine (the verdict) and Kiro's Bug Fix specs (where a break lands as work). **Why Kiro:**
+a `PreToolUse` / `PostToolUse` hook runs inside the agent and sees each MCP call's `tool_input` and `tool_response` with
+Kiro's `session_id`, so there is no proxy in front of the server, and a red jar becomes a spec Kiro's Bug Fix workflow can
+execute (payload keys measured in [`evidence/spikes/S3.md`](evidence/spikes/S3.md); every jar line in [`jars/`](jars/)
+carries the `session_id`).
+
 **Video (2:37, public):** <https://youtu.be/41UlOy2X318>. Kiro on screen at
 [0:43](https://youtu.be/41UlOy2X318?t=43) (a live Kiro CLI session, its calls sealed by the capture hooks),
 [1:03](https://youtu.be/41UlOy2X318?t=63) (the curator agent files a bugfix spec, `check-spec` PASS) and
@@ -51,15 +58,15 @@ Open <https://specimen.edycu.dev/> on a desktop browser. No install, no login, n
    **SHIP v2.1 · 10 preserved · 0 rattled · 0 cracked**, input-schema diff 0 of 6. Three of the ten are `quote` jars that
    keep `total` and gain `total_cents`, which the default mode counts as compatible; `--strict` says HOLD · 3 rattled.
 
-The strip above the shelves is the page's own guide to steps 4–6 (its middle step ticks when you open the spec's GitHub
-link). Also live: the [landing](https://specimen.edycu.dev/landing/), whose hero shelf replays v2 in the tab, and the
+The strip above the shelves is the page's own guide to steps 4–6 (its middle step ticks once the bugfix spec fills
+half of the screen as you scroll the drawer, or when you open its GitHub link). Also live: the [landing](https://specimen.edycu.dev/landing/), whose hero shelf replays v2 in the tab, and the
 [deck](https://specimen.edycu.dev/deck/) (arrow keys).
 
 ## Kiro, impossible to miss
 
 Everything ran on the Kiro CLI, headless; the Kiro IDE was not used. Commits that hold Kiro's output start `kiro:`; our
 code commits start `claude-direct:`, and the other prefixes (`docs:`, `ci:`, `evidence:`, `chore:` …) hold no
-Kiro-written code. By lines added to `packages/`, `apps/` and `servers/`, `kiro:` commits are 94.4 %, with our edits
+Kiro-written code. By lines added to `packages/`, `apps/` and `servers/`, `kiro:` commits are 94.3 %, with our edits
 inside three `kiro:` commits counted as ours ([`evidence/authorship.md`](evidence/authorship.md)).
 
 | Kiro feature | Where | What it did here | Evidence |
@@ -72,7 +79,7 @@ inside three `kiro:` commits counted as ours ([`evidence/authorship.md`](evidenc
 | **Feature specs** (requirements → Analyze Requirements → design → tasks) | [`jar-capture/`](.kiro/specs/jar-capture/), [`replay-engine/`](.kiro/specs/replay-engine/), [`cabinet-ui/`](.kiro/specs/cabinet-ui/) | Written and executed by Kiro, headless: the capture code, the replay engine and the browser cabinet. Every task line is checked (48, 38 and 45) | [`prompts/README.md`](prompts/README.md), turns 14–23, 25 and 29–32 with their credits; [`evidence/authorship.md`](evidence/authorship.md) |
 | **Bug Fix workflow** | [`quote-total-total-cents/`](.kiro/specs/quote-total-total-cents/), [`search-rooms-rooms-rooms-r-08-rooms-r-09/`](.kiro/specs/search-rooms-rooms-rooms-r-08-rooms-r-09/), [`cancel-booking-missing-tool/`](.kiro/specs/cancel-booking-missing-tool/) | One spec per v2 break. The curator filed `bugfix.md`; Kiro's Bug Fix workflow wrote `design.md` and `tasks.md` and executed them into [`v2_1.ts`](servers/hollow-inn/src/v2_1.ts). Headless, with no IDE approval step; we ran the final acceptance of two (turn 43 stopped at it, turn 45 was cut by our timeout) | [`racks-vs-v2.1-ship.txt`](evidence/replay/racks-vs-v2.1-ship.txt) (SHIP · 10 jars compared); [`02-bugfix-to-v2.1.md`](evidence/slice/02-bugfix-to-v2.1.md); prompts 27–28 and 42–45 |
 | **Steering** | [`.kiro/steering/`](.kiro/steering/): `product`, `tech`, `structure` (always), `specimen-bugfix` (auto) | The rules the sessions worked under; `specimen-bugfix.md` is the bugfix spec layout the curator loads (a `resources` entry in its profile). Written by Kiro (turns 01–02); `product.md` was edited by us since | [`turn-01.md`](prompts/turn-01.md), [`turn-02.md`](prompts/turn-02.md) |
-| **Power** | [`power/specimen/`](power/specimen/) | `plugin.json` and one skill, `specimen-replay`, that packages the workflow. Written by Kiro (turn 49); not imported into the Kiro IDE, and no MCP server in it | [`turn-49.md`](prompts/turn-49.md) |
+| **Power** | [`power/specimen/`](power/specimen/) | `plugin.json` and one skill, `specimen-replay`, that packages the workflow. Written by Kiro (turn 49, commit `82b5126`); we edited `SKILL.md` twice since (`4138798`, `ee36cff`). Not imported into the Kiro IDE, and no MCP server in it | [`turn-49.md`](prompts/turn-49.md) |
 | **Every prompt, committed** | [`prompts/`](prompts/) | The 49 numbered build turns, verbatim (one local path in `turn-19.md` replaced by `<repo-root>`), with the credits Kiro reported for each (exceptions listed) | [`prompts/README.md`](prompts/README.md), [`scripts/kiro-credits.mjs`](scripts/kiro-credits.mjs) |
 | **What we learned** | [`docs/DX-REPORT.md`](docs/DX-REPORT.md), [`docs/EXPERIMENT.md`](docs/EXPERIMENT.md) | 21 numbered findings, for example: `kiro-cli agent validate` accepted permission rules with undefined keys (finding 4); a trigger id we got wrong passed every test because the tests copied it (19); a Bug Fix spec executed for about 1 credit, a whole feature spec for 27–53 (11). `EXPERIMENT.md`: five experiments, among them gate ON vs OFF | [`evidence/spikes/S5.md`](evidence/spikes/S5.md) (finding 4); [`prompts/README.md`](prompts/README.md) (credits) |
 
@@ -100,7 +107,7 @@ scripts/stop-gate-eval.sh && git diff evidence/stop-gate/eval.md
 
 npm test
 # Test Files  123 passed (123)
-#      Tests  1090 passed (1090)      (about 40 s)
+#      Tests  1093 passed (1093)      (about 40 s)
 ```
 
 These outputs are from a fresh clone on 2026-11-27. Committed copies:

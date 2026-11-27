@@ -20,7 +20,6 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="An iron shelf of glowing specimen jars; after the server swap, the broken ones rattle, flood red, and print ABNORMAL.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:creator" content="@edycutjong">
 <meta name="twitter:title" content="SPECIMEN JAR — the jars remember what your server used to say">
 <meta name="twitter:description" content="Kiro hooks jar your agent's MCP calls. Swap the server, replay: 5 of 10 no longer matched; a schema diff saw 2 changes.">
 <meta name="twitter:image" content="https://specimen.edycu.dev/static/img/og.png">
@@ -179,9 +178,6 @@ h1 .hl { color: var(--before); text-shadow: 0 0 34px rgba(168, 227, 95, .42); wh
 .plate-v__delta[data-tone="g"] { color: var(--before); } .plate-v__delta[data-tone="r"] { color: var(--after); }
 .tick { display: grid; gap: 2px; margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--rule); font: 500 13px/1.35 var(--font-data); color: var(--bone-2); text-align: right; min-height: calc(2.7em + 9px); }
 .tick__sum { color: var(--ink); font-weight: 700; }
-/* fixed rows: the tick lines empty and refill on every replay step; a reserved single line each keeps the shelf below from jumping */
-.tick__jar, .tick__sum { display: block; height: 1.35em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (min-width: 641px) { .lab__bar .plate-v { flex: 0 1 452px; } }
 .plate-v.is-slam .plate-v__word { animation: verdictslam .55s cubic-bezier(.2, 1.7, .4, 1) both; transform-origin: 100% 60%; }
 
 .room { position: relative; padding-top: 4px; margin-top: -26px; isolation: isolate; }
@@ -525,14 +521,12 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   .plate-v__top { flex-wrap: wrap; gap: 8px 12px; }
   .lab .plate-v__word { font-size: 36px; min-height: 36px; }
   .lab .plate-v__word i { font-size: 24px; }
-  .tick { text-align: left; min-height: calc(1.35em + 7px); margin-top: 6px; padding-top: 6px; }
+  .tick { text-align: left; min-height: 0; margin-top: 6px; padding-top: 6px; }
   .tick__jar { display: none; }
   .plate-v.is-stamped .plate-v__word, .plate-v.is-slam .plate-v__word { transform-origin: 0 60%; }
   .plate-v.is-slam .plate-v__word { animation-name: verdictslam-sm; }
   .lab .plate-v { padding: 8px 12px 10px; }
   .plate-v__top { min-height: 0; margin-bottom: 4px; }
-  /* phones: the delta ("red jars 5 → 0") only appears mid-replay and used to wrap under the lamp, pushing the shelf; give it its own reserved line */
-  .plate-v__delta { flex: 1 0 100%; height: 1.25em; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .lamp { padding: 6px 10px 6px 9px; }
   .plate-v__counts { font-size: 13px; margin-top: 2px; }
   .wall { left: -8px; right: -8px; border-radius: 50% 50% 0 0 / 60px 60px 0 0; }
@@ -567,7 +561,6 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
   .seam small { display: none; }
   .seams > svg { margin-top: 1px; }
 }
-@media (max-width: 400px) { .plate-v__counts { min-height: 2.7em; } } /* "5 preserved · 4 rattled · 1 cracked" wraps here, "10 preserved" does not: reserve both lines */
 @media (max-width: 380px) {
   .mark img { display: none; }
   .top .btn--main { padding: 8px 10px; font-size: 13px; }
@@ -770,7 +763,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <div class="receipt"><p class="receipt__n r"><span data-to="5">5</span><small>of 10</small></p><p>recorded calls no longer matched under v2</p><span class="path" data-gh="evidence/replay/racks-vs-v2.txt">evidence/replay/racks-vs-v2.txt</span></div>
 <div class="receipt"><p class="receipt__n"><span data-to="2">2</span></p><p>changes an input-schema diff of the same server saw: one renamed tool</p><span class="path" data-gh="evidence/bench/detect.md">evidence/bench/detect.md</span></div>
 <div class="receipt"><p class="receipt__n g"><span data-to="10">10</span><small>of 10</small></p><p>preserved under v2.1, after Kiro's fixes (3 jars gained a field)</p><span class="path" data-gh="evidence/replay/racks-vs-v2.1-ship.txt">evidence/replay/racks-vs-v2.1-ship.txt</span></div>
-<div class="receipt"><p class="receipt__n"><span data-to="1090">1,090</span></p><p>tests passing in 123 files, vitest + fast-check</p><span class="path" data-gh="evidence/tests.txt">evidence/tests.txt</span></div>
+<div class="receipt"><p class="receipt__n"><span data-to="1093">1,093</span></p><p>tests passing in 123 files, vitest + fast-check</p><span class="path" data-gh="evidence/tests.txt">evidence/tests.txt</span></div>
 </div></section>
 
 <section class="sec" id="demo" aria-labelledby="h-demo"><div class="wrap">
@@ -846,7 +839,7 @@ h3 { font: 900 27px/1.1 var(--font-display); letter-spacing: .01em; }
 <section class="sec" id="kiro" aria-labelledby="h-kiro"><div class="wrap">
 <p class="eyebrow">C5 · Kiro</p>
 <h2 id="h-kiro">Stitched together <span class="hl--g">by Kiro.</span></h2>
-<p class="sub">Kiro is the builder: <b>94.4 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came in <code>kiro:</code> commits, Kiro session output (38,477 of 40,748; our lines inside three mixed commits counted as ours). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits where Kiro reported them; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
+<p class="sub">Kiro is the builder: <b>94.3 %</b> of the lines added to <code>packages/</code>, <code>apps/</code> and <code>servers/</code> came in <code>kiro:</code> commits, Kiro session output (38,477 of 40,816; our lines inside three mixed commits counted as ours). Every prompt sent to Kiro is in <code>prompts/</code>, with measured credits where Kiro reported them; the exceptions are listed. <span class="path" data-gh="evidence/authorship.md">evidence/authorship.md</span></p>
 <div class="kiro">
 <ul class="inv">
 <li><b>49</b><div><strong>numbered Kiro prompts</strong><span class="path" data-gh="prompts/README.md">prompts/README.md</span></div></li>
