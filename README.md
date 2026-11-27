@@ -27,7 +27,7 @@
   [![Security](https://github.com/edycutjong/specimen/actions/workflows/security.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/security.yml)
   [![Lighthouse](https://github.com/edycutjong/specimen/actions/workflows/quality.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/quality.yml)
   [![Deploy & Live](https://github.com/edycutjong/specimen/actions/workflows/live.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/live.yml)
-  [![Production deployment](docs/badges/production.svg)](https://github.com/edycutjong/specimen/deployments/production)
+  [![Production deployment](docs/badges/production.svg)](https://specimen.edycu.dev/)
 
 </div>
 
