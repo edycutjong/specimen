@@ -83,6 +83,10 @@ export function HowJarsWereMade() {
       </p>
 
       <p className="how-made__ship">{SHIP_LINE}</p>
+
+      <p>
+        For judges: <a className="how-made__link" href="/judge">the 3-minute path, receipts and limits →</a>
+      </p>
     </section>
   );
 }
