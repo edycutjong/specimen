@@ -6,10 +6,13 @@
 
   <br/>
 
+  [![For judges](https://img.shields.io/badge/For_judges-the_judge_path-1F4E79?style=for-the-badge)](JUDGE.md)
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://specimen.edycu.dev/)
 
   [![Demo Video](https://img.shields.io/badge/▶_Demo-Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/41UlOy2X318)
-  [![For judges](https://img.shields.io/badge/For_judges-the_judge_path-1F4E79?style=for-the-badge)](JUDGE.md)
+  [![Landing](docs/badges/production-landing.svg)](https://specimen.edycu.dev/landing/)
+  [![Cabinet](docs/badges/production-cabinet.svg)](https://specimen.edycu.dev/)
+  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://specimen.edycu.dev/deck/)
   [![Built for Kiroween](https://img.shields.io/badge/Devpost-Kiroween_2026-8b5cf6?style=for-the-badge)](https://kiroween.devpost.com/)
 
   <br/>
@@ -27,7 +30,6 @@
   [![Security](https://github.com/edycutjong/specimen/actions/workflows/security.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/security.yml)
   [![Lighthouse](https://github.com/edycutjong/specimen/actions/workflows/quality.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/quality.yml)
   [![Deploy & Live](https://github.com/edycutjong/specimen/actions/workflows/live.yml/badge.svg)](https://github.com/edycutjong/specimen/actions/workflows/live.yml)
-  [![Production deployment](docs/badges/production.svg)](https://specimen.edycu.dev/)
 
 </div>
 
