@@ -7,7 +7,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { getBugfixSpecs, type CabinetReplayResult } from "../src/browser-replay.js";
 import { Jar } from "../src/components/Jar.js";
-import { JarDrawer } from "../src/components/JarDrawer.js";
+import { JarDrawer, specSectionSeen } from "../src/components/JarDrawer.js";
 import { buildViewModel, type JarViewModel } from "../src/cabinet-model.js";
 import { RACK_META } from "../src/rack-meta.js";
 import { loadReplays, viewModelOf, type Replays } from "./support/replays.js";
@@ -93,6 +93,40 @@ describe("the guide step for the spec ticks when the spec is shown (design pass,
     expect(onSpecViewed).toHaveBeenCalledTimes(1);
     expect(disconnect).toHaveBeenCalled();
 
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("a spec taller than the screen still ticks the guide step (judge path, 2026-11-27)", () => {
+  it("counts the section as seen once it fills half the screen, even when far less than half of it is visible", () => {
+    // Measured live at 1440×900: the spec section is ~3,318 px in a 595 px drawer scroller, so its ratio tops out near 0.18.
+    expect(specSectionSeen({ isIntersecting: true, intersectionRatio: 0.18, intersectionRect: { height: 595 }, rootBounds: { height: 900 } })).toBe(true);
+    expect(specSectionSeen({ isIntersecting: true, intersectionRatio: 0.03, intersectionRect: { height: 100 }, rootBounds: { height: 900 } })).toBe(false);
+    expect(specSectionSeen({ isIntersecting: false, intersectionRatio: 0, intersectionRect: { height: 0 }, rootBounds: { height: 900 } })).toBe(false);
+  });
+
+  it("keeps the half-visible rule for a short section, and falls back to it when the screen size is unknown", () => {
+    expect(specSectionSeen({ isIntersecting: true, intersectionRatio: 0.5 })).toBe(true);
+    expect(specSectionSeen({ isIntersecting: true, intersectionRatio: 0.49, intersectionRect: { height: 400 }, rootBounds: null })).toBe(false);
+  });
+
+  it("observes at ratio steps up to one half, so a tall section reports while it scrolls in", () => {
+    let options: IntersectionObserverInit | undefined;
+    class FakeObserver {
+      constructor(_cb: unknown, init?: IntersectionObserverInit) {
+        options = init;
+      }
+      observe(): void {}
+      disconnect(): void {}
+    }
+    vi.stubGlobal("IntersectionObserver", FakeObserver);
+    render(
+      <JarDrawer jar={jarOf("v2", "SPC-0002")} version="v2" result={replays.v2} specs={getBugfixSpecs()} onClose={() => {}} onSpecViewed={() => {}} />,
+    );
+    const steps = options?.threshold as number[];
+    expect(steps[0]).toBe(0);
+    expect(steps.at(-1)).toBe(0.5);
+    expect(steps.length).toBeGreaterThan(10);
     vi.unstubAllGlobals();
   });
 });

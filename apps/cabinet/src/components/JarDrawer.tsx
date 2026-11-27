@@ -96,7 +96,7 @@ export type JarDrawerProps = {
   /** Called by Escape and by the Close control. The parent sets `jar` to null. */
   onClose: () => void;
   /**
-   * Called once the Bugfix spec section of a filed jar is at least half visible, or when its GitHub link is
+   * Called once the Bugfix spec section of a filed jar is half visible or fills half the screen, or when its GitHub link is
    * followed. The guide step for reading the spec ticks on this call, not on opening the drawer (design pass, item 6).
    */
   onSpecViewed?: () => void;
@@ -104,6 +104,25 @@ export type JarDrawerProps = {
 
 /** The fraction of the Bugfix spec section that must be on screen before the reader counts as having seen it. */
 export const SPEC_VIEW_THRESHOLD = 0.5;
+
+/** Ratios the spec observer reports at, so a section taller than the screen still reports as it scrolls in. */
+const SPEC_VIEW_STEPS = Array.from({ length: 21 }, (_, i) => (i * SPEC_VIEW_THRESHOLD) / 20);
+
+type SpecViewEntry = Pick<IntersectionObserverEntry, "isIntersecting" | "intersectionRatio"> & {
+  intersectionRect?: { height: number };
+  rootBounds?: { height: number } | null;
+};
+
+/**
+ * Seen once half of the spec section is on screen, or, for a section taller than twice the screen (a filed spec is
+ * ~3,300 px in a 595 px drawer at 1440×900, so half of it never fits), once it fills half of the screen's height.
+ */
+export function specSectionSeen(entry: SpecViewEntry): boolean {
+  if (!entry.isIntersecting) return false;
+  if (entry.intersectionRatio >= SPEC_VIEW_THRESHOLD) return true;
+  const screen = entry.rootBounds?.height ?? 0;
+  return screen > 0 && (entry.intersectionRect?.height ?? 0) >= screen * SPEC_VIEW_THRESHOLD;
+}
 
 export function JarDrawer({ jar, version, result, specs, onClose, onSpecViewed }: JarDrawerProps): ReactElement | null {
   const form = drawerFormFor(useViewportWidth());
@@ -212,19 +231,19 @@ export function JarDrawer({ jar, version, result, specs, onClose, onSpecViewed }
     };
   }, [isOpen, form]);
 
-  // The spec counts as read once half of its section is on screen. Only a filed jar has a spec to read.
+  // The spec counts as read once half of its section, or half of the screen, shows it. Only a filed jar has a spec.
   const filed = jar?.filed === true;
   useEffect(() => {
     const node = specRef.current;
     if (!isOpen || !filed || node === null || typeof IntersectionObserver === "undefined") return undefined;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= SPEC_VIEW_THRESHOLD)) {
+        if (entries.some(specSectionSeen)) {
           specViewedRef.current?.();
           observer.disconnect();
         }
       },
-      { threshold: SPEC_VIEW_THRESHOLD },
+      { threshold: SPEC_VIEW_STEPS },
     );
     observer.observe(node);
     return () => observer.disconnect();
