@@ -1,5 +1,8 @@
 # DEMO — reproduce what SPECIMEN JAR measured
 
+Three minutes only? [`JUDGE.md`](JUDGE.md) is the short path: the live cabinet in six steps, where Kiro did the work, and
+four commands from a clone. This file is the full reproduction.
+
 Every number below is printed by the command next to it; the outputs are committed under `evidence/`. The live cabinet,
 <https://specimen.edycu.dev/>, replays the same jars in the browser on load; its cold open ends 4252–4403 ms after navigation start in headless Chrome, inside the 4500 ms design bound (`node scripts/cold-open-time.mjs`, 10 runs, `evidence/cold-open.md`).
 
@@ -28,7 +31,9 @@ npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v1"   # SHI
 npx specimen replay --server "npx tsx servers/hollow-inn/src/main.ts v2"   # HOLD — the three author-made breaks in CHANGES.md
 ```
 
-Committed outputs: `evidence/replay/racks-vs-v1.txt`, `evidence/replay/racks-vs-v2.txt`.
+Committed outputs: `evidence/replay/racks-vs-v1.txt`, `evidence/replay/racks-vs-v2.txt` (recorded before any bugfix spec
+was filed: `not filed · …`, exit 1). With the three specs now in `.kiro/specs/`, the v2 replay prints `HOLD · covered · 4 rattled, 1 cracked`
+and exits 3 (`evidence/replay/racks-vs-v2-after-filing-all.txt`).
 
 ## 3. Replay vs a schema diff, same change
 
