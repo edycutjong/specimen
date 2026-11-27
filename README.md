@@ -15,7 +15,8 @@
   [![Landing](docs/badges/production-landing.svg)](https://specimen.edycu.dev/landing/)
   [![Cabinet](docs/badges/production-cabinet.svg)](https://specimen.edycu.dev/)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://specimen.edycu.dev/deck/)
-  [![Built for Kiroween](https://img.shields.io/badge/Devpost-Kiroween_2026-8b5cf6?style=for-the-badge)](https://kiroween.devpost.com/)
+  [![Track: Kiroween 2026 Frankenstein](https://img.shields.io/badge/Track-Kiroween_2026_·_Frankenstein-8b5cf6?style=for-the-badge)](https://kiroween.devpost.com/)
+  [![Devpost entry](https://img.shields.io/badge/Devpost-View_entry-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/specimen-jar)
 
   <br/>
 
